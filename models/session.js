@@ -11,6 +11,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    static addSession({ playDate, venue, playernames, playersneeded }) {
+      return this.create({
+        playDate: playDate,
+        venue: venue,
+        playernames: playernames,
+        playersneeded: playersneeded,
+      });
+    }
+
+    static getSessions() {
+      return this.findAll();
+    }
   }
   Session.init(
     {

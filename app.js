@@ -18,27 +18,25 @@ app.use(express.urlencoded({ extended: false }));
 // })
 
 app.get("/", async (request, response) => {
-  const allSports = await Sport.getSports();
-  response.render("index", {
-    title: "Sports Application",
-    allSports,
-  });
-  // try {
-  //     const allSports = Sport.getSports()
-  //     if (request.accepts("html")) {
-  //         response.render("index", {
-  //             title: "Sports Application",
-  //             allSports
-  //         });
-  //     } else {
-  //         response.json({
-  //             allSports
-  //         });
-  //     }
-  // } catch (error) {
-  //     console.log(error);
-  //     return response.status(422).json(error);
-  // }
+  try {
+    const allSports = await Sport.getSports();
+    const allSessions = await Session.getSessions();
+    if (request.accepts("html")) {
+      response.render("index", {
+        title: "Sports Application",
+        allSports,
+        allSessions,
+      });
+    } else {
+      response.json({
+        allSports,
+        allSessions,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
 });
 
 app.post("/sports", async function (request, response) {
@@ -47,12 +45,57 @@ app.post("/sports", async function (request, response) {
     const sport = await Sport.addSport({
       title: request.body.title,
     });
-    // return response.json(sport)
     return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
+});
+
+app.get("/createSport", (request, response, next) => {
+  response.render("createSport");
+});
+
+app.post("/sessions", async function (request, response) {
+  console.log("Creating a session", request.body);
+  const sportid = request.sport.id;
+  try {
+    const sport = await Session.addSession({
+      playDate: request.body.playDate,
+      venue: request.body.venue,
+      playernames: request.body.playernames.split(","),
+      playerneeded: request.body.playerneeded,
+    });
+    return response.redirect("/sport/:id");
+    // return response.redirect("/sport/1");
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+
+app.get("/sport/:id", async function (request, response) {
+  // const todo = await Session.findByPk(request.params.id);
+  const allSessions = await Session.getSessions();
+  // const sportid = request.Sport.id;
+  // console.log(sportid)
+  response.render("session", {
+    title: "Sports Application",
+    allSessions,
+  });
+});
+
+// app.get("/", async function (request, response) {
+//     // const todo = await Session.findByPk(request.params.id);
+//     const allSessions = await Session.getSessions()
+//     response.render("index", {
+//         title: "Sports Application",
+//         allSessions
+//     })
+// });
+
+app.get("/createSession", (request, response, next) => {
+  response.render("createSession");
 });
 
 module.exports = app;

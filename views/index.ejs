@@ -12,29 +12,13 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include('header') %>
-        <form action="/sports" method="post">
-          <div class="py-3">
-            <label for="title">What is this sports name?</label>
-            <input
-              name="title"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-              type="text"
-              placeholder="Enter Sport Name"
-              required
-            />
-          </div>
-          <div class="py-3">
-            <button
-              type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-
+        <div class="py-5">
+          <a href="/createSport" class="text-green-600 underline"
+            >Create New sport</a
+          >
+        </div>
         <div>
-          <h5 class="text-xl font-semibold text-gray-600">
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are available. Please select one
           </h5>
           <%- include('sport.ejs', {data: allSports}) %>

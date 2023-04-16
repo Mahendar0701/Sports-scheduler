@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
+        <form action="/sessions" method="post">
+          <div class="py-3">
+            <label for="playDate" class="text-xl font-semibold text-gray-600"
+              >When will this session be held?</label
+            >
+            <input
+              name="playDate"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              type="datetime-local"
+            />
+          </div>
+          <div class="py-3">
+            <label for="venue" class="text-xl font-semibold text-gray-600"
+              >Where will this session be played?</label
+            >
+            <input
+              name="venue"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              type="text"
+            />
+          </div>
+          <div class="py-3">
+            <label for="playernames" class="text-xl font-semibold text-gray-600"
+              >who all will be joining in this session?</label
+            >
+            <input
+              name="playernames"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              type="text"
+            />
+          </div>
+          <div class="py-3">
+            <label for="title" class="text-xl font-semibold text-gray-600"
+              >How many more players nedded?</label
+            >
+            <input
+              name="playersneeded"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              type="number"
+              placeholder="Enter Sport Name"
+            />
+          </div>
+          <div class="py-3">
+            <button
+              type="submit"
+              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+        <div>
+          <h1>Available sessions</h1>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
