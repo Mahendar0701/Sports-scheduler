@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+/* eslint-disable no-unused-vars */
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Sport extends Model {
     /**
@@ -12,12 +11,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    static addSport({ title }) {
+      return this.create({
+        title: title,
+      });
+    }
+
+    static getSports() {
+      return this.findAll();
+    }
   }
-  Sport.init({
-    title: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Sport',
-  });
+  Sport.init(
+    {
+      title: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: "Sport",
+    }
+  );
   return Sport;
 };

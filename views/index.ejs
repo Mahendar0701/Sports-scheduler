@@ -4,9 +4,42 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
     <title>Document</title>
   </head>
   <body>
-    sports schedule home page
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header') %>
+        <form action="/sports" method="post">
+          <div class="py-3">
+            <label for="title">What is this sports name?</label>
+            <input
+              name="title"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              type="text"
+              placeholder="Enter Sport Name"
+              required
+            />
+          </div>
+          <div class="py-3">
+            <button
+              type="submit"
+              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+
+        <div>
+          <h5 class="text-xl font-semibold text-gray-600">
+            The following Sports are available. Please select one
+          </h5>
+          <%- include('sport.ejs', {data: allSports}) %>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
