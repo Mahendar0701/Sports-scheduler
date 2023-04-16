@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "mahi123@#",
+    "database": "wd-sports-dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "mahi123@#",
+    "database": "wd-sports-test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "mahi123@#",
+    "database": "wd-sports-prod",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
