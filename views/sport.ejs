@@ -3,12 +3,14 @@
     <% for( var i = 0 ; i < data.length ; i++) { %>
     <tr>
       <td>
-        <a
-          href="/sport/<%= data[i].id
+        <div class="border border-gray-600 text-gray-900 rounded p-1 w-full">
+          <a
+            href="/sport/<%= data[i].id
         %>"
-          class="text-green-600 underline"
-          ><%=data[i].title %></a
-        >
+            class="underline text-green-600"
+            ><%=data[i].title %></a
+          >
+        </div>
       </td>
     </tr>
     <% } %>

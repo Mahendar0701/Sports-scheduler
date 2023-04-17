@@ -10,7 +10,7 @@
   </head>
   <body>
     <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
+      <div class="col-start-3 col-span-3">
         <a href="/createSession" class="text-green-600 underline"
           >create session</a
         >
@@ -22,7 +22,7 @@
             >
             <input
               name="playDate"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              class="border border-gray-600 text-gray-900 rounded p-2"
               type="datetime-local"
             />
           </div>
@@ -54,7 +54,7 @@
             <input
               name="playersneeded"
               class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-              type="number"
+              type="integer"
             />
           </div>
           <div class="py-3">
@@ -74,15 +74,19 @@
             <tr>
               <td>
                 <h1>Available sessions</h1>
-                <a
-                  href="/sport/<%= allSessions[i].id
-                  %>"
-                  class="text-green-600 underline"
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-1 w-full"
                 >
-                  <%=allSessions[i].playDate %> <%=allSessions[i].venue %>
-                  <%=allSessions[i].playernames %>
-                  <%=allSessions[i].playersneeded %>
-                </a>
+                  <a
+                    href="/sport/<%= allSessions[i].id
+                  %>"
+                    class="text-green-600 underline"
+                  >
+                    <%=allSessions[i].playDate %> <%=allSessions[i].venue %>
+                    <%=allSessions[i].playernames %>
+                    <%=allSessions[i].playersneeded %>
+                  </a>
+                </div>
               </td>
             </tr>
             <% } %>

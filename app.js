@@ -58,7 +58,6 @@ app.get("/createSport", (request, response, next) => {
 
 app.post("/sessions", async function (request, response) {
   console.log("Creating a session", request.body);
-  const sportid = request.sport.id;
   try {
     const sport = await Session.addSession({
       playDate: request.body.playDate,
@@ -67,7 +66,6 @@ app.post("/sessions", async function (request, response) {
       playerneeded: request.body.playerneeded,
     });
     return response.redirect("/sport/:id");
-    // return response.redirect("/sport/1");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
