@@ -40,6 +40,20 @@ module.exports = (sequelize, DataTypes) => {
     static getSportId() {
       return sportId;
     }
+
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
+    static async getSession(id) {
+      return this.findOne({
+        where: { id },
+      });
+    }
   }
   Session.init(
     {
