@@ -9,20 +9,36 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Session.belongsTo(models.Sport, {
+        foreignKey: "sportId",
+      });
       // define association here
     }
 
-    static addSession({ playDate, venue, playernames, playersneeded }) {
+    static addSession({
+      playDate,
+      venue,
+      playernames,
+      playersneeded,
+      sportId,
+    }) {
       return this.create({
         playDate: playDate,
         venue: venue,
         playernames: playernames,
         playersneeded: playersneeded,
+        sportId,
       });
     }
 
-    static getSessions() {
-      return this.findAll();
+    static getSessions(sportId) {
+      return this.findAll({
+        where: { sportId },
+      });
+    }
+
+    static getSportId() {
+      return sportId;
     }
   }
   Session.init(

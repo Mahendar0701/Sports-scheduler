@@ -9,13 +9,20 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-3">
-        <a href="/createSession" class="text-green-600 underline"
+    <div class="grid grid-cols-6 pt-10">
+      <div class="col-start-3 col-span-2">
+        <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
+        <br />
+        <a
+          href="/sport/<%= sportId %>/new_session"
+          class="text-green-600 underline"
           >create session</a
         >
-        <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
-        <form action="/sessions" method="post">
+        <br />
+        <br />
+        <!-- <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2> -->
+        <!-- <form action="/sessions" method="post">
+          <input type="hidden" name="sportId" value="<%= sportId %>" />
           <div class="py-3">
             <label for="playDate" class="text-xl font-semibold text-gray-600"
               >When will this session be held?</label
@@ -65,26 +72,30 @@
               Submit
             </button>
           </div>
-        </form>
+        </form> -->
         <div>
-          <h1>Available sessions</h1>
+          <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
           <table>
-            <%=allSessions.length %> <% for( var i = 0 ; i < allSessions.length
-            ; i++) { %>
+            sportId : <%= sportId %>
+            <br />
+            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
+            allSessions.length ; i++) { %>
             <tr>
               <td>
-                <h1>Available sessions</h1>
                 <div
-                  class="border border-gray-600 text-gray-900 rounded p-1 w-full"
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
                 >
                   <a
-                    href="/sport/<%= allSessions[i].id
+                    href="/sport/<%= sportId %>/<%= allSessions[i].id
                   %>"
-                    class="text-green-600 underline"
+                    class="text-green-600"
                   >
-                    <%=allSessions[i].playDate %> <%=allSessions[i].venue %>
-                    <%=allSessions[i].playernames %>
-                    <%=allSessions[i].playersneeded %>
+                    <div class="mr-18 display: inline">
+                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=allSessions[i].playersneeded %> slots
+                    </div>
                   </a>
                 </div>
               </td>

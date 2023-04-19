@@ -13,13 +13,14 @@
       <div class="col-start-3 col-span-2">
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
         <form action="/sessions" method="post">
+          <input type="hidden" name="sportId" value="<%= sportId %>" />
           <div class="py-3">
             <label for="playDate" class="text-xl font-semibold text-gray-600"
               >When will this session be held?</label
             >
             <input
               name="playDate"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+              class="border border-gray-600 text-gray-900 rounded p-2"
               type="datetime-local"
             />
           </div>
@@ -38,9 +39,10 @@
               >who all will be joining in this session?</label
             >
             <input
-              name="playernames"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
               type="text"
+              name="playernames"
+              id="playernames"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
             />
           </div>
           <div class="py-3">
@@ -50,8 +52,7 @@
             <input
               name="playersneeded"
               class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-              type="number"
-              placeholder="Enter Sport Name"
+              type="integer"
             />
           </div>
           <div class="py-3">
@@ -63,9 +64,9 @@
             </button>
           </div>
         </form>
-        <div>
+        <!-- <div>
           <h1>Available sessions</h1>
-        </div>
+        </div> -->
       </div>
     </div>
   </body>

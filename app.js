@@ -5,6 +5,7 @@ const app = express();
 const { Session, Sport } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("./models/session");
 
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
@@ -20,17 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", async (request, response) => {
   try {
     const allSports = await Sport.getSports();
-    const allSessions = await Session.getSessions();
+    // const allSessions = await Session.getSessions();
     if (request.accepts("html")) {
       response.render("index", {
         title: "Sports Application",
         allSports,
-        allSessions,
+        // allSessions,
       });
     } else {
       response.json({
         allSports,
-        allSessions,
+        // allSessions,
       });
     }
   } catch (error) {
@@ -58,14 +59,17 @@ app.get("/createSport", (request, response, next) => {
 
 app.post("/sessions", async function (request, response) {
   console.log("Creating a session", request.body);
+  console.log("id...", request.params.id);
   try {
     const sport = await Session.addSession({
       playDate: request.body.playDate,
       venue: request.body.venue,
       playernames: request.body.playernames.split(","),
-      playerneeded: request.body.playerneeded,
+      playersneeded: request.body.playersneeded,
+      sportId: request.body.sportId,
     });
-    return response.redirect("/sport/:id");
+    const id = request.body.sportId;
+    return response.redirect(`/sport/${id}`);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -73,27 +77,25 @@ app.post("/sessions", async function (request, response) {
 });
 
 app.get("/sport/:id", async function (request, response) {
-  // const todo = await Session.findByPk(request.params.id);
-  const allSessions = await Session.getSessions();
-  // const sportid = request.Sport.id;
-  // console.log(sportid)
+  console.log("paramsid...", request.params);
+  const sportId = request.params.id;
+  const title = await Sport.getSportTitle(sportId);
+  const allSessions = await Session.getSessions(request.params.id);
   response.render("session", {
-    title: "Sports Application",
+    // title: "Sports Application",
     allSessions,
+    sportId,
+    title,
   });
 });
 
-// app.get("/", async function (request, response) {
-//     // const todo = await Session.findByPk(request.params.id);
-//     const allSessions = await Session.getSessions()
-//     response.render("index", {
-//         title: "Sports Application",
-//         allSessions
-//     })
-// });
+app.get("/sport/:id/new_session", async (request, response, next) => {
+  const sportId = request.params.id;
 
-app.get("/createSession", (request, response, next) => {
-  response.render("createSession");
+  console.log("iddd", sportId);
+  response.render("createSession", {
+    sportId,
+  });
 });
 
 module.exports = app;

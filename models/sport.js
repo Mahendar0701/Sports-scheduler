@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 "use strict";
-const { Model } = require("sequelize");
+const { Model, where } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Sport extends Model {
     /**
@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Sport.hasMany(models.Session, {
+        foreignKey: "sportId",
+      });
       // define association here
     }
 
@@ -20,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
 
     static getSports() {
       return this.findAll();
+    }
+
+    static async getSportTitle(id) {
+      const sport = await this.findOne({ where: { id } });
+      return sport.title;
     }
   }
   Sport.init(
