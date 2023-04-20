@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
     <title>Document</title>
-    <!-- <script>
-      function deleteTodo(id) {
-        fetch(`/todos/${id}`, {
+    <script>
+      function deleteSession(id) {
+        fetch(`/sessions/${id}`, {
           method: "delete",
           headers: { "Content-Type": "application/json" },
         })
@@ -20,7 +20,7 @@
           })
           .catch((err) => console.error(err));
       }
-    </script> -->
+    </script>
   </head>
 
   <body>
@@ -54,7 +54,7 @@
                 <a
                   href="#"
                   class="ml-2 trash-icon ml-2"
-                  onclick="deleteTodo(<%= session.id %>)"
+                  onclick="deleteSession(<%= session.id %>)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,13 @@
             <a href="" class="text-green-600 underline"> Edit session </a>
           </div>
           <div>
-            <a href="" class="text-green-600 underline"> Cancel session </a>
+            <a
+              href=""
+              class="text-green-600 underline"
+              onclick="deleteSession(<%= session.id %>)"
+            >
+              Cancel session
+            </a>
           </div>
         </div>
       </div>

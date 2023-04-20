@@ -106,10 +106,11 @@ app.get("/sessions/:id", async (request, response, next) => {
   });
 });
 
-// app.delete("/sport/:id", async function (request, response) {
+// app.delete("/sessions/:id", async function (request, response) {
 //   try {
 //     await Session.remove(request.params.id);
-//     return response.json({ success: true });
+//     // return response.json({ success: true });
+//     return response.redirect(`/`);
 //   } catch (error) {
 //     console.log(error);
 //     return response.status(422).json(error);
