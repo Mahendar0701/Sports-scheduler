@@ -7,6 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
     <title>Document</title>
+    <script>
+      function deleteSport(id) {
+        fetch(`/sport/${id}`, {
+          method: "delete",
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.href = "/";
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+    </script>
   </head>
   <body>
     <div class="grid grid-cols-6 pt-10">
@@ -14,65 +27,21 @@
         <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
         <br />
         <a
+          href="/"
+          class="text-green-600 underline"
+          onclick="deleteSport(<%= sportId %>)"
+          >Delete Sport
+        </a>
+        <br />
+        <br />
+        <a
           href="/sport/<%= sportId %>/new_session"
           class="text-green-600 underline"
           >create session</a
         >
+
         <br />
         <br />
-        <!-- <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2> -->
-        <!-- <form action="/sessions" method="post">
-          <input type="hidden" name="sportId" value="<%= sportId %>" />
-          <div class="py-3">
-            <label for="playDate" class="text-xl font-semibold text-gray-600"
-              >When will this session be held?</label
-            >
-            <input
-              name="playDate"
-              class="border border-gray-600 text-gray-900 rounded p-2"
-              type="datetime-local"
-            />
-          </div>
-          <div class="py-3">
-            <label for="venue" class="text-xl font-semibold text-gray-600"
-              >Where will this session be played?</label
-            >
-            <input
-              name="venue"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-              type="text"
-            />
-          </div>
-          <div class="py-3">
-            <label for="playernames" class="text-xl font-semibold text-gray-600"
-              >who all will be joining in this session?</label
-            >
-            <input
-              type="text"
-              name="playernames"
-              id="playernames"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-            />
-          </div>
-          <div class="py-3">
-            <label for="title" class="text-xl font-semibold text-gray-600"
-              >How many more players nedded?</label
-            >
-            <input
-              name="playersneeded"
-              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
-              type="integer"
-            />
-          </div>
-          <div class="py-3">
-            <button
-              type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
-            >
-              Submit
-            </button>
-          </div>
-        </form> -->
         <div>
           <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
           <table>

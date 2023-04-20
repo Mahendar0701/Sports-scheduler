@@ -97,24 +97,42 @@ app.get("/sessions/:id", async (request, response, next) => {
   const sessionId = request.params.id;
   const session = await Session.getSession(sessionId);
   const sportId = session.sportId;
+  console.log("paramsid...", sportId);
   const title = await Sport.getSportTitle(sportId);
-
   response.render("dispSession", {
     sessionId,
     session,
     title,
+    sportId,
   });
 });
 
-// app.delete("/sessions/:id", async function (request, response) {
-//   try {
-//     await Session.remove(request.params.id);
-//     // return response.json({ success: true });
-//     return response.redirect(`/`);
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error);
-//   }
-// });
+app.delete("/sessions/:id", async function (request, response) {
+  try {
+    const sessionId = request.params.id;
+    console.log("Deleting session with ID", sessionId);
+    const session = await Session.getSession(sessionId);
+    const sportId = session.sportId;
+    await Session.remove(sessionId);
+    console.log("Session deleted successfully");
+    return response.redirect(`/sport/${sportId}`);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+
+app.delete("/sport/:id", async function (request, response) {
+  try {
+    const sportId = request.params.id;
+    console.log("Deleting sport with ID", sportId);
+    await Sport.remove(sportId);
+    console.log("sport deleted successfully");
+    return response.redirect("/");
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
 
 module.exports = app;

@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       const sport = await this.findOne({ where: { id } });
       return sport.title;
     }
+
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
   }
   Sport.init(
     {

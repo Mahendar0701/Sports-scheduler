@@ -11,11 +11,10 @@
       function deleteSession(id) {
         fetch(`/sessions/${id}`, {
           method: "delete",
-          headers: { "Content-Type": "application/json" },
         })
           .then((res) => {
             if (res.ok) {
-              window.location.reload();
+              window.location.href = "/";
             }
           })
           .catch((err) => console.error(err));
@@ -41,7 +40,7 @@
             Players (<%= session.playernames.length %>)
           </h1>
 
-          sessionId : <%= sessionId %>
+          sessionId : <%= sessionId %> sportId:<%= sportId %>
           <br />
           <ul class="list-none display:inline">
             <li>
@@ -51,11 +50,7 @@
                 class="border border-gray-600 text-gray-900 rounded p-2 w-40 display:inline"
               >
                 <%=session.playernames[i]%>
-                <a
-                  href="#"
-                  class="ml-2 trash-icon ml-2"
-                  onclick="deleteSession(<%= session.id %>)"
-                >
+                <a href="" class="ml-2 trash-icon ml-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -83,7 +78,7 @@
           </div>
           <div>
             <a
-              href=""
+              href="/sport/<%= sportId %>"
               class="text-green-600 underline"
               onclick="deleteSession(<%= session.id %>)"
             >
