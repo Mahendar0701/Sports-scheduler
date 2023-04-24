@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header') %>
+        <p class="py-2">Welcome to the To-Do Manager</p>
+        <h6 class="py-4">Signup as a New user</h6>
+        <form action="/users" method="post">
+          <div class="py-3">
+            <label for="firstName">First Name: </label>
+            <input
+              type="text"
+              name="firstName"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+            />
+          </div>
+          <div class="py-3">
+            <label for="lastName">Last Name: </label>
+            <input
+              type="text"
+              name="lastName"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+            />
+          </div>
+          <div class="py-3">
+            <label for="email">email</label>
+            <input
+              type="email"
+              name="email"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+            />
+          </div>
+          <div class="py-3">
+            <label for="password">password</label>
+            <input
+              type="password"
+              name="password"
+              class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+            />
+          </div>
+          <div class="py-3">
+            <button
+              type="submit"
+              class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-5 py-2"
+            >
+              Sign up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

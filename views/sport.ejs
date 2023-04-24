@@ -1,18 +1,48 @@
-<div>
-  <table>
-    <% for( var i = 0 ; i < data.length ; i++) { %>
-    <tr>
-      <td>
-        <div class="border border-gray-600 text-gray-900 rounded p-1 w-full">
-          <a
-            href="/sport/<%= data[i].id
-        %>"
-            class="underline text-green-600"
-            ><%=data[i].title %></a
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header') %>
+        <div class="py-5">
+          <a href="/createSport" class="text-green-600 underline"
+            >Create New sport</a
           >
         </div>
-      </td>
-    </tr>
-    <% } %>
-  </table>
-</div>
+        <div>
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            The following Sports are available. Please select one
+          </h5>
+          <div>
+            <table>
+              <% for( var i = 0 ; i < allSports.length ; i++) { %>
+              <tr>
+                <td>
+                  <div
+                    class="border border-gray-600 text-gray-900 rounded p-1 w-full"
+                  >
+                    <a
+                      href="/sport/<%= allSports[i].id
+                  %>"
+                      class="underline text-green-600"
+                      ><%=allSports[i].title %></a
+                    >
+                  </div>
+                </td>
+              </tr>
+              <% } %>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -12,6 +12,15 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include('header') %>
+        <p class="py-2">Welcome to the To-Do Manager</p>
+        <p class="py-2">
+          New here? <a href="/signup" class="text-green-600">Sign-up now</a>
+        </p>
+        <p class="py-2">
+          Already have an account?
+          <a href="/login">Sign-in</a>
+          <a href="/sport" class="text-green-600">sport</a>
+        </p>
         <div class="py-5">
           <a href="/createSport" class="text-green-600 underline"
             >Create New sport</a
@@ -21,7 +30,26 @@
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are available. Please select one
           </h5>
-          <%- include('sport.ejs', {data: allSports}) %>
+          <div>
+            <table>
+              <% for( var i = 0 ; i < allSports.length ; i++) { %>
+              <tr>
+                <td>
+                  <div
+                    class="border border-gray-600 text-gray-900 rounded p-1 w-full"
+                  >
+                    <a
+                      href="/sport/<%= allSports[i].id
+                  %>"
+                      class="underline text-green-600"
+                      ><%=allSports[i].title %></a
+                    >
+                  </div>
+                </td>
+              </tr>
+              <% } %>
+            </table>
+          </div>
         </div>
       </div>
     </div>
