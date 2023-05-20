@@ -5,115 +5,149 @@ const app = express();
 const { Session, Sport, User } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
-const session = require("./models/session");
+// const session = require("./models/session");
 
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
 // app.set("views", path.join(__dirname, "views"));
 
+const passport = require("passport");
+const connectEnsureLogin = require("connect-ensure-login");
+const session = require("express-session");
+// const flash = require("connect-flash");
+const localStrategy = require("passport-local");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 
+app.use(
+  session({
+    secret: "my-super-secret-key-21728172615261562",
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+  new localStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    (username, password, done) => {
+      User.findOne({ where: { email: username } })
+        .then(async (user) => {
+          const result = await bcrypt.compare(password, user.password);
+          if (result) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Invalid password" });
+          }
+        })
+        .catch((error) => {
+          return done(null, false, { message: "Invalid Email or password" });
+        });
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  console.log("Serializing user in session : ", user.id);
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  console.log("deserializing user from session: ", id);
+  User.findByPk(id)
+    .then((users) => {
+      done(null, users);
+    })
+    .catch((error) => {
+      done(error, null);
+    });
+});
+
+app.get("/", async (request, response) => {
+  response.render("index", {
+    title: "Sports Application",
+  });
+});
+
 app.get("/signup", (request, response) => {
-  // if (request.isAuthenticated()) {
-  //   return response.redirect("/todos");
-  // }
   response.render("signup", {
     title: "Signup",
-    // csrfToken: request.csrfToken(),
   });
 });
 
 app.post("/users", async (request, response) => {
-  // if (
-  //   request.body.firstName.length != 0 &&
-  //   request.body.email.length != 0 &&
-  //   request.body.password.length == 0
-  // ) {
-  //   request.flash("error", "Password can not be Empty");
-  //   return response.redirect("/signup");
-  // }
-  // const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-  // console.log(hashedPwd);
+  const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
+  console.log(hashedPwd);
   try {
     const user = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
-      password: request.body.password,
+      password: hashedPwd,
     });
-    // request.login(user, (err) => {
-    //   if (err) {
-    //     console.log(err);
-    //   }
+    request.login(user, (err) => {
+      if (err) {
+        console.log(err);
+      }
 
-    response.redirect("/sport");
-    // });
+      response.redirect("/sport");
+    });
   } catch (error) {
     console.log(error);
-
     return response.status(422).json(error);
   }
 });
 
 app.get("/login", (request, response) => {
-  // if (request.isAuthenticated()) {
-  //   return response.redirect("/sport");
-  // }
   response.render("login", { title: "Login" });
 });
 
 app.post(
-  "/login"
-  // ,
-  // passport.authenticate("local", {
-  //   failureRedirect: "/login",
-  //   failureFlash: true,
-  // }
-),
+  "/signin",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+  }),
   async (request, response) => {
     console.log(request.user);
     response.redirect("/sport");
-  };
-// );
-
-app.get("/", async (request, response) => {
-  try {
-    const allSports = await Sport.getSports();
-    if (request.accepts("html")) {
-      response.render("index", {
-        title: "Sports Application",
-        allSports,
-      });
-    } else {
-      response.json({
-        allSports,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
   }
-});
+);
 
-app.get("/sport", async (request, response) => {
-  try {
-    const allSports = await Sport.getSports();
-    if (request.accepts("html")) {
-      response.render("sport", {
-        title: "Sports Application",
-        allSports,
-      });
-    } else {
-      response.json({
-        allSports,
-      });
+app.get(
+  "/sport",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const loggedInUser = request.user.id;
+      console.group(loggedInUser);
+      const allSports = await Sport.getSports();
+      if (request.accepts("html")) {
+        response.render("sport", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSports,
+        });
+      } else {
+        response.json({
+          allSports,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
     }
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
   }
-});
+);
 
 app.post("/sports", async function (request, response) {
   console.log("Creating a sport", request.body);

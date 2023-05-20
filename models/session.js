@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       Session.belongsTo(models.Sport, {
         foreignKey: "sportId",
       });
+      Session.belongsToMany(models.User, {
+        through: "UserSessions",
+        foreignKey: "sessionId",
+        otherKey: "userId",
+      });
       // define association here
     }
 

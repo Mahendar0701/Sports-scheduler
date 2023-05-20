@@ -11,12 +11,16 @@
   <body>
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
-        <%- include('header') %>
+        <%- include('header') %> <br />
+        <div class="text-2xl font-semibold text-gray-600">
+          Welcome <%= loggedInUser.firstName %> <%= loggedInUser.lastName %> !
+        </div>
         <div class="py-5">
           <a href="/createSport" class="text-green-600 underline"
             >Create New sport</a
           >
         </div>
+
         <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are available. Please select one
