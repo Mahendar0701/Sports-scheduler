@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       });
       // define association here
     }
+
+    async hasSession(sessionId) {
+      const userSessions = await this.getSessions();
+      return userSessions.some((session) => session.id === sessionId);
+    }
   }
   User.init(
     {

@@ -2,7 +2,7 @@
 const { request, response } = require("express");
 const express = require("express");
 const app = express();
-const { Session, Sport, User } = require("./models");
+const { Session, Sport, User, UserSession } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
 // const session = require("./models/session");
@@ -131,15 +131,23 @@ app.get(
       const loggedInUser = request.user.id;
       console.group(loggedInUser);
       const allSports = await Sport.getSports();
+      // Get the logged-in user
+      const user = request.user;
+
+      // Retrieve the sessions associated with the user
+      const allSessions = await user.getSessions();
+
       if (request.accepts("html")) {
         response.render("sport", {
           loggedInUser: request.user,
           title: "Sports Application",
           allSports,
+          allSessions,
         });
       } else {
         response.json({
           allSports,
+          allSessions,
         });
       }
     } catch (error) {
@@ -149,79 +157,168 @@ app.get(
   }
 );
 
-app.post("/sports", async function (request, response) {
-  console.log("Creating a sport", request.body);
-  try {
-    const sport = await Sport.addSport({
-      title: request.body.title,
-    });
-    return response.redirect("/sport");
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.post(
+  "/sports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("Creating a sport", request.body);
+    try {
+      const sport = await Sport.addSport({
+        title: request.body.title,
+      });
+      return response.redirect("/sport");
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
 app.get("/createSport", (request, response, next) => {
   response.render("createSport");
 });
 
-app.post("/sessions", async function (request, response) {
-  console.log("Creating a session", request.body);
-  console.log("id...", request.params.id);
-  try {
-    const sport = await Session.addSession({
-      playDate: request.body.playDate,
-      venue: request.body.venue,
-      playernames: request.body.playernames.split(","),
-      playersneeded: request.body.playersneeded,
-      sportId: request.body.sportId,
-    });
-    const id = request.body.sportId;
-    return response.redirect(`/sport/${id}`);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.post(
+  "/sessions",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("Creating a session", request.body);
+    console.log("id...", request.params.id);
+    try {
+      const sport = await Session.addSession({
+        playDate: request.body.playDate,
+        venue: request.body.venue,
+        playernames: request.body.playernames.split(","),
+        playersneeded: request.body.playersneeded,
+        sportId: request.body.sportId,
+      });
+      const id = request.body.sportId;
+      return response.redirect(`/sport/${id}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
-app.get("/sport/:id", async function (request, response) {
-  console.log("paramsid...", request.params);
-  const sportId = request.params.id;
-  const title = await Sport.getSportTitle(sportId);
-  console.log();
+app.get(
+  "/sport/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("paramsid...", request.params);
+    const sportId = request.params.id;
+    const title = await Sport.getSportTitle(sportId);
+    console.log();
 
-  const allSessions = await Session.getSessions(request.params.id);
-  response.render("session", {
-    // title: "Sports Application",
-    allSessions,
-    sportId,
-    title,
-  });
-});
+    const allSessions = await Session.getSessions(request.params.id);
+    response.render("session", {
+      // title: "Sports Application",
+      allSessions,
+      sportId,
+      title,
+    });
+  }
+);
 
-app.get("/sport/:id/new_session", async (request, response, next) => {
-  const sportId = request.params.id;
-  console.log("iddd", sportId);
-  response.render("createSession", {
-    sportId,
-  });
-});
+app.get(
+  "/sport/:id/new_session",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response, next) => {
+    const sportId = request.params.id;
+    console.log("iddd", sportId);
+    response.render("createSession", {
+      sportId,
+    });
+  }
+);
 
-app.get("/sessions/:id", async (request, response, next) => {
-  console.log("paramsid...", request.params);
-  const sessionId = request.params.id;
-  const session = await Session.getSession(sessionId);
-  const sportId = session.sportId;
-  console.log("paramsid...", sportId);
-  const title = await Sport.getSportTitle(sportId);
-  response.render("dispSession", {
-    sessionId,
-    session,
-    title,
-    sportId,
-  });
-});
+app.get(
+  "/sessions/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response, next) => {
+    console.log("paramsid...", request.params);
+    console.log("user: ", request.user.lastName);
+    console.log("userId: ", request.user.id);
+    const userName = request.user.lastName;
+    const userId = request.user.id;
+    const sessionId = request.params.id;
+    const session = await Session.getSession(sessionId);
+    const sportId = session.sportId;
+    const user = await User.findByPk(userId);
+    // const hasSession = await user.hasSession(sessionId);
+    const joined = await user.hasSession(session);
+    console.log("paramsid...", sportId);
+    const title = await Sport.getSportTitle(sportId);
+    response.render("dispSession", {
+      userName,
+      userId,
+      sessionId,
+      session,
+      title,
+      sportId,
+      joined,
+    });
+  }
+);
+
+/////do it
+app.post(
+  "/sessions/:id/join",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const sessionId = request.params.id;
+      const session = await Session.getSession(sessionId);
+      const user = request.user;
+
+      await session.addUser(user);
+
+      const userName = request.user.lastName;
+      session.playernames.push(userName);
+      await Session.update(
+        { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
+      await session.save();
+
+      response.redirect(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.post(
+  "/sessions/:id/leave",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const sessionId = request.params.id;
+      const session = await Session.getSession(sessionId);
+      const user = request.user;
+
+      await session.removeUser(user);
+
+      const userName = request.user.lastName;
+
+      session.playernames = session.playernames.filter(
+        (name) => name !== userName
+      );
+
+      await Session.update(
+        { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
+      await session.save();
+
+      response.redirect(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
 
 app.delete("/sessions/:id", async function (request, response) {
   try {

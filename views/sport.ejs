@@ -23,6 +23,36 @@
 
         <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            You have the follwing upcoming Sessions
+          </h5>
+          <table>
+            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
+            allSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                >
+                  <a
+                    href="/sessions/<%=allSessions[i].id %>"
+                    class="text-green-600"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=allSessions[i].playersneeded %> slots
+                    </div>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+
+        <div>
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are available. Please select one
           </h5>
           <div>

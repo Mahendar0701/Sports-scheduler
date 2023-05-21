@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="./css/style.css" />
     <title>Document</title>
     <script>
+      function toggleJoinLeave(event) {
+        //event.preventDefault(); // Prevent form submission
+        //not working
+        const joinButton = document.getElementById("joinButton");
+        const joinForm = document.getElementById("joinForm");
+
+        joinButton.addEventListener("click", function handleclick() {
+          if (joinButton.innerText === "Join Session") {
+            joinButton.innerText = "Leave Session";
+            joinForm.action = `/sessions/<%= sessionId %>/join`;
+          } else {
+            joinButton.innerText = "Join Session";
+            joinForm.action = `/sessions/<%= sessionId %>/leave`;
+          }
+
+          joinForm.submit(); // Submit the form
+        });
+      }
+
       function deleteSession(id) {
         fetch(`/sessions/${id}`, {
           method: "delete",
@@ -19,7 +38,7 @@
           })
           .catch((err) => console.error(err));
       }
-
+      //not working
       function removePlayer(id) {
         fetch(`/sessions/${id}/removePlayer`, {
           method: "delete",
@@ -52,7 +71,8 @@
             Players (<%= session.playernames.length %>)
           </h1>
 
-          sessionId : <%= sessionId %> sportId:<%= sportId %>
+          sessionId : <%= sessionId %> sportId:<%= sportId %> <%= userName %>
+          <%= userId %>
           <br />
           <ul class="list-none display:inline">
             <li>
@@ -82,15 +102,46 @@
               <% } %>
             </li>
           </ul>
-          <div>
-            <a href="" class="text-green-600 underline"> Join session </a>
-          </div>
+          <!-- <div>
+            <a
+              href=""
+              class="text-green-600 underline"
+              onclick="joinSession(<%= sessionId %>)"
+              >Join session</a
+            >
+          </div> -->
+          <br />
+          <form
+            id="joinForm"
+            action="/sessions/<%= sessionId %>/join"
+            method="POST"
+          >
+            <button
+              type="submit"
+              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+              id="joinButton"
+              onclick="toggleJoinLeave(event)"
+            >
+              Join Session
+            </button>
+          </form>
+          <br />
+          <form action="/sessions/<%= sessionId %>/leave" method="POST">
+            <button
+              type="submit"
+              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+            >
+              leave session
+            </button>
+            <%= joined %>
+          </form>
+          <br />
           <div>
             <a href="" class="text-green-600 underline"> Edit session </a>
           </div>
           <div>
             <a
-              href="/sport/<%= sportId %>"
+              href="/sessions/<%= sessionId %>"
               class="text-green-600 underline"
               onclick="deleteSession(<%= session.id %>)"
             >
