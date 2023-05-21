@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -e js,ejs",
-    "start:prod": "node index.js",
+    "start:prod": "node index.js ",
     "pretest": "NODE_ENV=test npx sequelize-cli db:drop && NODE_ENV=test npx sequelize-cli db:create",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
     "prepare": "husky install"
   },
   "lint-staged": {
