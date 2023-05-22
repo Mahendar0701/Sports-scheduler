@@ -16,9 +16,16 @@
           Welcome <%= loggedInUser.firstName %> <%= loggedInUser.lastName %> !
         </div>
         <div class="py-5">
-          <a href="/createSport" class="text-green-600 underline"
+          <!-- <a href="/createSport" class="text-green-600 underline"
             >Create New sport</a
-          >
+          > -->
+          isadmin <%= isAdmin %> <% if (isAdmin) { %>
+          <div class="py-5">
+            <a href="/createSport" class="text-green-600 underline"
+              >Create New Sport</a
+            >
+          </div>
+          <% } %>
         </div>
 
         <div>

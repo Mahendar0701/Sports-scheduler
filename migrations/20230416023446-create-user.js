@@ -22,6 +22,10 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
+      // isAdmin: {
+      //   type: Sequelize.BOOLEAN,
+      //   defaultValue: false, // Default value is false for non-admin users
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

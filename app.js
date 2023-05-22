@@ -19,6 +19,8 @@ const localStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+const config = require("./adminconfig");
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 
@@ -108,6 +110,39 @@ app.post("/users", async (request, response) => {
   }
 });
 
+// app.post("/users", async (request, response) => {
+//   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
+//   console.log(hashedPwd);
+//   try {
+//     const user = await User.create({
+//       firstName: request.body.firstName,
+//       lastName: request.body.lastName,
+//       email: request.body.email,
+//       password: hashedPwd,
+//     });
+
+//     // Check if the registered user has admin credentials
+//     if (
+//       user.email === config.adminCredentials.email &&
+//       request.body.password === config.adminCredentials.password
+//     ) {
+//       user.isAdmin = true;
+//       await user.save();
+//     }
+
+//     request.login(user, (err) => {
+//       if (err) {
+//         console.log(err);
+//       }
+
+//       response.redirect("/sport");
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return response.status(422).json(error);
+//   }
+// });
+
 app.get("/login", (request, response) => {
   response.render("login", { title: "Login" });
 });
@@ -133,8 +168,14 @@ app.get(
       const allSports = await Sport.getSports();
       // Get the logged-in user
       const user = request.user;
-
-      // Retrieve the sessions associated with the user
+      let isAdmin = false;
+      if (
+        user.email === config.adminCredentials.email
+        // &&
+        // request.body.password === config.adminCredentials.password
+      ) {
+        isAdmin = true;
+      }
       const allSessions = await user.getSessions();
 
       if (request.accepts("html")) {
@@ -143,11 +184,13 @@ app.get(
           title: "Sports Application",
           allSports,
           allSessions,
+          isAdmin,
         });
       } else {
         response.json({
           allSports,
           allSessions,
+          isAdmin,
         });
       }
     } catch (error) {
@@ -156,6 +199,40 @@ app.get(
     }
   }
 );
+
+// app.get(
+//   "/sport",
+//   connectEnsureLogin.ensureLoggedIn(),
+//   async (request, response) => {
+//     try {
+//       const loggedInUser = request.user; // Get the logged-in user
+//       const allSports = await Sport.getSports();
+//       const allSessions = await loggedInUser.getSessions();
+
+//       if (loggedInUser.isAdmin) {
+//         // Check if the user is an admin
+//         response.render("sport", {
+//           loggedInUser,
+//           title: "Sports Application",
+//           allSports,
+//           allSessions,
+//           isAdmin: true, // Pass isAdmin flag to the template
+//         });
+//       } else {
+//         response.render("sport", {
+//           loggedInUser,
+//           title: "Sports Application",
+//           allSports,
+//           allSessions,
+//           isAdmin: false, // Pass isAdmin flag to the template
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return response.status(422).json(error);
+//     }
+//   }
+// );
 
 app.post(
   "/sports",
@@ -210,12 +287,23 @@ app.get(
     const title = await Sport.getSportTitle(sportId);
     console.log();
 
+    const user = request.user;
+    let isAdmin = false;
+    if (
+      user.email === config.adminCredentials.email
+      // &&
+      // request.body.password === config.adminCredentials.password
+    ) {
+      isAdmin = true;
+    }
+
     const allSessions = await Session.getSessions(request.params.id);
     response.render("session", {
       // title: "Sports Application",
       allSessions,
       sportId,
       title,
+      isAdmin,
     });
   }
 );
@@ -249,6 +337,17 @@ app.get(
     const joined = await user.hasSession(session);
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
+
+    //isAdmin
+    const users = request.user;
+    let isAdmin = false;
+    if (
+      users.email === config.adminCredentials.email
+      // &&
+      // request.body.password === config.adminCredentials.password
+    ) {
+      isAdmin = true;
+    }
     response.render("dispSession", {
       userName,
       userId,
@@ -257,6 +356,7 @@ app.get(
       title,
       sportId,
       joined,
+      isAdmin,
     });
   }
 );
@@ -348,19 +448,37 @@ app.delete("/sport/:id", async function (request, response) {
   }
 });
 
-app.delete("/sessions/:id/removePlayer", async function (request, response) {
-  try {
-    const sessionId = request.params.id;
-    console.log("Deleting session with ID", sessionId);
-    const session = await Session.getSession(sessionId);
-    const sportId = session.sportId;
-    await Session.remove(sessionId);
-    console.log("Session deleted successfully");
-    return response.redirect(`/sport/${sportId}`);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.post(
+  "/sessions/:id/removePlayer/:playerName",
+  async function (request, response) {
+    try {
+      const sessionId = request.params.id;
+      console.log("Deleting session with ID", sessionId);
+      const session = await Session.getSession(sessionId);
+      const sportId = session.sportId;
+      let playernames = session.playernames;
+
+      // Retrieve the player name from the URL parameter
+      const playerNameToRemove = request.params.playerName;
+
+      // Remove the player's name
+      playernames = playernames.filter((name) => name !== playerNameToRemove);
+
+      // Update the session with the modified player names
+      session.playernames = playernames;
+
+      await Session.update(
+        { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
+      await session.save();
+
+      return response.redirect(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
 module.exports = app;

@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
+      // isAdmin: {
+      //   type: DataTypes.BOOLEAN,
+      //   defaultValue: false, // Default value is false for non-admin users
+      // },
     },
     {
       sequelize,
