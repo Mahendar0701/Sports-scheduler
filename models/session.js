@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     /**
@@ -36,9 +36,25 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static getSessions(sportId) {
+    static prevSessions(sportId) {
       return this.findAll({
-        where: { sportId },
+        where: {
+          sportId,
+          playDate: {
+            [Op.lt]: new Date(),
+          },
+        },
+      });
+    }
+
+    static upcomingSessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+        },
       });
     }
 

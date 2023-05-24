@@ -175,7 +175,7 @@ app.get(
       const loggedInUser = request.user.id;
       console.group(loggedInUser);
       const allSports = await Sport.getSports();
-      // Get the logged-in user
+
       const user = request.user;
       let isAdmin = false;
       if (
@@ -200,6 +200,42 @@ app.get(
           allSports,
           allSessions,
           isAdmin,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.get(
+  "/reports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const allSports = await Sport.getSports();
+      let sessionCounts = [];
+      console.log("sport id", allSports.length);
+      for (let i = 0; i < allSports.length; i++) {
+        const count = await Session.count({
+          where: { sportId: allSports[i].id },
+        });
+        sessionCounts.push(count);
+      }
+      console.log(sessionCounts);
+
+      if (request.accepts("html")) {
+        response.render("reports", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSports,
+          sessionCounts,
+        });
+      } else {
+        response.json({
+          allSports,
+          sessionCounts,
         });
       }
     } catch (error) {
@@ -306,8 +342,38 @@ app.get(
       isAdmin = true;
     }
 
-    const allSessions = await Session.getSessions(request.params.id);
+    const allSessions = await Session.upcomingSessions(sportId);
     response.render("session", {
+      // title: "Sports Application",
+      allSessions,
+      sportId,
+      title,
+      isAdmin,
+    });
+  }
+);
+
+app.get(
+  "/sport/:id/prev_sessions",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("paramsid...", request.params);
+    const sportId = request.params.id;
+    const title = await Sport.getSportTitle(sportId);
+    console.log();
+
+    const user = request.user;
+    let isAdmin = false;
+    if (
+      user.email === config.adminCredentials.email
+      // &&
+      // request.body.password === config.adminCredentials.password
+    ) {
+      isAdmin = true;
+    }
+
+    const allSessions = await Session.prevSessions(sportId);
+    response.render("previousSessions", {
       // title: "Sports Application",
       allSessions,
       sportId,
@@ -342,9 +408,7 @@ app.get(
     console.log(session.playersneeded);
     const sportId = session.sportId;
     const user = await User.findByPk(userId);
-    // const hasSession = await user.hasSession(sessionId);
-    // const joined = await user.hasSession(session);
-    // const joined = await session.hasUser(userId);
+
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
 

@@ -6,36 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
-    <title>Sports</title>
+    <title>Sessions</title>
+    <script>
+      function deleteSport(id) {
+        fetch(`/sport/${id}`, {
+          method: "delete",
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.href = "/";
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+    </script>
   </head>
   <body>
-    <div class="grid grid-cols-6">
+    <div class="grid grid-cols-6 pt-10">
       <div class="col-start-3 col-span-2">
-        <%- include('header') %> <br />
-        <div class="text-2xl font-semibold text-gray-600">
-          Welcome <%= loggedInUser.firstName %> <%= loggedInUser.lastName %> !
-        </div>
-        <div class="py-5">
-          <!-- <a href="/createSport" class="text-green-600 underline"
-            >Create New sport</a
-          > -->
-          isadmin <%= isAdmin %> <% if (isAdmin) { %>
-          <div class="py-5">
-            <a href="/createSport" class="text-green-600 underline"
-              >Create New Sport</a
-            >
-          </div>
-          <div class="py-2">
-            <a href="/reports" class="text-green-600 underline">View reports</a>
-          </div>
-          <% } %>
-        </div>
+        <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
+        <br />
+        <!-- <% if (isAdmin) { %>
+        <a
+          href="/"
+          class="text-green-600 underline"
+          onclick="deleteSport(<%= sportId %>)"
+          >Delete Sport
+        </a>
+        <br />
+        <br />
+        <% } %>
+        <a
+          href="/sport/<%= sportId %>/new_session"
+          class="text-green-600 underline"
+          >create session</a
+        >
+        <br />
+        <br />
 
+        <a
+          href="/sport/<%= sportId %>/new_session"
+          class="text-green-600 underline"
+          >view previous sessions</a
+        >
+
+        <br />
+        <br /> -->
         <div>
-          <h5 class="text-xl font-semibold text-gray-600 pb-5">
-            You have the follwing upcoming Sessions
-          </h5>
+          <h1 class="text-xl font-semibold text-gray-600">Previous sessions</h1>
           <table>
+            sportId : <%= sportId %>
+            <br />
             <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
             allSessions.length ; i++) { %>
             <tr>
@@ -70,39 +91,20 @@
             <% } %>
           </table>
         </div>
-
-        <div>
-          <h5 class="text-xl font-semibold text-gray-600 pb-5">
-            The following Sports are available. Please select one
-          </h5>
-          <div>
-            <table>
-              <% for( var i = 0 ; i < allSports.length ; i++) { %>
-              <tr>
-                <td>
-                  <div
-                    class="border border-gray-600 text-gray-900 rounded p-1 w-full"
-                  >
-                    <a
-                      href="/sport/<%= allSports[i].id
-                  %>"
-                      class="underline text-green-600"
-                      ><%=allSports[i].title %></a
-                    >
-                  </div>
-                </td>
-              </tr>
-              <% } %>
-            </table>
-          </div>
-        </div>
-
         <div>
           <br />
           <a
             class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
             href="/signout"
             >Signout</a
+          >
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+            href="/sport"
+            >Home</a
           >
         </div>
       </div>
