@@ -158,6 +158,15 @@ app.post(
   }
 );
 
+app.get("/signout", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
+});
+
 app.get(
   "/sport",
   connectEnsureLogin.ensureLoggedIn(),
@@ -325,16 +334,17 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response, next) => {
     console.log("paramsid...", request.params);
-    console.log("user: ", request.user.lastName);
     console.log("userId: ", request.user.id);
     const userName = request.user.lastName;
     const userId = request.user.id;
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
+    console.log(session.playersneeded);
     const sportId = session.sportId;
     const user = await User.findByPk(userId);
     // const hasSession = await user.hasSession(sessionId);
-    const joined = await user.hasSession(session);
+    // const joined = await user.hasSession(session);
+    // const joined = await session.hasUser(userId);
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
 
@@ -355,7 +365,7 @@ app.get(
       session,
       title,
       sportId,
-      joined,
+      // joined,
       isAdmin,
     });
   }
@@ -375,8 +385,13 @@ app.post(
 
       const userName = request.user.lastName;
       session.playernames.push(userName);
+      session.playersneeded = session.playersneeded - 1;
       await Session.update(
         { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
+      await Session.update(
+        { playersneeded: session.playersneeded },
         { where: { id: sessionId } }
       );
       await session.save();
@@ -406,8 +421,15 @@ app.post(
         (name) => name !== userName
       );
 
+      session.playersneeded = session.playersneeded + 1;
+
       await Session.update(
         { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
+
+      await Session.update(
+        { playersneeded: session.playersneeded },
         { where: { id: sessionId } }
       );
       await session.save();
@@ -466,6 +488,13 @@ app.post(
 
       // Update the session with the modified player names
       session.playernames = playernames;
+
+      session.playersneeded = session.playersneeded + 1;
+
+      await Session.update(
+        { playernames: session.playernames },
+        { where: { id: sessionId } }
+      );
 
       await Session.update(
         { playernames: session.playernames },

@@ -57,6 +57,14 @@
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-2 col-span-5">
         <br />
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+            href="/sport"
+            >Home</a
+          >
+        </div>
         <br />
         <div>
           <h1 class="text-3xl font-semibold text-gray-600">
@@ -76,7 +84,14 @@
           <br />
           <ul class="list-none display:inline">
             <li>
-              <% for( var i=0 ; i < session.playernames.length ; i++) { %>
+              <% for( var i=0 ; i < session.playernames.length ; i++) { %> <%
+              if(session.playernames[i]===userName) { %>
+              <div
+                class="border border-gray-600 text-gray-900 rounded p-2 w-40 display:inline"
+              >
+                You
+              </div>
+              <% } %> <% if(session.playernames[i]!=userName) { %>
 
               <div
                 class="border border-gray-600 text-gray-900 rounded p-2 w-40 display:inline"
@@ -111,7 +126,7 @@
                 </form>
                 <% } %>
               </div>
-              <% } %>
+              <% } %> <% } %>
             </li>
           </ul>
           <!-- <div>
@@ -123,6 +138,7 @@
             >
           </div> -->
           <br />
+          <% if ((session.playersneeded)>0) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -145,9 +161,12 @@
             >
               leave session
             </button>
-            <%= joined %>
           </form>
-          <br /><% if (isAdmin) { %>
+          <% } %> <% if ((session.playersneeded)==0) { %>
+          <div>No Slots Available</div>
+          <% } %>
+          <br />
+          <% if (isAdmin) { %>
           <div>
             <a href="" class="text-green-600 underline"> Edit session </a>
           </div>
@@ -161,6 +180,14 @@
             </a>
           </div>
           <% } %>
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            href="/signout"
+            >Signout</a
+          >
         </div>
       </div>
     </div>

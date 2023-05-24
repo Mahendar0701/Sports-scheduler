@@ -63,15 +63,41 @@
                     <div class="mr-18 display: inline">
                       <%=allSessions[i].playDate.toString().substring(0,25)%>
                     </div>
+                    <% if (allSessions[i].playersneeded>1) { %>
                     <div class="pl-5 pr-2 display: inline">
                       <%=allSessions[i].playersneeded %> slots
                     </div>
+                    <% } %> <% if (allSessions[i].playersneeded===1) { %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (allSessions[i].playersneeded ===0) { %>
+                    <div class="text-black-600 pl-5 pr-2 display: inline">
+                      Fully Booked
+                    </div>
+                    <% } %>
                   </a>
                 </div>
               </td>
             </tr>
             <% } %>
           </table>
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            href="/signout"
+            >Signout</a
+          >
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+            href="/sport"
+            >Home</a
+          >
         </div>
       </div>
     </div>
