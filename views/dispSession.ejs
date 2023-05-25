@@ -168,7 +168,12 @@
           <br />
           <% if (isAdmin) { %>
           <div>
-            <a href="" class="text-green-600 underline"> Edit session </a>
+            <a
+              href="/sessions/<%= session.id %>/edit"
+              class="text-green-600 underline"
+            >
+              Edit session
+            </a>
           </div>
           <div>
             <a

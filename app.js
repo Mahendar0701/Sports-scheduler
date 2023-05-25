@@ -543,14 +543,10 @@ app.post(
       const session = await Session.getSession(sessionId);
       const sportId = session.sportId;
       let playernames = session.playernames;
-
-      // Retrieve the player name from the URL parameter
       const playerNameToRemove = request.params.playerName;
 
-      // Remove the player's name
       playernames = playernames.filter((name) => name !== playerNameToRemove);
 
-      // Update the session with the modified player names
       session.playernames = playernames;
 
       session.playersneeded = session.playersneeded + 1;
@@ -573,5 +569,43 @@ app.post(
     }
   }
 );
+
+app.post("/sessions/:id/edit", async function (request, response) {
+  try {
+    const sessionId = request.params.id;
+    console.log("Updating session with ID", sessionId);
+    const session = await Session.getSession(sessionId);
+    session.venue = request.body.venue;
+    session.playernames = request.body.playernames.split(",");
+    session.playersneeded = request.body.playersneeded;
+
+    await Session.update(
+      {
+        playernames: session.playernames,
+        playersneeded: session.playersneeded,
+        venue: session.venue,
+      },
+      {
+        where: { id: sessionId },
+      }
+    );
+    await session.save();
+
+    console.log("Session Edited successfully");
+    return response.redirect(`/sessions/${sessionId}`);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+
+app.get("/sessions/:id/edit", async (request, response, next) => {
+  const sessionId = request.params.id;
+  const session = await Session.getSession(sessionId);
+  response.render("updateSession", {
+    sessionId,
+    session,
+  });
+});
 
 module.exports = app;
