@@ -173,6 +173,7 @@ app.get(
   async (request, response) => {
     try {
       const loggedInUser = request.user.id;
+      const userName = request.user.firstName + " " + request.user.lastName;
       console.group(loggedInUser);
       const allSports = await Sport.getSports();
 
@@ -194,6 +195,7 @@ app.get(
           allSports,
           allSessions,
           isAdmin,
+          userName,
         });
       } else {
         response.json({
@@ -431,7 +433,7 @@ app.get(
   async (request, response, next) => {
     console.log("paramsid...", request.params);
     console.log("userId: ", request.user.id);
-    const userName = request.user.lastName;
+    const userName = request.user.firstName + " " + request.user.lastName;
     const userId = request.user.id;
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
@@ -479,7 +481,7 @@ app.post(
 
       await session.addUser(user);
 
-      const userName = request.user.lastName;
+      const userName = request.user.firstName + " " + request.user.lastName;
       session.playernames.push(userName);
       session.playersneeded = session.playersneeded - 1;
       await Session.update(
@@ -511,7 +513,7 @@ app.post(
 
       await session.removeUser(user);
 
-      const userName = request.user.lastName;
+      const userName = request.user.firstName + " " + request.user.lastName;
 
       session.playernames = session.playernames.filter(
         (name) => name !== userName

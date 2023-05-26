@@ -13,7 +13,9 @@
       <div class="col-start-3 col-span-2">
         <%- include('header') %> <br />
         <div class="text-2xl font-semibold text-gray-600">
-          Welcome <%= loggedInUser.firstName %> <%= loggedInUser.lastName %> !
+          Welcome
+          <!-- <%= loggedInUser.firstName %> <%= loggedInUser.lastName %> ! -->
+          <%= userName %>
         </div>
         <div class="py-5">
           <!-- <a href="/createSport" class="text-green-600 underline"
