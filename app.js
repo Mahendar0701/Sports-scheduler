@@ -384,6 +384,36 @@ app.get(
 );
 
 app.get(
+  "/sport/:id/canceled_sessions",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("paramsid...", request.params);
+    const sportId = request.params.id;
+    const title = await Sport.getSportTitle(sportId);
+    console.log();
+
+    const user = request.user;
+    let isAdmin = false;
+    if (
+      user.email === config.adminCredentials.email
+      // &&
+      // request.body.password === config.adminCredentials.password
+    ) {
+      isAdmin = true;
+    }
+
+    const allSessions = await Session.canceledSessions(sportId);
+    response.render("canceledSessions", {
+      // title: "Sports Application",
+      allSessions,
+      sportId,
+      title,
+      isAdmin,
+    });
+  }
+);
+
+app.get(
   "/sport/:id/new_session",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response, next) => {
@@ -422,6 +452,9 @@ app.get(
     ) {
       isAdmin = true;
     }
+
+    // const isJoined = await User.hasJoinedSession(sessionId)
+
     response.render("dispSession", {
       userName,
       userId,
@@ -429,13 +462,12 @@ app.get(
       session,
       title,
       sportId,
-      // joined,
+      // isJoined,
       isAdmin,
     });
   }
 );
 
-/////do it
 app.post(
   "/sessions/:id/join",
   connectEnsureLogin.ensureLoggedIn(),
@@ -496,6 +528,34 @@ app.post(
         { playersneeded: session.playersneeded },
         { where: { id: sessionId } }
       );
+      await session.save();
+
+      response.redirect(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.post(
+  "/sessions/:id/cancel",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const sessionId = request.params.id;
+      const session = await Session.getSession(sessionId);
+      // const user = request.user;
+
+      session.isCanceled = true;
+
+      session.playersneeded = session.playersneeded + 1;
+
+      await Session.update(
+        { isCanceled: session.isCanceled },
+        { where: { id: sessionId } }
+      );
+
       await session.save();
 
       response.redirect(`/sessions/${sessionId}`);
@@ -602,7 +662,45 @@ app.post("/sessions/:id/edit", async function (request, response) {
 app.get("/sessions/:id/edit", async (request, response, next) => {
   const sessionId = request.params.id;
   const session = await Session.getSession(sessionId);
-  response.render("updateSession", {
+  response.render("editSession", {
+    sessionId,
+    session,
+  });
+});
+
+app.post("/sport/:id/edit", async function (request, response) {
+  try {
+    const sessionId = request.params.id;
+    console.log("Updating session with ID", sessionId);
+    const session = await Session.getSession(sessionId);
+    session.venue = request.body.venue;
+    session.playernames = request.body.playernames.split(",");
+    session.playersneeded = request.body.playersneeded;
+
+    await Session.update(
+      {
+        playernames: session.playernames,
+        playersneeded: session.playersneeded,
+        venue: session.venue,
+      },
+      {
+        where: { id: sessionId },
+      }
+    );
+    await session.save();
+
+    console.log("Session Edited successfully");
+    return response.redirect(`/sessions/${sessionId}`);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+
+app.get("/sessions/:id/edit", async (request, response, next) => {
+  const sessionId = request.params.id;
+  const session = await Session.getSession(sessionId);
+  response.render("editSession", {
     sessionId,
     session,
   });

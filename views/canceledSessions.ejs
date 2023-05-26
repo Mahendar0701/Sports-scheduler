@@ -26,43 +26,9 @@
       <div class="col-start-3 col-span-2">
         <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
         <br />
-        <% if (isAdmin) { %>
-        <a
-          href="/"
-          class="text-green-600 underline"
-          onclick="deleteSport(<%= sportId %>)"
-          >Delete Sport
-        </a>
-        <br />
-        <br />
-        <% } %>
-        <a
-          href="/sport/<%= sportId %>/new_session"
-          class="text-green-600 underline"
-          >create session</a
-        >
-        <br />
-        <br />
 
-        <a
-          href="/sport/<%= sportId %>/prev_sessions"
-          class="text-green-600 underline"
-          >view previous sessions</a
-        >
-
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/canceled_sessions"
-          class="text-green-600 underline"
-          >view canceled sessions</a
-        >
-
-        <br />
-        <br />
         <div>
-          <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
+          <h1 class="text-xl font-semibold text-gray-600">Canceled sessions</h1>
           <table>
             sportId : <%= sportId %>
             <br />

@@ -17,9 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    async hasSession(sessionId) {
-      const userSessions = await this.getSessions();
-      return userSessions.some((session) => session.id === sessionId);
+    async hasJoinedSession(sessionId) {
+      const userSessions = await this.getSessions({
+        where: { id: sessionId },
+      });
+      return userSessions.length > 0;
     }
   }
   User.init(
@@ -28,10 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      // isAdmin: {
-      //   type: DataTypes.BOOLEAN,
-      //   defaultValue: false, // Default value is false for non-admin users
-      // },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, // Default value is false for non-admin users
+      },
     },
     {
       sequelize,

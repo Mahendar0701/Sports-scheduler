@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
           playDate: {
             [Op.lt]: new Date(),
           },
+          isCanceled: false,
         },
       });
     }
@@ -54,6 +55,16 @@ module.exports = (sequelize, DataTypes) => {
           playDate: {
             [Op.gt]: new Date(),
           },
+          isCanceled: false,
+        },
+      });
+    }
+
+    static canceledSessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+          isCanceled: true,
         },
       });
     }
@@ -82,6 +93,12 @@ module.exports = (sequelize, DataTypes) => {
       venue: DataTypes.STRING,
       playernames: DataTypes.ARRAY(DataTypes.STRING),
       playersneeded: DataTypes.INTEGER,
+      isCanceled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      creatorName: DataTypes.STRING,
+      reason: DataTypes.STRING,
     },
     {
       sequelize,
