@@ -1,5 +1,4 @@
 "use strict";
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,7 +10,6 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       userId: {
-        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: "Users",
@@ -19,9 +17,9 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        type: Sequelize.INTEGER,
       },
       sessionId: {
-        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: "Sessions",
@@ -29,6 +27,7 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
@@ -39,21 +38,8 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
   },
-
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("UserSessions");
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
   },
 };

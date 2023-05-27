@@ -72,26 +72,22 @@
               <% for( var i=0 ; i < session.playernames.length ; i++) { %> <%
               if(session.playernames[i]===userName) { %>
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 w-40 display:inline"
+                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
               >
                 You
               </div>
               <% } %> <% if(session.playernames[i]!=userName) { %>
 
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 w-40 display:inline"
+                class="border border-gray-600 text-gray-900 rounded p-2 w-40 my-2 display:inline"
               >
                 <%=session.playernames[i]%> <% if (isAdmin) { %>
+
                 <form
                   action="/sessions/<%= sessionId %>/removePlayer/<%=session.playernames[i]%>"
                   method="post"
                 >
                   <button type="submit">
-                    <!-- <a
-                    href=""
-                    onclick="removePlayer(<%= sessionId %>,<%=session.playernames[i]%>)"
-                    class="ml-2 trash-icon ml-2"
-                  > -->
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -106,7 +102,6 @@
                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                       />
                     </svg>
-                    <!-- </a> -->
                   </button>
                 </form>
                 <% } %>
@@ -114,17 +109,11 @@
               <% } %> <% } %>
             </li>
           </ul>
-          <!-- <div>
-            <a
-              href=""
-              class="text-green-600 underline"
-              onclick="joinSession(<%= sessionId %>)"
-              >Join session</a
-            >
-          </div> -->
+
           <br />
           <% if (((session.playersneeded)>0 && session.isCanceled === false) ||
-          ((session.playersneeded)>0 && isPrevious === false )) { %>
+          ((session.playersneeded)>0 && isPrevious === false )) { %> <% if
+          (isJoined === false) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -137,7 +126,9 @@
               Join Session
             </button>
           </form>
+          <% } %>
           <br />
+          isJoined <%= isJoined %> <% } %> <% if (isJoined) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <button
               type="submit"
@@ -146,8 +137,11 @@
               leave session
             </button>
           </form>
-          isJoined <% } %> <% if ((session.playersneeded)==0) { %>
+          <br />
+          <% } %> <% if ((session.playersneeded)==0 && isJoined ===false) { %>
           <div>No Slots Available</div>
+          <% } %> <% if ((session.playersneeded)==0 && isJoined ===true) { %>
+          <div>Fully booked</div>
           <% } %>
           <br />
           <% if (isAdmin) { %>
@@ -160,24 +154,8 @@
             </a>
           </div>
           <div>
-            <!-- <a
-              href="/sessions/<%= sessionId %>"
-              class="text-green-600 underline"
-              onclick="deleteSession(<%= session.id %>)"
-            >
-              Cancel session
-            </a> -->
             <br />
-            <!-- <% if ( session.isCanceled === false ) { %>
-            <form action="/sessions/<%= sessionId %>/cancel" method="POST">
-              <button
-                type="submit"
-                class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
-              >
-                Cancel session
-              </button>
-            </form>
-            <% } %> -->
+
             <% if (session.isCanceled === false) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
               <button

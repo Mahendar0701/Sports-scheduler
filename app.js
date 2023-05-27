@@ -522,7 +522,7 @@ app.get(
       isAdmin = true;
     }
 
-    // const isJoined = await User.hasJoinedSession(sessionId)
+    const isJoined = await UserSession.isUserJoined(userId, sessionId);
 
     response.render("dispSession", {
       userName,
@@ -532,7 +532,7 @@ app.get(
       title,
       sportId,
       isPrevious,
-      // isJoined,
+      isJoined,
       isAdmin,
       reason,
     });
