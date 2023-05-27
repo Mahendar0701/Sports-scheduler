@@ -247,6 +247,48 @@ app.get(
   }
 );
 
+app.post(
+  "/reports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const allSports = await Sport.getSports();
+      let sessionCounts = [];
+      console.log("sport id", allSports.length);
+      for (let i = 0; i < allSports.length; i++) {
+        const count = await Session.count({
+          where: { sportId: allSports[i].id },
+        });
+        sessionCounts.push(count);
+        const startDate = request.body.startDate;
+        const endDate = request.body.endDate;
+      }
+      const startDate = request.body.startDate;
+      const endDate = request.body.endDate;
+      console.log(sessionCounts);
+
+      if (request.accepts("html")) {
+        response.render("reports", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSports,
+          sessionCounts,
+          startDate,
+          endDate,
+        });
+        response.redirect("/reports");
+      } else {
+        response.json({
+          allSports,
+          sessionCounts,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
 // app.get(
 //   "/sport",
 //   connectEnsureLogin.ensureLoggedIn(),
@@ -315,8 +357,25 @@ app.post(
         playernames: request.body.playernames.split(","),
         playersneeded: request.body.playersneeded,
         sportId: request.body.sportId,
+        creatorName: request.body.creatorName,
       });
       const id = request.body.sportId;
+      const user = request.user;
+
+      await session.addUser(user);
+
+      // const userName = request.user.firstName + " " + request.user.lastName;
+      // session.playernames.push(userName);
+      // session.playersneeded = session.playersneeded - 1;
+      // await Session.update(
+      //   { playernames: session.playernames },
+      //   { where: { id: sessionId } }
+      // );
+      // await Session.update(
+      //   { playersneeded: session.playersneeded },
+      //   { where: { id: sessionId } }
+      // );
+      // await session.save();
       return response.redirect(`/sport/${id}`);
     } catch (error) {
       console.log(error);
@@ -420,9 +479,11 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response, next) => {
     const sportId = request.params.id;
+    const userName = request.user.firstName + " " + request.user.lastName;
     console.log("iddd", sportId);
     response.render("createSession", {
       sportId,
+      userName,
     });
   }
 );
@@ -437,9 +498,15 @@ app.get(
     const userId = request.user.id;
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
+    let isPrevious = false;
+    if (session.isCanceled === true) {
+      isPrevious = true;
+    }
     console.log(session.playersneeded);
     const sportId = session.sportId;
     const user = await User.findByPk(userId);
+
+    const reason = session.reason;
 
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
@@ -464,8 +531,10 @@ app.get(
       session,
       title,
       sportId,
+      isPrevious,
       // isJoined,
       isAdmin,
+      reason,
     });
   }
 );
@@ -549,16 +618,17 @@ app.post(
       const session = await Session.getSession(sessionId);
       // const user = request.user;
 
+      session.reason = request.body.reason;
       session.isCanceled = true;
-
       session.playersneeded = session.playersneeded + 1;
 
       await Session.update(
-        { isCanceled: session.isCanceled },
+        {
+          isCanceled: session.isCanceled,
+          reason: session.reason,
+        },
         { where: { id: sessionId } }
       );
-
-      await session.save();
 
       response.redirect(`/sessions/${sessionId}`);
     } catch (error) {

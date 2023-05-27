@@ -14,34 +14,60 @@
         <%- include('header') %> <br />
 
         <div>
+          <form action="/reports" method="post"></form>
+          <div class="py-3">
+            <label for="startDate" class="text-xl font-semibold text-gray-600"
+              >Start Date</label
+            >
+            <input
+              name="startDate"
+              class="border border-gray-600 text-gray-900 rounded p-2"
+              type="datetime-local"
+              
+            />
+          </div>
+          <div class="py-3">
+            <label for="endtDate" class="text-xl font-semibold text-gray-600"
+              >End Date</label
+            >
+            <input
+              name="endDate"
+              class="border border-gray-600 text-gray-900 rounded p-2"
+              type="datetime-local"
+              
+            />
+          </div>
+          <div class="py-3">
+            <button
+              type="submit"
+              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+            >
+              Submit
+            </button>
+          </div>
+
+          </form>
+        </div>
+
+        <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
-            The following Sports are available according to no of sessions
-            created
+            The following Sports are according to no of sessions created
           </h5>
           <div>
             <table>
               <% for( var i = 0 ; i < allSports.length ; i++) { %>
               <tr>
                 <td style="padding: 10px; text-align: center">
-                  <!-- <div> -->
-                  <!-- <span class="background-color-grey p-2 w-full"> -->
-                  <!-- <div class="background-color-grey p-2 w-full"> -->
                   <a
                     href="/sport/<%= allSports[i].id
                     %>"
                     class="underline text-green-600"
                     ><%=allSports[i].title %>
                   </a>
-                  <!-- </div> -->
-                  <!-- </span> -->
-                  <!-- <span>  -->
                 </td>
                 <td style="padding: 10px; text-align: center">
                   number ofsessions : <%=sessionCounts[i] %>
-                  <!-- </span> -->
                 </td>
-                <!-- </div> -->
-                <!-- <br /> -->
               </tr>
               <% } %>
             </table>

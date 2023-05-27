@@ -31,6 +31,10 @@
           })
           .catch((err) => console.error(err));
       }
+
+      function displayReasonField() {
+        document.getElementById("reasonField").style.display = "block";
+      }
     </script>
   </head>
 
@@ -119,8 +123,8 @@
             >
           </div> -->
           <br />
-          <% if ((session.playersneeded)>0 && session.isCanceled === false ) {
-          %>
+          <% if (((session.playersneeded)>0 && session.isCanceled === false) ||
+          ((session.playersneeded)>0 && isPrevious === false )) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -128,9 +132,7 @@
           >
             <button
               type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
-              id="joinButton"
-              onclick="toggleJoinLeave(event)"
+              class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
             >
               Join Session
             </button>
@@ -166,7 +168,7 @@
               Cancel session
             </a> -->
             <br />
-            <% if ( session.isCanceled === false ) { %>
+            <!-- <% if ( session.isCanceled === false ) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
               <button
                 type="submit"
@@ -175,10 +177,41 @@
                 Cancel session
               </button>
             </form>
+            <% } %> -->
+            <% if (session.isCanceled === false) { %>
+            <form action="/sessions/<%= sessionId %>/cancel" method="POST">
+              <button
+                type="button"
+                class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+                onclick="displayReasonField()"
+              >
+                Cancel session
+              </button>
+              <br />
+              <br />
+              <div id="reasonField" style="display: none">
+                <textarea
+                  name="reason"
+                  class="border border-gray-600 p-2 rounded"
+                  rows="4"
+                  cols="50"
+                ></textarea>
+                <br />
+                <button
+                  type="submit"
+                  class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
+                >
+                  Confirm Cancellation
+                </button>
+              </div>
+            </form>
             <% } %>
           </div>
           <% } %>
         </div>
+        <% if (session.isCanceled === true) { %>
+        <h5>reason of cancellation :</h5>
+        <%= reason %> <% } %>
         <div>
           <br />
           <a

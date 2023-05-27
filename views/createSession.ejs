@@ -14,6 +14,7 @@
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
         <form action="/sessions" method="post">
           <input type="hidden" name="sportId" value="<%= sportId %>" />
+          <input type="hidden" name="creatorName" value="<%= userName %>" />
           <div class="py-3">
             <label for="playDate" class="text-xl font-semibold text-gray-600"
               >When will this session be held?</label
