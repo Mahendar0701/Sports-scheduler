@@ -351,7 +351,7 @@ app.post(
     console.log("Creating a session", request.body);
     console.log("id...", request.params.id);
     try {
-      const sport = await Session.addSession({
+      const session = await Session.addSession({
         playDate: request.body.playDate,
         venue: request.body.venue,
         playernames: request.body.playernames.split(","),
@@ -361,8 +361,19 @@ app.post(
       });
       const id = request.body.sportId;
       const user = request.user;
+      console.log("creator name ", request.body.creatorName);
 
       await session.addUser(user);
+      session.playernames.push(request.body.creatorName);
+      session.creatorName = request.body.creatorName;
+      await Session.update(
+        {
+          playernames: session.playernames,
+          creatorName: session.creatorName,
+        },
+        { where: { id: session.id } }
+      );
+      await session.save();
 
       // const userName = request.user.firstName + " " + request.user.lastName;
       // session.playernames.push(userName);
@@ -498,10 +509,7 @@ app.get(
     const userId = request.user.id;
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
-    let isPrevious = false;
-    if (session.isCanceled === true) {
-      isPrevious = true;
-    }
+
     console.log(session.playersneeded);
     const sportId = session.sportId;
     const user = await User.findByPk(userId);
@@ -510,6 +518,18 @@ app.get(
 
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
+
+    //isPrevious
+    const currentDateTime = new Date();
+    const isPrevious = session.playDate < currentDateTime;
+
+    //isCreator
+    let isCreator = false;
+    if (userName === session.creatorName) {
+      isCreator = true;
+    }
+
+    const creatorName = session.creatorName;
 
     //isAdmin
     const users = request.user;
@@ -522,6 +542,7 @@ app.get(
       isAdmin = true;
     }
 
+    //isjoined
     const isJoined = await UserSession.isUserJoined(userId, sessionId);
 
     response.render("dispSession", {
@@ -534,7 +555,9 @@ app.get(
       isPrevious,
       isJoined,
       isAdmin,
+      isCreator,
       reason,
+      creatorName,
     });
   }
 );

@@ -76,7 +76,15 @@
               >
                 You
               </div>
-              <% } %> <% if(session.playernames[i]!=userName) { %>
+              <% } %> <% if((session.playernames[i]===creatorName)) { %>
+              <div
+                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
+              >
+                <%=session.playernames[i]%>
+                <p class="font-light">organizer</p>
+              </div>
+              <% } %> <% if((session.playernames[i]!=userName) &&
+              (session.playernames[i]!=creatorName)) { %>
 
               <div
                 class="border border-gray-600 text-gray-900 rounded p-2 w-40 my-2 display:inline"
@@ -111,9 +119,9 @@
           </ul>
 
           <br />
-          <% if (((session.playersneeded)>0 && session.isCanceled === false) ||
-          ((session.playersneeded)>0 && isPrevious === false )) { %> <% if
-          (isJoined === false) { %>
+          <% if (((session.playersneeded)>0 && session.isCanceled === false &&
+          isPrevious === false) || ((session.playersneeded)>0 && isPrevious ===
+          false )) { %> <% if (isJoined === false) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -128,7 +136,8 @@
           </form>
           <% } %>
           <br />
-          isJoined <%= isJoined %> <% } %> <% if (isJoined) { %>
+          isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
+          (isJoined && isPrevious ===false) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <button
               type="submit"
@@ -144,7 +153,7 @@
           <div>Fully booked</div>
           <% } %>
           <br />
-          <% if (isAdmin) { %>
+          <% if (isAdmin || isCreator) { %>
           <div>
             <a
               href="/sessions/<%= session.id %>/edit"

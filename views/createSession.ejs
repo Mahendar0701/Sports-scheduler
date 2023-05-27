@@ -12,6 +12,7 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
+        <%= userName %>
         <form action="/sessions" method="post">
           <input type="hidden" name="sportId" value="<%= sportId %>" />
           <input type="hidden" name="creatorName" value="<%= userName %>" />
