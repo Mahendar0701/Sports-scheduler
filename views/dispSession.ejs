@@ -175,7 +175,7 @@
           <div>
             <br />
 
-            <% if ((session.isCanceled===false) && (isAdmin || isCreator)) { %>
+            <% if ((session.isCanceled===false) && (isCreator)) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
               <button
                 type="button"
