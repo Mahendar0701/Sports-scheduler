@@ -1,8 +1,6 @@
 "use strict";
 const { Model, Op } = require("sequelize");
-const {
-  Session,
-} = require("/home/mahendar07/sports-scheduler/models/session.js");
+
 module.exports = (sequelize, DataTypes) => {
   class UserSession extends Model {
     /**
