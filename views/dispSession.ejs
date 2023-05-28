@@ -70,13 +70,23 @@
           <ul class="list-none display:inline">
             <li>
               <% for( var i=0 ; i < session.playernames.length ; i++) { %> <%
-              if(session.playernames[i]===userName) { %>
+              if((session.playernames[i]===userName) &&
+              (session.playernames[i]===creatorName)) { %>
+              <div
+                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
+              >
+                You
+                <p class="font-light">organizer</p>
+              </div>
+              <% } %> <% if((session.playernames[i]===userName) &&
+              (session.playernames[i]!=creatorName)) { %>
               <div
                 class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
               >
                 You
               </div>
-              <% } %> <% if((session.playernames[i]===creatorName)) { %>
+              <% } %> <% if((session.playernames[i]===creatorName) &&
+              (session.playernames[i]!=userName)) { %>
               <div
                 class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
               >
@@ -121,7 +131,7 @@
           <br />
           <% if (((session.playersneeded)>0 && session.isCanceled === false &&
           isPrevious === false) || ((session.playersneeded)>0 && isPrevious ===
-          false )) { %> <% if (isJoined === false) { %>
+          false )) { %> <% if (isJoined===false) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -137,7 +147,7 @@
           <% } %>
           <br />
           isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
-          (isJoined && isPrevious ===false) { %>
+          (isJoined && isPrevious===false) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <button
               type="submit"
@@ -147,9 +157,9 @@
             </button>
           </form>
           <br />
-          <% } %> <% if ((session.playersneeded)==0 && isJoined ===false) { %>
+          <% } %> <% if ((session.playersneeded)==0 && isJoined===false) { %>
           <div>No Slots Available</div>
-          <% } %> <% if ((session.playersneeded)==0 && isJoined ===true) { %>
+          <% } %> <% if ((session.playersneeded)==0 && isJoined===true) { %>
           <div>Fully booked</div>
           <% } %>
           <br />
@@ -165,7 +175,7 @@
           <div>
             <br />
 
-            <% if (session.isCanceled === false) { %>
+            <% if ((session.isCanceled===false) && (isAdmin || isCreator)) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
               <button
                 type="button"
@@ -196,7 +206,7 @@
           </div>
           <% } %>
         </div>
-        <% if (session.isCanceled === true) { %>
+        <% if (session.isCanceled===true) { %>
         <h5>reason of cancellation :</h5>
         <%= reason %> <% } %>
         <div>

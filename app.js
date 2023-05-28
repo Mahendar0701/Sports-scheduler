@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const { request, response } = require("express");
+const { Op } = require("sequelize");
 const express = require("express");
 const app = express();
 const { Session, Sport, User, UserSession } = require("./models");
@@ -186,8 +187,14 @@ app.get(
       ) {
         isAdmin = true;
       }
-      const allSessions = await user.getSessions();
-
+      const allSessions = await user.getSessions({
+        where: {
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+          isCanceled: false,
+        },
+      });
       if (request.accepts("html")) {
         response.render("sport", {
           loggedInUser: request.user,
@@ -212,20 +219,104 @@ app.get(
 );
 
 app.get(
+  "/my_sessions",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const loggedInUser = request.user.id;
+      const userName = request.user.firstName + " " + request.user.lastName;
+      console.group(loggedInUser);
+      const allSports = await Sport.getSports();
+
+      const user = request.user;
+      let isAdmin = false;
+      if (
+        user.email === config.adminCredentials.email
+        // &&
+        // request.body.password === config.adminCredentials.password
+      ) {
+        isAdmin = true;
+      }
+      const allSessions = await user.getSessions({
+        where: {
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+        },
+      });
+      const previousSessions = await user.getSessions({
+        where: {
+          playDate: {
+            [Op.lt]: new Date(),
+          },
+          isCanceled: false,
+        },
+      });
+
+      // console.log("Previous Sessions: ", previousSessions.length);
+
+      const canceledSessions = await user.getSessions({
+        where: {
+          isCanceled: true,
+        },
+      });
+
+      // console.log("canceled Sessions: ", canceledSessions.length);
+
+      if (request.accepts("html")) {
+        response.render("mySessions", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSports,
+          allSessions,
+          previousSessions,
+          canceledSessions,
+          isAdmin,
+          userName,
+        });
+      } else {
+        response.json({
+          allSports,
+          allSessions,
+          isAdmin,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.get(
   "/reports",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
+      const startDate = request.query.startDate;
+      const endDate = request.query.endDate;
       const allSports = await Sport.getSports();
-      let sessionCounts = [];
+      // const sportTitles = await Sport.getSportTitle();
       console.log("sport id", allSports.length);
+      let sessionCounts = [];
+      let sportTitles = [];
       for (let i = 0; i < allSports.length; i++) {
         const count = await Session.count({
-          where: { sportId: allSports[i].id },
+          where: {
+            sportId: allSports[i].id,
+            playDate: {
+              [Op.between]: [startDate, endDate],
+            },
+          },
         });
         sessionCounts.push(count);
+        sportTitles.push(allSports[i].title);
+        // sportTitles.push("'" + allSports[i].title + "'");
       }
       console.log(sessionCounts);
+      // sportTitles = sportTitles.map((title) => title.replace(/'/g, '"'));
+      // sportTitles = JSON.stringify(sportTitles).replace(/'/g, '"');
+      console.log("sport titles", sportTitles);
 
       if (request.accepts("html")) {
         response.render("reports", {
@@ -233,11 +324,17 @@ app.get(
           title: "Sports Application",
           allSports,
           sessionCounts,
+          sportTitles,
+          startDate,
+          endDate,
         });
       } else {
         response.json({
           allSports,
           sessionCounts,
+          sportTitles,
+          startDate,
+          endDate,
         });
       }
     } catch (error) {
@@ -252,20 +349,25 @@ app.post(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      const allSports = await Sport.getSports();
-      let sessionCounts = [];
-      console.log("sport id", allSports.length);
-      for (let i = 0; i < allSports.length; i++) {
-        const count = await Session.count({
-          where: { sportId: allSports[i].id },
-        });
-        sessionCounts.push(count);
-        const startDate = request.body.startDate;
-        const endDate = request.body.endDate;
-      }
       const startDate = request.body.startDate;
       const endDate = request.body.endDate;
-      console.log(sessionCounts);
+      const allSports = await Sport.getSports();
+      let sessionCounts = [];
+      let sportTitles = [];
+
+      for (let i = 0; i < allSports.length; i++) {
+        const count = await Session.count({
+          where: {
+            sportId: allSports[i].id,
+            playDate: {
+              [Op.between]: [startDate, endDate],
+            },
+          },
+        });
+        sessionCounts.push(count);
+        sportTitles.push(allSports[i].title);
+        // sportTitles.push("'" + allSports[i].title + "'");
+      }
 
       if (request.accepts("html")) {
         response.render("reports", {
@@ -273,14 +375,17 @@ app.post(
           title: "Sports Application",
           allSports,
           sessionCounts,
+          sportTitles,
           startDate,
           endDate,
         });
-        response.redirect("/reports");
       } else {
         response.json({
           allSports,
           sessionCounts,
+          sportTitles,
+          startDate,
+          endDate,
         });
       }
     } catch (error) {
@@ -289,39 +394,6 @@ app.post(
     }
   }
 );
-// app.get(
-//   "/sport",
-//   connectEnsureLogin.ensureLoggedIn(),
-//   async (request, response) => {
-//     try {
-//       const loggedInUser = request.user; // Get the logged-in user
-//       const allSports = await Sport.getSports();
-//       const allSessions = await loggedInUser.getSessions();
-
-//       if (loggedInUser.isAdmin) {
-//         // Check if the user is an admin
-//         response.render("sport", {
-//           loggedInUser,
-//           title: "Sports Application",
-//           allSports,
-//           allSessions,
-//           isAdmin: true, // Pass isAdmin flag to the template
-//         });
-//       } else {
-//         response.render("sport", {
-//           loggedInUser,
-//           title: "Sports Application",
-//           allSports,
-//           allSessions,
-//           isAdmin: false, // Pass isAdmin flag to the template
-//         });
-//       }
-//     } catch (error) {
-//       console.log(error);
-//       return response.status(422).json(error);
-//     }
-//   }
-// );
 
 app.post(
   "/sports",
@@ -374,19 +446,6 @@ app.post(
         { where: { id: session.id } }
       );
       await session.save();
-
-      // const userName = request.user.firstName + " " + request.user.lastName;
-      // session.playernames.push(userName);
-      // session.playersneeded = session.playersneeded - 1;
-      // await Session.update(
-      //   { playernames: session.playernames },
-      //   { where: { id: sessionId } }
-      // );
-      // await Session.update(
-      //   { playersneeded: session.playersneeded },
-      //   { where: { id: sessionId } }
-      // );
-      // await session.save();
       return response.redirect(`/sport/${id}`);
     } catch (error) {
       console.log(error);
@@ -518,19 +577,15 @@ app.get(
 
     console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
-
     //isPrevious
     const currentDateTime = new Date();
     const isPrevious = session.playDate < currentDateTime;
-
     //isCreator
     let isCreator = false;
     if (userName === session.creatorName) {
       isCreator = true;
     }
-
     const creatorName = session.creatorName;
-
     //isAdmin
     const users = request.user;
     let isAdmin = false;
@@ -541,7 +596,6 @@ app.get(
     ) {
       isAdmin = true;
     }
-
     //isjoined
     const isJoined = await UserSession.isUserJoined(userId, sessionId);
 

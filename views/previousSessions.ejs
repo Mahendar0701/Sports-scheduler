@@ -26,32 +26,6 @@
       <div class="col-start-3 col-span-2">
         <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
         <br />
-        <!-- <% if (isAdmin) { %>
-        <a
-          href="/"
-          class="text-green-600 underline"
-          onclick="deleteSport(<%= sportId %>)"
-          >Delete Sport
-        </a>
-        <br />
-        <br />
-        <% } %>
-        <a
-          href="/sport/<%= sportId %>/new_session"
-          class="text-green-600 underline"
-          >create session</a
-        >
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/new_session"
-          class="text-green-600 underline"
-          >view previous sessions</a
-        >
-
-        <br />
-        <br /> -->
         <div>
           <h1 class="text-xl font-semibold text-gray-600">Previous sessions</h1>
           <table>
@@ -80,7 +54,9 @@
                       Last slot
                     </div>
                     <% } %> <% if (allSessions[i].playersneeded ===0) { %>
-                    <div class="text-black-600 pl-5 pr-2 display: inline">
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
                       Fully Booked
                     </div>
                     <% } %>

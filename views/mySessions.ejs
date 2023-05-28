@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Sessions</title>
+    <script>
+      function deleteSport(id) {
+        fetch(`/sport/${id}`, {
+          method: "delete",
+        })
+          .then((res) => {
+            if (res.ok) {
+              window.location.href = "/";
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+    </script>
+  </head>
+  <body>
+    <div class="grid grid-cols-6 pt-10">
+      <div class="col-start-3 col-span-2">
+        <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
+        <br />
+
+        <div>
+          <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
+          <table>
+            <br />
+            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
+            allSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                >
+                  <a
+                    href="/sessions/<%=allSessions[i].id %>"
+                    class="text-green-600"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <% if (allSessions[i].playersneeded>1) { %>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=allSessions[i].playersneeded %> slots
+                    </div>
+                    <% } %> <% if (allSessions[i].playersneeded===1) { %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (allSessions[i].playersneeded ===0) { %>
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Fully Booked
+                    </div>
+                    <% } %>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+
+        <div>
+          <h1 class="text-xl font-semibold text-gray-600">Previous sessions</h1>
+          <table>
+            <br />
+            <%=previousSessions.length %> sessions Available<% for( var i = 0 ;
+            i < previousSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                >
+                  <a
+                    href="/sessions/<%=previousSessions[i].id %>"
+                    class="text-green-600"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=previousSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <% if (previousSessions[i].playersneeded>1) { %>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=previousSessions[i].playersneeded %> slots
+                    </div>
+                    <% } %> <% if (previousSessions[i].playersneeded===1) { %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (previousSessions[i].playersneeded ===0) { %>
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Fully Booked
+                    </div>
+                    <% } %>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+        <div>
+          <h1 class="text-xl font-semibold text-gray-600">Canceled sessions</h1>
+          <table>
+            <br />
+            <%=canceledSessions.length %> sessions Available<% for( var i = 0 ;
+            i < canceledSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                >
+                  <a
+                    href="/sessions/<%=canceledSessions[i].id %>"
+                    class="text-green-600"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=canceledSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <% if (canceledSessions[i].playersneeded>1) { %>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=canceledSessions[i].playersneeded %> slots
+                    </div>
+                    <% } %> <% if (canceledSessions[i].playersneeded===1) { %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (canceledSessions[i].playersneeded ===0) { %>
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Fully Booked
+                    </div>
+                    <% } %>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            href="/signout"
+            >Signout</a
+          >
+        </div>
+        <div>
+          <br />
+          <a
+            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+            href="/sport"
+            >Home</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

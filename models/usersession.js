@@ -1,5 +1,8 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
+const {
+  Session,
+} = require("/home/mahendar07/sports-scheduler/models/session.js");
 module.exports = (sequelize, DataTypes) => {
   class UserSession extends Model {
     /**
@@ -25,6 +28,22 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
       return userSession !== null;
+    }
+
+    static async getUpcomingSessionsByUser(userId) {
+      const sessions = await UserSession.findAll({
+        where: {
+          userId,
+        },
+        // include: Session, // Include the Session model as an association
+        // where: {
+        //   '$Session.playDate$': {
+        //     [Op.gt]: new Date(),
+        //   },
+        // },
+      });
+
+      return sessions;
     }
   }
   UserSession.init(

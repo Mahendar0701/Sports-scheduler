@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="./css/style.css" />
     <title>Document</title>
   </head>
@@ -14,38 +15,35 @@
         <%- include('header') %> <br />
 
         <div>
-          <form action="/reports" method="post"></form>
-          <div class="py-3">
-            <label for="startDate" class="text-xl font-semibold text-gray-600"
-              >Start Date</label
-            >
-            <input
-              name="startDate"
-              class="border border-gray-600 text-gray-900 rounded p-2"
-              type="datetime-local"
-              
-            />
-          </div>
-          <div class="py-3">
-            <label for="endtDate" class="text-xl font-semibold text-gray-600"
-              >End Date</label
-            >
-            <input
-              name="endDate"
-              class="border border-gray-600 text-gray-900 rounded p-2"
-              type="datetime-local"
-              
-            />
-          </div>
-          <div class="py-3">
-            <button
-              type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
-            >
-              Submit
-            </button>
-          </div>
-
+          <form action="/reports" method="post">
+            <div class="py-3">
+              <label for="startDate" class="text-xl font-semibold text-gray-600"
+                >From</label
+              >
+              <input
+                name="startDate"
+                class="border border-gray-600 text-gray-900 rounded p-2"
+                type="datetime-local"
+              />
+            </div>
+            <div class="py-3">
+              <label for="endtDate" class="text-xl font-semibold text-gray-600"
+                >To</label
+              >
+              <input
+                name="endDate"
+                class="border border-gray-600 text-gray-900 rounded p-2"
+                type="datetime-local"
+              />
+            </div>
+            <div class="py-3">
+              <button
+                type="submit"
+                class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+              >
+                Submit
+              </button>
+            </div>
           </form>
         </div>
 
@@ -53,6 +51,10 @@
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are according to no of sessions created
           </h5>
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            From <%= startDate %> to <%= endDate %>
+          </h5>
+
           <div>
             <table>
               <% for( var i = 0 ; i < allSports.length ; i++) { %>
@@ -72,6 +74,9 @@
               <% } %>
             </table>
           </div>
+          <div style="width: 500px; height: 300px; py: 2px">
+            <canvas id="myChart"></canvas>
+          </div>
         </div>
 
         <div>
@@ -84,5 +89,23 @@
         </div>
       </div>
     </div>
+    <script>
+      const sportTitlesx = <%- JSON.stringify(sportTitles) %>;
+      const sessionCountsy = <%- JSON.stringify(sessionCounts) %>;
+
+      new Chart("myChart", {
+        type: "bar",
+        data: {
+          labels: sportTitlesx,
+          datasets: [
+            {
+              label: "No of Sessions created",
+              data: sessionCountsy,
+            },
+          ],
+        },
+        options: {},
+      });
+    </script>
   </body>
 </html>
