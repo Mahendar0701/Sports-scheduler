@@ -147,7 +147,7 @@
           <% } %>
           <br />
           isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
-          (isJoined && isPrevious===false) { %>
+          (isJoined && isPrevious===false && !isCreator) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <button
               type="submit"
