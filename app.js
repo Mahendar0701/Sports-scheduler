@@ -2,7 +2,8 @@
 const { request, response } = require("express");
 const { Op } = require("sequelize");
 const express = require("express");
-var csrf = require("tiny-csrf");
+// var csrf = require("tiny-csrf");
+var csrf = require("csurf");
 const app = express();
 const { Session, Sport, User, UserSession } = require("./models");
 const bodyParser = require("body-parser");
@@ -18,8 +19,6 @@ const localStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const config = require("./adminconfig");
-
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -28,8 +27,8 @@ app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("sshh! some secret string"));
-// app.use(csrf({ cookie: true }));
-app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
+app.use(csrf({ cookie: true }));
+// app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 app.use(
   session({
@@ -118,6 +117,7 @@ app.post("/users", async (request, response) => {
       lastName: request.body.lastName,
       email: request.body.email,
       password: hashedPwd,
+      isAdmin: false,
     });
     request.login(user, (err) => {
       if (err) {
@@ -226,14 +226,15 @@ app.get(
       const allSports = await Sport.getSports();
 
       const user = request.user;
-      let isAdmin = false;
-      if (
-        user.email === config.adminCredentials.email
-        // &&
-        // request.body.password === config.adminCredentials.password
-      ) {
-        isAdmin = true;
-      }
+      // let isAdmin = false;
+      // if (
+      //   user.email === config.adminCredentials.email
+      //   // &&
+      //   // request.body.password === config.adminCredentials.password
+      // ) {
+      //   isAdmin = true;
+      // }
+      const isAdmin = user.isAdmin;
       const allSessions = await user.getSessions({
         where: {
           playDate: {
@@ -277,14 +278,15 @@ app.get(
       const allSports = await Sport.getSports();
 
       const user = request.user;
-      let isAdmin = false;
-      if (
-        user.email === config.adminCredentials.email
-        // &&
-        // request.body.password === config.adminCredentials.password
-      ) {
-        isAdmin = true;
-      }
+      // let isAdmin = false;
+      // if (
+      //   user.email === config.adminCredentials.email
+      //   // &&
+      //   // request.body.password === config.adminCredentials.password
+      // ) {
+      //   isAdmin = true;
+      // }
+      const isAdmin = user.isAdmin;
       const allSessions = await user.getSessions({
         where: {
           playDate: {
@@ -359,11 +361,8 @@ app.get(
         });
         sessionCounts.push(count);
         sportTitles.push(allSports[i].title);
-        // sportTitles.push("'" + allSports[i].title + "'");
       }
       console.log(sessionCounts);
-      // sportTitles = sportTitles.map((title) => title.replace(/'/g, '"'));
-      // sportTitles = JSON.stringify(sportTitles).replace(/'/g, '"');
       console.log("sport titles", sportTitles);
 
       if (request.accepts("html")) {
@@ -473,7 +472,6 @@ app.post(
         });
         sessionCounts.push(count);
         sportTitles.push(allSports[i].title);
-        // sportTitles.push("'" + allSports[i].title + "'");
       }
 
       if (request.accepts("html")) {
@@ -614,14 +612,7 @@ app.get(
     console.log();
 
     const user = request.user;
-    let isAdmin = false;
-    if (
-      user.email === config.adminCredentials.email
-      // &&
-      // request.body.password === config.adminCredentials.password
-    ) {
-      isAdmin = true;
-    }
+    const isAdmin = user.isAdmin;
 
     const allSessions = await Session.upcomingSessions(sportId);
     response.render("session", {
@@ -645,14 +636,7 @@ app.get(
     console.log();
 
     const user = request.user;
-    let isAdmin = false;
-    if (
-      user.email === config.adminCredentials.email
-      // &&
-      // request.body.password === config.adminCredentials.password
-    ) {
-      isAdmin = true;
-    }
+    const isAdmin = user.isAdmin;
 
     const allSessions = await Session.prevSessions(sportId);
     response.render("previousSessions", {
@@ -675,14 +659,7 @@ app.get(
     console.log();
 
     const user = request.user;
-    let isAdmin = false;
-    if (
-      user.email === config.adminCredentials.email
-      // &&
-      // request.body.password === config.adminCredentials.password
-    ) {
-      isAdmin = true;
-    }
+    const isAdmin = user.isAdmin;
 
     const allSessions = await Session.canceledSessions(sportId);
     response.render("canceledSessions", {
@@ -740,14 +717,7 @@ app.get(
     const creatorName = session.creatorName;
     //isAdmin
     const users = request.user;
-    let isAdmin = false;
-    if (
-      users.email === config.adminCredentials.email
-      // &&
-      // request.body.password === config.adminCredentials.password
-    ) {
-      isAdmin = true;
-    }
+    const isAdmin = users.isAdmin;
     //isjoined
     const isJoined = await UserSession.isUserJoined(userId, sessionId);
 
