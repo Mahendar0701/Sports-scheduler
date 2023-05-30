@@ -89,10 +89,38 @@ module.exports = (sequelize, DataTypes) => {
   }
   Session.init(
     {
-      playDate: DataTypes.DATE,
-      venue: DataTypes.STRING,
+      // playDate: DataTypes.DATE,
+      playDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      // venue: DataTypes.STRING,
+      venue: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       playernames: DataTypes.ARRAY(DataTypes.STRING),
-      playersneeded: DataTypes.INTEGER,
+      // playernames: {
+      //   type: DataTypes.ARRAY(DataTypes.STRING),
+      //   allowNull: false,
+      //   validate: {
+      //     notEmpty: true,
+      //   },
+      // },
+      // playersneeded: DataTypes.INTEGER,
+      playersneeded: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       isCanceled: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

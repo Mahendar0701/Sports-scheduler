@@ -2,28 +2,34 @@
 const { request, response } = require("express");
 const { Op } = require("sequelize");
 const express = require("express");
+var csrf = require("tiny-csrf");
 const app = express();
 const { Session, Sport, User, UserSession } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
+var cookieParser = require("cookie-parser");
 // const session = require("./models/session");
-
-app.use(bodyParser.json());
-app.set("view engine", "ejs");
-// app.set("views", path.join(__dirname, "views"));
 
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
-// const flash = require("connect-flash");
+const flash = require("connect-flash");
 const localStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const config = require("./adminconfig");
 
+app.use(bodyParser.json());
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("sshh! some secret string"));
+// app.use(csrf({ cookie: true }));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 app.use(
   session({
@@ -36,6 +42,11 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 passport.use(
   new localStrategy(
@@ -79,16 +90,26 @@ passport.deserializeUser((id, done) => {
 app.get("/", async (request, response) => {
   response.render("index", {
     title: "Sports Application",
+    csrfToken: request.csrfToken(),
   });
 });
 
 app.get("/signup", (request, response) => {
   response.render("signup", {
     title: "Signup",
+    csrfToken: request.csrfToken(),
   });
 });
 
 app.post("/users", async (request, response) => {
+  if (
+    request.body.firstName.length != 0 &&
+    request.body.email.length != 0 &&
+    request.body.password.length == 0
+  ) {
+    request.flash("error", "Password can not be Empty");
+    return response.redirect("/signup");
+  }
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
   try {
@@ -107,7 +128,32 @@ app.post("/users", async (request, response) => {
     });
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
+    // return response.status(422).json(error);
+    if (error.name == "SequelizeValidationError") {
+      const errMsg = error.errors.map((error) => error.message);
+      console.log("flash errors", errMsg);
+      errMsg.forEach((message) => {
+        if (message == "Validation notEmpty on firstName failed") {
+          request.flash("error", "First Name cannot be empty");
+        }
+        if (message == "Validation notEmpty on email failed") {
+          request.flash("error", "Email cannot be empty");
+        }
+      });
+      response.redirect("/signup");
+    } else if (error.name == "SequelizeUniqueConstraintError") {
+      const errMsg = error.errors.map((error) => error.message);
+      console.log(errMsg);
+      errMsg.forEach((message) => {
+        if (message == "email must be unique") {
+          request.flash("error", "Email already used");
+        }
+      });
+      response.redirect("/signup");
+    } else {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
 });
 
@@ -145,13 +191,14 @@ app.post("/users", async (request, response) => {
 // });
 
 app.get("/login", (request, response) => {
-  response.render("login", { title: "Login" });
+  response.render("login", { title: "Login", csrfToken: request.csrfToken() });
 });
 
 app.post(
   "/signin",
   passport.authenticate("local", {
     failureRedirect: "/login",
+    failureFlash: true,
   }),
   async (request, response) => {
     console.log(request.user);
@@ -203,6 +250,7 @@ app.get(
           allSessions,
           isAdmin,
           userName,
+          csrfToken: request.csrfToken(),
         });
       } else {
         response.json({
@@ -327,6 +375,7 @@ app.get(
           sportTitles,
           startDate,
           endDate,
+          csrfToken: request.csrfToken(),
         });
       } else {
         response.json({
@@ -335,6 +384,64 @@ app.get(
           sportTitles,
           startDate,
           endDate,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.get(
+  "/sport/:id/report-session/:startDate/:endDate",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const startDate = request.params.startDate;
+      const endDate = request.params.endDate;
+      const sportId = request.params.id;
+      const sportTitle = await Sport.getSportTitle(sportId);
+      console.log("sport Title :", sportTitle);
+      const allSessions = await Session.findAll({
+        where: {
+          sportId: sportId,
+          playDate: {
+            [Op.between]: [startDate, endDate],
+          },
+          isCanceled: false,
+        },
+      });
+
+      const allCanceledSessions = await Session.findAll({
+        where: {
+          sportId: sportId,
+          playDate: {
+            [Op.between]: [startDate, endDate],
+          },
+          isCanceled: true,
+        },
+      });
+
+      if (request.accepts("html")) {
+        response.render("report-sessions", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSessions,
+          allCanceledSessions,
+          sportTitle,
+          startDate,
+          endDate,
+          sportId,
+        });
+      } else {
+        response.json({
+          allSessions,
+          allCanceledSessions,
+          startDate,
+          endDate,
+          sportId,
+          sportTitle,
         });
       }
     } catch (error) {
@@ -378,6 +485,7 @@ app.post(
           sportTitles,
           startDate,
           endDate,
+          csrfToken: request.csrfToken(),
         });
       } else {
         response.json({
@@ -407,13 +515,35 @@ app.post(
       return response.redirect("/sport");
     } catch (error) {
       console.log(error);
-      return response.status(422).json(error);
+      // return response.status(422).json(error);
+      if (error.name == "SequelizeValidationError") {
+        const errMsg = error.errors.map((error) => error.message);
+        console.log("flash errors", errMsg);
+        errMsg.forEach((message) => {
+          if (message == "Validation notEmpty on title failed") {
+            request.flash("error", "Sport name cannot be empty");
+          }
+        });
+        response.redirect("/createSport");
+      } else if (error.name == "SequelizeUniqueConstraintError") {
+        const errMsg = error.errors.map((error) => error.message);
+        console.log(errMsg);
+        errMsg.forEach((message) => {
+          if (message == "title must be unique") {
+            request.flash("error", "Sport already created");
+          }
+        });
+        response.redirect("/createSport");
+      } else {
+        console.log(error);
+        return response.status(422).json(error);
+      }
     }
   }
 );
 
 app.get("/createSport", (request, response, next) => {
-  response.render("createSport");
+  response.render("createSport", { csrfToken: request.csrfToken() });
 });
 
 app.post(
@@ -448,8 +578,28 @@ app.post(
       await session.save();
       return response.redirect(`/sport/${id}`);
     } catch (error) {
+      const id = request.body.sportId;
       console.log(error);
-      return response.status(422).json(error);
+      // return response.status(422).json(error);
+      if (error.name == "SequelizeValidationError") {
+        const errMsg = error.errors.map((error) => error.message);
+        console.log("flash errors", errMsg);
+        errMsg.forEach((message) => {
+          if (message == "Validation notEmpty on playDate failed") {
+            request.flash("error", "Play Date cannot be empty");
+          }
+          if (message == "Validation notEmpty on venue failed") {
+            request.flash("error", "Venue cannot be empty");
+          }
+          if (message == "Validation notEmpty on playersneeded failed") {
+            request.flash("error", "Number of players nedded cannot be empty");
+          }
+        });
+        response.redirect(`/sport/${id}/new_session`);
+      } else {
+        console.log(error);
+        return response.status(422).json(error);
+      }
     }
   }
 );
@@ -480,6 +630,7 @@ app.get(
       sportId,
       title,
       isAdmin,
+      csrfToken: request.csrfToken(),
     });
   }
 );
@@ -554,6 +705,7 @@ app.get(
     response.render("createSession", {
       sportId,
       userName,
+      csrfToken: request.csrfToken(),
     });
   }
 );
@@ -612,6 +764,7 @@ app.get(
       isCreator,
       reason,
       creatorName,
+      csrfToken: request.csrfToken(),
     });
   }
 );
@@ -715,36 +868,45 @@ app.post(
   }
 );
 
-app.delete("/sessions/:id", async function (request, response) {
-  try {
-    const sessionId = request.params.id;
-    console.log("Deleting session with ID", sessionId);
-    const session = await Session.getSession(sessionId);
-    const sportId = session.sportId;
-    await Session.remove(sessionId);
-    console.log("Session deleted successfully");
-    return response.redirect(`/sport/${sportId}`);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.delete(
+  "/sessions/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const sessionId = request.params.id;
+      console.log("Deleting session with ID", sessionId);
+      const session = await Session.getSession(sessionId);
+      const sportId = session.sportId;
+      await Session.remove(sessionId);
+      console.log("Session deleted successfully");
+      return response.redirect(`/sport/${sportId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
-app.delete("/sport/:id", async function (request, response) {
-  try {
-    const sportId = request.params.id;
-    console.log("Deleting sport with ID", sportId);
-    await Sport.remove(sportId);
-    console.log("sport deleted successfully");
-    return response.redirect("/sport");
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.delete(
+  "/sport/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const sportId = request.params.id;
+      console.log("Deleting sport with ID", sportId);
+      await Sport.remove(sportId);
+      console.log("sport deleted successfully");
+      return response.redirect("/sport");
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
 app.post(
   "/sessions/:id/removePlayer/:playerName",
+  connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
       const sessionId = request.params.id;
@@ -761,12 +923,10 @@ app.post(
       session.playersneeded = session.playersneeded + 1;
 
       await Session.update(
-        { playernames: session.playernames },
-        { where: { id: sessionId } }
-      );
-
-      await Session.update(
-        { playernames: session.playernames },
+        {
+          playernames: session.playernames,
+          playersneeded: session.playersneeded,
+        },
         { where: { id: sessionId } }
       );
       await session.save();
@@ -779,80 +939,95 @@ app.post(
   }
 );
 
-app.post("/sessions/:id/edit", async function (request, response) {
-  try {
-    const sessionId = request.params.id;
-    console.log("Updating session with ID", sessionId);
-    const session = await Session.getSession(sessionId);
-    session.venue = request.body.venue;
-    session.playernames = request.body.playernames.split(",");
-    session.playersneeded = request.body.playersneeded;
+app.post(
+  "/sessions/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const sessionId = request.params.id;
+      console.log("Updating session with ID", sessionId);
+      const session = await Session.getSession(sessionId);
+      session.venue = request.body.venue;
+      session.playernames = request.body.playernames.split(",");
+      session.playersneeded = request.body.playersneeded;
 
-    await Session.update(
-      {
-        playernames: session.playernames,
-        playersneeded: session.playersneeded,
-        venue: session.venue,
-      },
-      {
-        where: { id: sessionId },
-      }
-    );
-    await session.save();
+      await Session.update(
+        {
+          playernames: session.playernames,
+          playersneeded: session.playersneeded,
+          venue: session.venue,
+        },
+        {
+          where: { id: sessionId },
+        }
+      );
+      await session.save();
 
-    console.log("Session Edited successfully");
-    return response.redirect(`/sessions/${sessionId}`);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+      console.log("Session Edited successfully");
+      return response.redirect(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
-app.get("/sessions/:id/edit", async (request, response, next) => {
-  const sessionId = request.params.id;
-  const session = await Session.getSession(sessionId);
-  response.render("editSession", {
-    sessionId,
-    session,
-  });
-});
-
-app.post("/sport/:id/edit", async function (request, response) {
-  try {
+app.get(
+  "/sessions/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response, next) => {
     const sessionId = request.params.id;
-    console.log("Updating session with ID", sessionId);
     const session = await Session.getSession(sessionId);
-    session.venue = request.body.venue;
-    session.playernames = request.body.playernames.split(",");
-    session.playersneeded = request.body.playersneeded;
-
-    await Session.update(
-      {
-        playernames: session.playernames,
-        playersneeded: session.playersneeded,
-        venue: session.venue,
-      },
-      {
-        where: { id: sessionId },
-      }
-    );
-    await session.save();
-
-    console.log("Session Edited successfully");
-    return response.redirect(`/sessions/${sessionId}`);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    response.render("editSession", {
+      sessionId,
+      session,
+      csrfToken: request.csrfToken(),
+    });
   }
-});
+);
 
-app.get("/sessions/:id/edit", async (request, response, next) => {
-  const sessionId = request.params.id;
-  const session = await Session.getSession(sessionId);
-  response.render("editSession", {
-    sessionId,
-    session,
-  });
-});
+app.post(
+  "/sport/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const sportId = request.params.id;
+      console.log("Updating sport with ID", sportId);
+      const sport = await Sport.getSport(sportId);
+      sport.title = request.body.title;
+
+      await Sport.update(
+        {
+          title: sport.title,
+        },
+        {
+          where: { id: sportId },
+        }
+      );
+      await sport.save();
+
+      console.log("Session Edited successfully");
+      return response.redirect(`/sport/${sportId}`);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.get(
+  "/sport/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response, next) => {
+    const sportId = request.params.id;
+    const sport = await Sport.getSport(sportId);
+    console.log("Updating sport ", sport);
+    response.render("editSport", {
+      sportId,
+      sport,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
 
 module.exports = app;

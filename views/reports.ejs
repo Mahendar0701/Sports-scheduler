@@ -16,14 +16,17 @@
 
         <div>
           <form action="/reports" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="py-3">
               <label for="startDate" class="text-xl font-semibold text-gray-600"
                 >From</label
               >
               <input
                 name="startDate"
+                id="startDate"
                 class="border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
+                required
               />
             </div>
             <div class="py-3">
@@ -32,8 +35,10 @@
               >
               <input
                 name="endDate"
+                id="endDate"
                 class="border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
+                required
               />
             </div>
             <div class="py-3">
@@ -45,6 +50,13 @@
               </button>
             </div>
           </form>
+          <script>
+            const startDateInput = document.getElementById("startDate");
+            const endDateInput = document.getElementById("endDate");
+            startDateInput.addEventListener("input", function () {
+              endDateInput.min = startDateInput.value;
+            });
+          </script>
         </div>
 
         <div>
@@ -62,7 +74,7 @@
                 <td style="padding: 10px; text-align: center">
                   <a
                     href="/sport/<%= allSports[i].id
-                    %>"
+                    %>/report-session/<%= startDate %>/<%= endDate %>"
                     class="underline text-green-600"
                     ><%=allSports[i].title %>
                   </a>

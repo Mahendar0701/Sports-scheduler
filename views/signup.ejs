@@ -15,6 +15,7 @@
         <p class="py-2">Welcome to the To-Do Manager</p>
         <h6 class="py-4">Signup as a New user</h6>
         <form action="/users" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="py-3">
             <label for="firstName">First Name: </label>
             <input
@@ -56,6 +57,11 @@
             </button>
           </div>
         </form>
+        <div class="text-red-500"><% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+                  <li > <%= messages.error[i] %></li>
+          <% } %>
+        <% } %></div>
       </div>
     </div>
   </body>

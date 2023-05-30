@@ -14,6 +14,7 @@
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
         <%= userName %>
         <form action="/sessions" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <input type="hidden" name="sportId" value="<%= sportId %>" />
           <input type="hidden" name="creatorName" value="<%= userName %>" />
           <div class="py-3">
@@ -67,6 +68,11 @@
             </button>
           </div>
         </form>
+        <div class="text-red-500"><% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+                  <li > <%= messages.error[i] %></li>
+          <% } %>
+        <% } %></div>
         <!-- <div>
           <h1>Available sessions</h1>
         </div> -->

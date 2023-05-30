@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Sport.hasMany(models.Session, {
         foreignKey: "sportId",
+        onDelete: "SET NULL",
       });
       // define association here
     }
@@ -23,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
 
     static getSports() {
       return this.findAll();
+    }
+
+    static async getSport(id) {
+      const sport = await this.findOne({ where: { id } });
+      return sport;
     }
 
     static async getSportTitle(id) {
@@ -40,7 +46,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Sport.init(
     {
-      title: DataTypes.STRING,
+      // title: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
     },
     {
       sequelize,

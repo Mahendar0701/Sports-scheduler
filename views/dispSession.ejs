@@ -105,6 +105,7 @@
                   action="/sessions/<%= sessionId %>/removePlayer/<%=session.playernames[i]%>"
                   method="post"
                 >
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <button type="submit">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -137,6 +138,7 @@
             action="/sessions/<%= sessionId %>/join"
             method="POST"
           >
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
               class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
@@ -149,6 +151,7 @@
           isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
           (isJoined && isPrevious===false && !isCreator) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
               class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
@@ -177,6 +180,7 @@
 
             <% if ((session.isCanceled===false) && (isCreator)) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button
                 type="button"
                 class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"

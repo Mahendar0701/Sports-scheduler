@@ -6,3 +6,23 @@ body {
 .Todo-Item:hover .trash-icon {
   display: block;
 }
+
+.flash-message {
+  list-style-type: none; /* Remove bullet/disc */
+  padding-left: 20px; /* Add padding to align X symbol */
+}
+
+.flash-message li {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.flash-message li:before {
+  content: "\2716"; /* X symbol */
+  position: absolute;
+  left: -15px; /* Adjust positioning of X symbol */
+}
+
+.flash-message.error li:before {
+  color: red; /* Customize X symbol color for error messages */
+}

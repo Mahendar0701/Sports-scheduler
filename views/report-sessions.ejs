@@ -4,25 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%= csrfToken %>" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
     <title>Sessions</title>
     <script>
-      var token = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
       function deleteSport(id) {
         fetch(`/sport/${id}`, {
           method: "delete",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            _csrf: token,
-          }),
         })
           .then((res) => {
             if (res.ok) {
-              window.location.href = "/sport";
+              window.location.href = "/";
             }
           })
           .catch((err) => console.error(err));
@@ -34,48 +26,12 @@
       <div class="col-start-3 col-span-2">
         <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
         <br />
-        <% if (isAdmin) { %>
-        <a href="/sport/<%= sportId %>/edit" class="text-green-600 underline"
-          >Edit Sport
-        </a>
-        <br />
-        <br />
-        <a
-          href="/sport"
-          class="text-green-600 underline"
-          onclick="deleteSport(<%= sportId %>)"
-          >Delete Sport
-        </a>
-        <br />
-        <br />
-        <% } %>
-        <a
-          href="/sport/<%= sportId %>/new_session"
-          class="text-green-600 underline"
-          >create session</a
-        >
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/prev_sessions"
-          class="text-green-600 underline"
-          >view previous sessions</a
-        >
-
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/canceled_sessions"
-          class="text-green-600 underline"
-          >view canceled sessions</a
-        >
-
-        <br />
-        <br />
         <div>
-          <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
+          <h1 class="text-xl font-semibold text-gray-600">
+            <h1 class="text-xl font-bold">Sessions</h1>
+            Sessions of <%- sportTitle %> From <%- startDate.replace("T", " ")
+            %> To <%= endDate.replace("T", " ") %>
+          </h1>
           <table>
             sportId : <%= sportId %>
             <br />
@@ -102,7 +58,57 @@
                       Last slot
                     </div>
                     <% } %> <% if (allSessions[i].playersneeded ===0) { %>
-                    <div class="text-black-600 pl-5 pr-2 display: inline">
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Fully Booked
+                    </div>
+                    <% } %>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+        <br />
+        <div>
+          <h1 class="text-xl font-semibold text-gray-600">
+            <h1 class="text-xl font-bold">Canceled Sessions</h1>
+            Canceled Sessions of <%- sportTitle %> From <%=
+            startDate.replace("T", " ") %> To <%= endDate.replace("T", " ") %>
+          </h1>
+          <table>
+            sportId : <%= sportId %>
+            <br />
+            <%=allCanceledSessions.length %> sessions Available<% for( var i = 0
+            ; i < allCanceledSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <div
+                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                >
+                  <a
+                    href="/sessions/<%=allCanceledSessions[i].id %>"
+                    class="text-green-600"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=allCanceledSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <% if (allCanceledSessions[i].playersneeded>1) { %>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=allCanceledSessions[i].playersneeded %> slots
+                    </div>
+                    <% } %> <% if (allCanceledSessions[i].playersneeded===1) {
+                    %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (allCanceledSessions[i].playersneeded ===0) {
+                    %>
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
                       Fully Booked
                     </div>
                     <% } %>

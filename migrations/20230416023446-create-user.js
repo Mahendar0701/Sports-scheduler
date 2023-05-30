@@ -18,14 +18,16 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
       },
-      // isAdmin: {
-      //   type: Sequelize.BOOLEAN,
-      //   defaultValue: false, // Default value is false for non-admin users
-      // },
+      isAdmin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
