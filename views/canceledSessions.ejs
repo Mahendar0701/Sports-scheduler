@@ -32,29 +32,29 @@
           <table>
             sportId : <%= sportId %>
             <br />
-            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
-            allSessions.length ; i++) { %>
+            <%=canceledSessions.length %> sessions Available<% for( var i = 0 ;
+            i < canceledSessions.length ; i++) { %>
             <tr>
               <td>
                 <div
                   class="border border-gray-600 text-gray-900 rounded p-2 w-full"
                 >
                   <a
-                    href="/sessions/<%=allSessions[i].id %>"
+                    href="/sessions/<%=canceledSessions[i].id %>"
                     class="text-green-600"
                   >
                     <div class="mr-18 display: inline">
-                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                      <%=canceledSessions[i].playDate.toString().substring(0,25)%>
                     </div>
-                    <% if (allSessions[i].playersneeded>1) { %>
+                    <% if (canceledSessions[i].playersneeded>1) { %>
                     <div class="pl-5 pr-2 display: inline">
-                      <%=allSessions[i].playersneeded %> slots
+                      <%=canceledSessions[i].playersneeded %> slots
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded===1) { %>
+                    <% } %> <% if (canceledSessions[i].playersneeded===1) { %>
                     <div class="text-red-600 pl-5 pr-2 display: inline">
                       Last slot
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded ===0) { %>
+                    <% } %> <% if (canceledSessions[i].playersneeded ===0) { %>
                     <div
                       class="text-green-1000 font-bold pl-5 pr-2 display: inline"
                     >

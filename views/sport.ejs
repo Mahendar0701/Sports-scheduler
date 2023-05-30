@@ -20,8 +20,9 @@
             >My sessions</a
           >
         </div>
+        <% if (isAdmin) { %>
         <div class="py-5">
-          isadmin <%= isAdmin %> <% if (isAdmin) { %>
+          isadmin <%= isAdmin %>
           <div class="py-5">
             <a href="/createSport" class="text-green-600 underline"
               >Create New Sport</a
@@ -31,51 +32,60 @@
           <div class="py-2">
             <a href="/reports" class="text-green-600 underline">View reports</a>
           </div>
-          <% } %>
         </div>
-
+        <% } %>
+        <hr class="rounded h-5 my-3" />
         <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             You have the following upcoming Sessions
           </h5>
           <table>
-            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
-            allSessions.length ; i++) { %>
+            <%=userUpcomingSessions.length %> sessions Available<% for( var i =
+            0 ; i < userUpcomingSessions.length ; i++) { %>
             <tr>
               <td>
-                <div
-                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                <a
+                  href="/sessions/<%=userUpcomingSessions[i].id %>"
+                  class="text-green-600"
                 >
-                  <a
-                    href="/sessions/<%=allSessions[i].id %>"
-                    class="text-green-600"
+                  <div
+                    class="border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
                   >
                     <div class="mr-18 display: inline">
-                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                      <%=userUpcomingSessions[i].playDate.toString().substring(0,25)%>
                     </div>
-                    <% if (allSessions[i].playersneeded>1) { %>
+                    <% if (userUpcomingSessions[i].playersneeded>1) { %>
                     <div class="pl-5 pr-2 display: inline">
-                      <%=allSessions[i].playersneeded %> slots
+                      <%=userUpcomingSessions[i].playersneeded %> slots
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded===1) { %>
+                    <% } %> <% if (userUpcomingSessions[i].playersneeded===1) {
+                    %>
                     <div class="text-red-600 pl-5 pr-2 display: inline">
                       Last slot
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded ===0) { %>
+                    <% } %> <% if (userUpcomingSessions[i].playersneeded ===0) {
+                    %>
                     <div
                       class="text-green-1000 font-bold pl-5 pr-2 display: inline"
                     >
                       Fully Booked
                     </div>
+                    <% } %> <% if (userUpcomingSessions[i].isCanceled ===true )
+                    { %>
+                    <div
+                      class="text-black-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
+                    </div>
                     <% } %>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </td>
             </tr>
             <% } %>
           </table>
         </div>
-
+        <hr class="rounded h-5 my-3" />
         <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are available. Please select one
@@ -85,23 +95,75 @@
               <% for( var i = 0 ; i < allSports.length ; i++) { %>
               <tr>
                 <td>
-                  <div
-                    class="border border-gray-600 text-gray-900 rounded p-1 w-full"
-                  >
-                    <a
-                      href="/sport/<%= allSports[i].id
+                  <a
+                    href="/sport/<%= allSports[i].id
                   %>"
-                      class="underline text-green-600"
-                      ><%=allSports[i].title %></a
+                    class="text-green-600 no-underline"
+                  >
+                    <div
+                      class="border border-gray-600 text-gray-900 rounded my-0.5 p-2 w-full"
                     >
-                  </div>
+                      <%=allSports[i].title %>
+                    </div>
+                  </a>
                 </td>
               </tr>
               <% } %>
             </table>
           </div>
         </div>
-
+        <hr class="rounded h-5 my-3" />
+        <div>
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            You Created the following upcoming Sessions
+          </h5>
+          <table>
+            <%=createdUpcomingSessions.length %> sessions Available<% for( var i
+            = 0 ; i < createdUpcomingSessions.length ; i++) { %>
+            <tr>
+              <td>
+                <a
+                  href="/sessions/<%=createdUpcomingSessions[i].id %>"
+                  class="text-green-600"
+                >
+                  <div
+                    class="border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
+                  >
+                    <div class="mr-18 display: inline">
+                      <%=createdUpcomingSessions[i].playDate.toString().substring(0,25)%>
+                    </div>
+                    <% if (createdUpcomingSessions[i].playersneeded>1) { %>
+                    <div class="pl-5 pr-2 display: inline">
+                      <%=createdUpcomingSessions[i].playersneeded %> slots
+                    </div>
+                    <% } %> <% if (createdUpcomingSessions[i].playersneeded===1)
+                    { %>
+                    <div class="text-red-600 pl-5 pr-2 display: inline">
+                      Last slot
+                    </div>
+                    <% } %> <% if (createdUpcomingSessions[i].playersneeded
+                    ===0) { %>
+                    <div
+                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Fully Booked
+                    </div>
+                    <% } %> <% if (createdUpcomingSessions[i].isCanceled ===true
+                    ) { %>
+                    <div
+                      class="text-black-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
+                    </div>
+                    <% } %>
+                  </div>
+                </a>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+        <hr class="rounded h-5 my-3" />
         <div>
           <br />
           <a

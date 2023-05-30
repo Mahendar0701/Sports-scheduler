@@ -100,6 +100,7 @@ app.get("/signup", (request, response) => {
   });
 });
 
+//user signup
 app.post("/users", async (request, response) => {
   if (
     request.body.firstName.length != 0 &&
@@ -123,7 +124,6 @@ app.post("/users", async (request, response) => {
       if (err) {
         console.log(err);
       }
-
       response.redirect("/sport");
     });
   } catch (error) {
@@ -157,39 +157,6 @@ app.post("/users", async (request, response) => {
   }
 });
 
-// app.post("/users", async (request, response) => {
-//   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-//   console.log(hashedPwd);
-//   try {
-//     const user = await User.create({
-//       firstName: request.body.firstName,
-//       lastName: request.body.lastName,
-//       email: request.body.email,
-//       password: hashedPwd,
-//     });
-
-//     // Check if the registered user has admin credentials
-//     if (
-//       user.email === config.adminCredentials.email &&
-//       request.body.password === config.adminCredentials.password
-//     ) {
-//       user.isAdmin = true;
-//       await user.save();
-//     }
-
-//     request.login(user, (err) => {
-//       if (err) {
-//         console.log(err);
-//       }
-
-//       response.redirect("/sport");
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error);
-//   }
-// });
-
 app.get("/login", (request, response) => {
   response.render("login", { title: "Login", csrfToken: request.csrfToken() });
 });
@@ -220,35 +187,33 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      const loggedInUser = request.user.id;
-      const userName = request.user.firstName + " " + request.user.lastName;
-      console.group(loggedInUser);
-      const allSports = await Sport.getSports();
-
       const user = request.user;
-      // let isAdmin = false;
-      // if (
-      //   user.email === config.adminCredentials.email
-      //   // &&
-      //   // request.body.password === config.adminCredentials.password
-      // ) {
-      //   isAdmin = true;
-      // }
+      const userName = user.firstName + " " + user.lastName;
+      const allSports = await Sport.getAllSports();
       const isAdmin = user.isAdmin;
-      const allSessions = await user.getSessions({
+      const userUpcomingSessions = await user.getSessions({
         where: {
           playDate: {
             [Op.gt]: new Date(),
           },
-          isCanceled: false,
         },
       });
+      const createdUpcomingSessions = await user.getSessions({
+        where: {
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+          CreatorId: user.id,
+        },
+      });
+
       if (request.accepts("html")) {
         response.render("sport", {
           loggedInUser: request.user,
           title: "Sports Application",
           allSports,
-          allSessions,
+          userUpcomingSessions,
+          createdUpcomingSessions,
           isAdmin,
           userName,
           csrfToken: request.csrfToken(),
@@ -256,7 +221,8 @@ app.get(
       } else {
         response.json({
           allSports,
-          allSessions,
+          userUpcomingSessions,
+          createdUpcomingSessions,
           isAdmin,
         });
       }
@@ -272,22 +238,13 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      const loggedInUser = request.user.id;
-      const userName = request.user.firstName + " " + request.user.lastName;
-      console.group(loggedInUser);
-      const allSports = await Sport.getSports();
-
       const user = request.user;
-      // let isAdmin = false;
-      // if (
-      //   user.email === config.adminCredentials.email
-      //   // &&
-      //   // request.body.password === config.adminCredentials.password
-      // ) {
-      //   isAdmin = true;
-      // }
+      const loggedInUser = request.user.id;
+      const userName = user.firstName + " " + user.lastName;
+      const allSports = await Sport.getAllSports();
       const isAdmin = user.isAdmin;
-      const allSessions = await user.getSessions({
+
+      const upComingSessions = await user.getSessions({
         where: {
           playDate: {
             [Op.gt]: new Date(),
@@ -303,22 +260,18 @@ app.get(
         },
       });
 
-      // console.log("Previous Sessions: ", previousSessions.length);
-
       const canceledSessions = await user.getSessions({
         where: {
           isCanceled: true,
         },
       });
 
-      // console.log("canceled Sessions: ", canceledSessions.length);
-
       if (request.accepts("html")) {
         response.render("mySessions", {
           loggedInUser: request.user,
           title: "Sports Application",
           allSports,
-          allSessions,
+          upComingSessions,
           previousSessions,
           canceledSessions,
           isAdmin,
@@ -327,7 +280,7 @@ app.get(
       } else {
         response.json({
           allSports,
-          allSessions,
+          upComingSessions,
           isAdmin,
         });
       }
@@ -345,8 +298,7 @@ app.get(
     try {
       const startDate = request.query.startDate;
       const endDate = request.query.endDate;
-      const allSports = await Sport.getSports();
-      // const sportTitles = await Sport.getSportTitle();
+      const allSports = await Sport.getAllSports();
       console.log("sport id", allSports.length);
       let sessionCounts = [];
       let sportTitles = [];
@@ -457,7 +409,7 @@ app.post(
     try {
       const startDate = request.body.startDate;
       const endDate = request.body.endDate;
-      const allSports = await Sport.getSports();
+      const allSports = await Sport.getAllSports();
       let sessionCounts = [];
       let sportTitles = [];
 
@@ -544,6 +496,23 @@ app.get("/createSport", (request, response, next) => {
   response.render("createSport", { csrfToken: request.csrfToken() });
 });
 
+app.get(
+  "/sport/:id/new_session",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    const sportId = request.params.id;
+    const userName = request.user.firstName + " " + request.user.lastName;
+    const userId = request.user.id;
+    console.log("iddd", sportId);
+    response.render("createSession", {
+      sportId,
+      userName,
+      userId,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
 app.post(
   "/sessions",
   connectEnsureLogin.ensureLoggedIn(),
@@ -557,19 +526,22 @@ app.post(
         playernames: request.body.playernames.split(","),
         playersneeded: request.body.playersneeded,
         sportId: request.body.sportId,
-        creatorName: request.body.creatorName,
+        CreatorId: request.body.creatorId,
       });
       const id = request.body.sportId;
       const user = request.user;
-      console.log("creator name ", request.body.creatorName);
+      console.log("creator Id ", request.body.creatorId);
+
+      const creator = await User.findByPk(request.body.creatorId);
+      const creatorName = creator.firstName + " " + creator.lastName;
 
       await session.addUser(user);
-      session.playernames.push(request.body.creatorName);
-      session.creatorName = request.body.creatorName;
+      session.playernames.push(creatorName);
+      session.CreatorId = request.body.creatorId;
       await Session.update(
         {
           playernames: session.playernames,
-          creatorName: session.creatorName,
+          CreatorId: session.creatorId,
         },
         { where: { id: session.id } }
       );
@@ -606,18 +578,15 @@ app.get(
   "/sport/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("paramsid...", request.params);
+    console.log("paramsid...", request.params.id);
     const sportId = request.params.id;
     const title = await Sport.getSportTitle(sportId);
-    console.log();
-
     const user = request.user;
     const isAdmin = user.isAdmin;
-
-    const allSessions = await Session.upcomingSessions(sportId);
+    const upcomingSessions = await Session.upcomingSessions(sportId);
     response.render("session", {
       // title: "Sports Application",
-      allSessions,
+      upcomingSessions,
       sportId,
       title,
       isAdmin,
@@ -638,10 +607,10 @@ app.get(
     const user = request.user;
     const isAdmin = user.isAdmin;
 
-    const allSessions = await Session.prevSessions(sportId);
+    const previousSessions = await Session.prevSessions(sportId);
     response.render("previousSessions", {
       // title: "Sports Application",
-      allSessions,
+      previousSessions,
       sportId,
       title,
       isAdmin,
@@ -661,10 +630,10 @@ app.get(
     const user = request.user;
     const isAdmin = user.isAdmin;
 
-    const allSessions = await Session.canceledSessions(sportId);
+    const canceledSessions = await Session.canceledSessions(sportId);
     response.render("canceledSessions", {
       // title: "Sports Application",
-      allSessions,
+      canceledSessions,
       sportId,
       title,
       isAdmin,
@@ -673,48 +642,28 @@ app.get(
 );
 
 app.get(
-  "/sport/:id/new_session",
-  connectEnsureLogin.ensureLoggedIn(),
-  async (request, response, next) => {
-    const sportId = request.params.id;
-    const userName = request.user.firstName + " " + request.user.lastName;
-    console.log("iddd", sportId);
-    response.render("createSession", {
-      sportId,
-      userName,
-      csrfToken: request.csrfToken(),
-    });
-  }
-);
-
-app.get(
   "/sessions/:id",
   connectEnsureLogin.ensureLoggedIn(),
-  async (request, response, next) => {
-    console.log("paramsid...", request.params);
-    console.log("userId: ", request.user.id);
+  async function (request, response) {
     const userName = request.user.firstName + " " + request.user.lastName;
     const userId = request.user.id;
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
 
-    console.log(session.playersneeded);
     const sportId = session.sportId;
-    const user = await User.findByPk(userId);
-
     const reason = session.reason;
-
-    console.log("paramsid...", sportId);
     const title = await Sport.getSportTitle(sportId);
     //isPrevious
     const currentDateTime = new Date();
     const isPrevious = session.playDate < currentDateTime;
     //isCreator
+    const creatorId = session.CreatorId;
     let isCreator = false;
-    if (userName === session.creatorName) {
+    if (userId === creatorId) {
       isCreator = true;
     }
-    const creatorName = session.creatorName;
+    const creator = await User.findByPk(creatorId);
+    const creatorName = creator.firstName + " " + creator.lastName;
     //isAdmin
     const users = request.user;
     const isAdmin = users.isAdmin;

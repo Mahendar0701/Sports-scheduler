@@ -26,34 +26,34 @@
       <div class="col-start-3 col-span-2">
         <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
         <br />
-
+        <hr class="my-3" />
         <div>
           <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
           <table>
             <br />
-            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
-            allSessions.length ; i++) { %>
+            <%=upComingSessions.length %> sessions Available<% for( var i = 0 ;
+            i < upComingSessions.length ; i++) { %>
             <tr>
               <td>
                 <div
                   class="border border-gray-600 text-gray-900 rounded p-2 w-full"
                 >
                   <a
-                    href="/sessions/<%=allSessions[i].id %>"
+                    href="/sessions/<%=upComingSessions[i].id %>"
                     class="text-green-600"
                   >
                     <div class="mr-18 display: inline">
-                      <%=allSessions[i].playDate.toString().substring(0,25)%>
+                      <%=upComingSessions[i].playDate.toString().substring(0,25)%>
                     </div>
-                    <% if (allSessions[i].playersneeded>1) { %>
+                    <% if (upComingSessions[i].playersneeded>1) { %>
                     <div class="pl-5 pr-2 display: inline">
-                      <%=allSessions[i].playersneeded %> slots
+                      <%=upComingSessions[i].playersneeded %> slots
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded===1) { %>
+                    <% } %> <% if (upComingSessions[i].playersneeded===1) { %>
                     <div class="text-red-600 pl-5 pr-2 display: inline">
                       Last slot
                     </div>
-                    <% } %> <% if (allSessions[i].playersneeded ===0) { %>
+                    <% } %> <% if (upComingSessions[i].playersneeded ===0) { %>
                     <div
                       class="text-green-1000 font-bold pl-5 pr-2 display: inline"
                     >
@@ -67,7 +67,8 @@
             <% } %>
           </table>
         </div>
-
+        <br />
+        <hr class="my-3" />
         <div>
           <h1 class="text-xl font-semibold text-gray-600">Previous sessions</h1>
           <table>
@@ -108,6 +109,8 @@
             <% } %>
           </table>
         </div>
+        <br />
+        <hr class="rounded h-5 my-3" />
         <div>
           <h1 class="text-xl font-semibold text-gray-600">Canceled sessions</h1>
           <table>
@@ -139,6 +142,12 @@
                       class="text-green-1000 font-bold pl-5 pr-2 display: inline"
                     >
                       Fully Booked
+                    </div>
+                    <% } %><% if (canceledSessions[i].isCanceled ===true ) { %>
+                    <div
+                      class="text-black-1000 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
                     </div>
                     <% } %>
                   </a>

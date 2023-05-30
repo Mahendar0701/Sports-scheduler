@@ -94,12 +94,12 @@
                 <p class="font-light">organizer</p>
               </div>
               <% } %> <% if((session.playernames[i]!=userName) &&
-              (session.playernames[i]!=creatorName)) { %>
+              (session.playernames[i]!=creatorName) ) { %>
 
               <div
                 class="border border-gray-600 text-gray-900 rounded p-2 w-40 my-2 display:inline"
               >
-                <%=session.playernames[i]%> <% if (isAdmin) { %>
+                <%=session.playernames[i]%> <% if (isCreator) { %>
 
                 <form
                   action="/sessions/<%= sessionId %>/removePlayer/<%=session.playernames[i]%>"
@@ -149,7 +149,7 @@
           <% } %>
           <br />
           isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
-          (isJoined && isPrevious===false && !isCreator) { %>
+          (isJoined && isPrevious===false && session.isCanceled === false ) { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
@@ -166,7 +166,7 @@
           <div>Fully booked</div>
           <% } %>
           <br />
-          <% if (isAdmin || isCreator) { %>
+          <% if ( isCreator && session.isCanceled === false) { %>
           <div>
             <a
               href="/sessions/<%= session.id %>/edit"

@@ -89,7 +89,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Session.init(
     {
-      // playDate: DataTypes.DATE,
       playDate: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -97,7 +96,6 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      // venue: DataTypes.STRING,
       venue: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -106,14 +104,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       playernames: DataTypes.ARRAY(DataTypes.STRING),
-      // playernames: {
-      //   type: DataTypes.ARRAY(DataTypes.STRING),
-      //   allowNull: false,
-      //   validate: {
-      //     notEmpty: true,
-      //   },
-      // },
-      // playersneeded: DataTypes.INTEGER,
       playersneeded: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -125,7 +115,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      creatorName: DataTypes.STRING,
+      CreatorId: DataTypes.INTEGER,
       reason: DataTypes.STRING,
     },
     {

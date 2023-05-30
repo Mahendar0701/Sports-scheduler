@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static getSports() {
+    static getAllSports() {
       return this.findAll();
     }
 
