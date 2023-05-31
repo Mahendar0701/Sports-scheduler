@@ -33,12 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           userId,
         },
-        // include: Session, // Include the Session model as an association
-        // where: {
-        //   '$Session.playDate$': {
-        //     [Op.gt]: new Date(),
-        //   },
-        // },
       });
 
       return sessions;

@@ -86,6 +86,16 @@ module.exports = (sequelize, DataTypes) => {
         where: { id },
       });
     }
+
+    static async getSessionWithDtId(id, playDate) {
+      return this.findOne({
+        where: {
+          id,
+          playDate,
+          isCanceled: false,
+        },
+      });
+    }
   }
   Session.init(
     {

@@ -57,8 +57,8 @@
           </h1>
           <p>
             This session is scheduled for <%=
-            session.playDate.toString().substring(0,25) %>, to be played at "
-            <%= session.venue %>"
+            session.playDate.toString().substring(0,25) %> <%= session.playDate
+            %>, to be played at " <%= session.venue %>"
           </p>
           <h1 class="text-2xl font-semibold text-gray-600">
             Players (<%= session.playernames.length %>)
@@ -132,7 +132,7 @@
           <br />
           <% if (((session.playersneeded)>0 && session.isCanceled === false &&
           isPrevious === false) || ((session.playersneeded)>0 && isPrevious ===
-          false )) { %> <% if (isJoined===false) { %>
+          false )) { %> <% if (isJoined===false && allowToJoin===true) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
@@ -149,7 +149,53 @@
           <% } %>
           <br />
           isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
-          (isJoined && isPrevious===false && session.isCanceled === false ) { %>
+          (allowToJoin===false && userJoinedSession.isCanceled===false &&
+          isJoined===false) { %>
+          <h3>
+            You Cant join this session as you have the follwoing Session at same
+            time
+          </h3>
+          <div>
+            <table>
+              <br />
+
+              <tr>
+                <td>
+                  <div
+                    class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                  >
+                    <a
+                      href="/sessions/<%=userJoinedSession.id %>"
+                      class="text-green-600"
+                    >
+                      <div class="mr-18 display: inline">
+                        <%=userJoinedSession.playDate.toString().substring(0,25)%>
+                      </div>
+                      <% if (userJoinedSession.playersneeded>1) { %>
+                      <div class="pl-5 pr-2 display: inline">
+                        <%=userJoinedSession.playersneeded %> slots
+                      </div>
+                      <% } %> <% if (userJoinedSession.playersneeded===1) { %>
+                      <div class="text-red-600 pl-5 pr-2 display: inline">
+                        Last slot
+                      </div>
+                      <% } %> <% if (userJoinedSession.playersneeded===0) { %>
+                      <div
+                        class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                      >
+                        Fully Booked
+                      </div>
+                      <% } %>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <% } %>
+            </table>
+          </div>
+
+          <% if (isJoined && isPrevious===false && session.isCanceled===false )
+          { %>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
@@ -166,7 +212,7 @@
           <div>Fully booked</div>
           <% } %>
           <br />
-          <% if ( isCreator && session.isCanceled === false) { %>
+          <% if ( isCreator && session.isCanceled===false) { %>
           <div>
             <a
               href="/sessions/<%= session.id %>/edit"

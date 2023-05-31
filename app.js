@@ -183,6 +183,58 @@ app.get("/signout", (request, response, next) => {
 });
 
 app.get(
+  "/changePassword",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const user = request.user;
+    const oldHashedPassword = user.password;
+    console.log("oldHashedPassword", oldHashedPassword);
+    response.render("changePassword", {
+      title: "Change Password",
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/changePassword",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const oldPassword = request.body.oldPassword;
+    const newPassword = request.body.newPassword;
+    try {
+      const user = request.user;
+      const oldHashedPassword = user.password;
+      const isPasswordMatch = await bcrypt.compare(
+        oldPassword,
+        oldHashedPassword
+      );
+      if (!isPasswordMatch) {
+        request.flash("error", "Invalid old password");
+        return response.redirect("/changePassword");
+      }
+      const saltRounds = 10;
+      const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+      user.password = newHashedPassword;
+
+      await User.update(
+        { password: user.password },
+        { where: { id: user.id } }
+      );
+      await user.save();
+
+      request.flash("success", "Password changed successfully");
+      response.redirect("/changePassword");
+    } catch (error) {
+      console.log(error);
+      request.flash("error", "An error occurred while changing the password");
+      response.redirect("/changePassword");
+    }
+  }
+);
+
+app.get(
   "/sport",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
@@ -669,6 +721,44 @@ app.get(
     const isAdmin = users.isAdmin;
     //isjoined
     const isJoined = await UserSession.isUserJoined(userId, sessionId);
+    //allowToJoin
+    let allowToJoin = true;
+    let userJoinedSession = null;
+    // let userAlreadyJoinedSession = null;
+    const userAllJoinedSessionsIds =
+      await UserSession.getUpcomingSessionsByUser(userId);
+    console.log("session date ", session.playDate);
+    for (let i = 0; i < userAllJoinedSessionsIds.length; i++) {
+      userJoinedSession = await Session.getSessionWithDtId(
+        userAllJoinedSessionsIds[i].sessionId,
+        session.playDate
+      );
+      console.log("userJoinedSession for loop ", userJoinedSession);
+      // if (userJoinedSession !== null && userJoinedSession.length > 0) {
+      //   allowToJoin = false;
+      //   console.log("allowtojoin FOR LOOP ", allowToJoin);
+      //   break;
+      // }
+      // else {
+      //   userJoinedSession = null;
+
+      // }
+      if (userJoinedSession === null) {
+        allowToJoin = true;
+        console.log("allowtojoin FOR LOOP ", allowToJoin);
+      } else {
+        allowToJoin = false;
+        break;
+      }
+    }
+
+    // console.log("userJoinedSessions ", userAllJoinedSessionsIds);
+
+    // console.log("userAlreadyJoinedSession ", userAlreadyJoinedSession);
+
+    console.log("userJoinedSessions ", userJoinedSession);
+    console.log("session date ", session.playDate);
+    console.log("allowtojoin  ", allowToJoin);
 
     response.render("dispSession", {
       userName,
@@ -681,6 +771,8 @@ app.get(
       isJoined,
       isAdmin,
       isCreator,
+      allowToJoin,
+      userJoinedSession,
       reason,
       creatorName,
       csrfToken: request.csrfToken(),
@@ -818,6 +910,7 @@ app.delete(
           sportId: sportId,
         },
       });
+      console.log("sessions deleted successfully");
       await Sport.remove(sportId);
       console.log("sport deleted successfully");
       return response.redirect("/sport");
