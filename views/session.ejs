@@ -33,53 +33,43 @@
   <body>
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-3 col-span-2">
-        <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
-        <br />
+        <span class="text-4xl font-semibold text-gray-600"><%= title %></span>
+        <span>
+          <a class="ml-6 text-green-600 underline" href="/sport">Home</a>
+        </span>
         <% if (isAdmin) { %>
-        <a href="/sport/<%= sportId %>/edit" class="text-green-600 underline"
-          >Edit Sport
-        </a>
-        <br />
-        <br />
-        <a
-          href="/sport"
-          class="text-green-600 underline"
-          onclick="deleteSport(<%= sportId %>)"
-          >Delete Sport
-        </a>
-        <br />
-        <br />
+
+        <span>
+          <a
+            href="/sport/<%= sportId %>/edit"
+            class="ml-6 text-green-600 underline"
+          >
+            <span> Edit Sport </span></a
+          >
+        </span>
+        <span>
+          <a
+            href="/sport"
+            class="ml-6 text-green-600 underline"
+            onclick="deleteSport(<%= sportId %>)"
+            >Delete Sport
+          </a></span
+        >
+
         <% } %>
-        <a
-          href="/sport/<%= sportId %>/new_session"
-          class="text-green-600 underline"
-          >create session</a
-        >
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/prev_sessions"
-          class="text-green-600 underline"
-          >view previous sessions</a
-        >
-
-        <br />
-        <br />
-
-        <a
-          href="/sport/<%= sportId %>/canceled_sessions"
-          class="text-green-600 underline"
-          >view canceled sessions</a
-        >
-
-        <br />
-        <br />
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h1 class="text-xl font-semibold text-gray-600">Upcoming sessions</h1>
+          <h1 class="mt-5 text-2xl font-semibold text-gray-600">
+            Upcoming sessions (<%= upcomingSessions.length %>)
+          </h1>
           <table>
-            sportId : <%= sportId %>
             <br />
+            <% if(upcomingSessions.length===0) { %>
+            <h5 class="text-grey">
+              There are no upcoming Sessions available to Join. Do you want to
+              create one ?
+            </h5>
+            <% } %> <% if(upcomingSessions.length!=0) { %>
             <%=upcomingSessions.length %> sessions Available<% for( var i=0 ; i
             < upcomingSessions.length ; i++) { %>
             <tr>
@@ -111,9 +101,24 @@
                 </div>
               </td>
             </tr>
-            <% } %>
+            <% } %> <% } %>
           </table>
         </div>
+        <br />
+        <span class="mt-5 mr-5">
+          <a
+            href="/sport/<%= sportId %>/new_session"
+            class="text-green-600 underline"
+            >create a new session</a
+          >
+        </span>
+        <span class="mt-5 mr-5">
+          <a
+            href="/sport/<%= sportId %>/prev_sessions"
+            class="text-green-600 underline"
+            >view previous sessions</a
+          >
+        </span>
         <div>
           <br />
           <a
@@ -124,11 +129,6 @@
         </div>
         <div>
           <br />
-          <a
-            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
-            href="/sport"
-            >Home</a
-          >
         </div>
       </div>
     </div>

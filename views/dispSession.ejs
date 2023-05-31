@@ -55,19 +55,17 @@
           <h1 class="text-3xl font-semibold text-gray-600">
             <%= title %> session #<%= sessionId %>
           </h1>
-          <p>
+          <p class="my-5">
             This session is scheduled for <%=
-            session.playDate.toString().substring(0,25) %> <%= session.playDate
-            %>, to be played at " <%= session.venue %>"
+            session.playDate.toLocaleString('en-US', { weekday: 'long' , month:
+            'long' , day: 'numeric' , year: 'numeric' , hour: 'numeric' ,
+            minute: 'numeric' , hour12: true }) %> , to be played at " <%=
+            session.venue %>"
           </p>
           <h1 class="text-2xl font-semibold text-gray-600">
             Players (<%= session.playernames.length %>)
           </h1>
-
-          sessionId : <%= sessionId %> sportId:<%= sportId %> <%= userName %>
-          <%= userId %>
-          <br />
-          <ul class="list-none display:inline">
+          <ul class="mt-5 list-none display:inline">
             <li>
               <% for( var i=0 ; i < session.playernames.length ; i++) { %> <%
               if((session.playernames[i]===userName) &&
@@ -129,15 +127,24 @@
             </li>
           </ul>
 
-          <br />
-          <% if (((session.playersneeded)>0 && session.isCanceled === false &&
-          isPrevious === false) || ((session.playersneeded)>0 && isPrevious ===
-          false )) { %> <% if (isJoined===false && allowToJoin===true) { %>
+          <% if ( isJoined===true) { %>
+          <div>
+            <h5 class="my-5">
+              You <% if ( isPrevious) { %>were <% } %> <% if ( !isPrevious) {
+              %>are <% } %> in this Session
+            </h5>
+          </div>
+
+          <% } %> <% if (((session.playersneeded)>0 && session.isCanceled ===
+          false && isPrevious === false) || ((session.playersneeded)>0 &&
+          isPrevious === false )) { %> <% if (isJoined===false &&
+          allowToJoin===true) { %>
           <form
             id="joinForm"
             action="/sessions/<%= sessionId %>/join"
             method="POST"
           >
+            <h3 class="my-5">Click Join to join the session</h3>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
@@ -146,14 +153,12 @@
               Join Session
             </button>
           </form>
-          <% } %>
           <br />
-          isJoined <%= isJoined %> isPrevious <%= isPrevious %> <% } %> <% if
-          (allowToJoin===false && userJoinedSession.isCanceled===false &&
-          isJoined===false) { %>
+          <% } %> <% } %> <% if (allowToJoin===false &&
+          userJoinedSession.isCanceled===false && isJoined===false) { %>
           <h3>
-            You Cant join this session as you have the follwoing Session at same
-            time
+            You Can't join this session as you have the following Session at the
+            same time
           </h3>
           <div>
             <table>
@@ -193,43 +198,38 @@
               <% } %>
             </table>
           </div>
-
-          <% if (isJoined && isPrevious===false && session.isCanceled===false )
-          { %>
+          <% if ((session.playersneeded)==0 && isJoined===true) { %>
+          <div>Your Session is Fully booked</div>
+          <% } %> <% if (isJoined && isPrevious===false &&
+          session.isCanceled===false ) { %>
+          <h5 class="mt-4">Do You Want to leave this session ?</h5>
           <form action="/sessions/<%= sessionId %>/leave" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+              class="my-5 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
             >
               leave session
             </button>
           </form>
-          <br />
           <% } %> <% if ((session.playersneeded)==0 && isJoined===false) { %>
-          <div>No Slots Available</div>
-          <% } %> <% if ((session.playersneeded)==0 && isJoined===true) { %>
-          <div>Fully booked</div>
-          <% } %>
-          <br />
-          <% if ( isCreator && session.isCanceled===false) { %>
-          <div>
+          <div>This session is Fully Booked. No slots available</div>
+          <% } %> <% if ( isCreator && session.isCanceled===false) { %>
+          <div class="mb-5">
             <a
               href="/sessions/<%= session.id %>/edit"
-              class="text-green-600 underline"
+              class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
             >
               Edit session
             </a>
           </div>
           <div>
-            <br />
-
             <% if ((session.isCanceled===false) && (isCreator)) { %>
             <form action="/sessions/<%= sessionId %>/cancel" method="POST">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button
                 type="button"
-                class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+                class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
                 onclick="displayReasonField()"
               >
                 Cancel session
@@ -246,7 +246,7 @@
                 <br />
                 <button
                   type="submit"
-                  class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
+                  class="my-5 text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
                 >
                   Confirm Cancellation
                 </button>
@@ -254,18 +254,19 @@
             </form>
             <% } %>
           </div>
+          <% } %> <% if (session.isCanceled===true) { %>
+          <div class="my-5">
+            <h5>This session is canceled due to :</h5>
+            <%= reason %>
+          </div>
           <% } %>
-        </div>
-        <% if (session.isCanceled===true) { %>
-        <h5>reason of cancellation :</h5>
-        <%= reason %> <% } %>
-        <div>
-          <br />
-          <a
-            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
-            href="/signout"
-            >Signout</a
-          >
+          <div>
+            <a
+              class="my-5 bg-red-600 hover:bg-red-800 text-white px-3 py-1 rounded font-medium"
+              href="/signout"
+              >Signout</a
+            >
+          </div>
         </div>
       </div>
     </div>

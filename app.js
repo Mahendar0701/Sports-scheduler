@@ -318,6 +318,15 @@ app.get(
         },
       });
 
+      const createdUpcomingSessions = await user.getSessions({
+        where: {
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+          CreatorId: user.id,
+        },
+      });
+
       if (request.accepts("html")) {
         response.render("mySessions", {
           loggedInUser: request.user,
@@ -328,12 +337,14 @@ app.get(
           canceledSessions,
           isAdmin,
           userName,
+          createdUpcomingSessions,
         });
       } else {
         response.json({
           allSports,
           upComingSessions,
           isAdmin,
+          createdUpcomingSessions,
         });
       }
     } catch (error) {
@@ -734,15 +745,6 @@ app.get(
         session.playDate
       );
       console.log("userJoinedSession for loop ", userJoinedSession);
-      // if (userJoinedSession !== null && userJoinedSession.length > 0) {
-      //   allowToJoin = false;
-      //   console.log("allowtojoin FOR LOOP ", allowToJoin);
-      //   break;
-      // }
-      // else {
-      //   userJoinedSession = null;
-
-      // }
       if (userJoinedSession === null) {
         allowToJoin = true;
         console.log("allowtojoin FOR LOOP ", allowToJoin);
@@ -751,11 +753,6 @@ app.get(
         break;
       }
     }
-
-    // console.log("userJoinedSessions ", userAllJoinedSessionsIds);
-
-    // console.log("userAlreadyJoinedSession ", userAlreadyJoinedSession);
-
     console.log("userJoinedSessions ", userJoinedSession);
     console.log("session date ", session.playDate);
     console.log("allowtojoin  ", allowToJoin);

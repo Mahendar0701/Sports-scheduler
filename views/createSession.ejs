@@ -12,7 +12,6 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
-        <%= userName %>
         <form action="/sessions" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <input type="hidden" name="sportId" value="<%= sportId %>" />
@@ -23,7 +22,7 @@
             >
             <input
               name="playDate"
-              class="border border-gray-600 text-gray-900 rounded p-2"
+              class="ml-5 border border-gray-600 text-gray-900 rounded p-2"
               type="datetime-local"
               min="<%= new Date().toISOString().slice(0, 16) %>"
             />

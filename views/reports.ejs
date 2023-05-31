@@ -24,7 +24,7 @@
               <input
                 name="startDate"
                 id="startDate"
-                class="border border-gray-600 text-gray-900 rounded p-2"
+                class="ml-6 border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
                 required
               />
@@ -36,7 +36,7 @@
               <input
                 name="endDate"
                 id="endDate"
-                class="border border-gray-600 text-gray-900 rounded p-2"
+                class="ml-12 border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
                 required
               />
@@ -46,7 +46,7 @@
                 type="submit"
                 class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
               >
-                Submit
+                Filter
               </button>
             </div>
           </form>
@@ -63,9 +63,6 @@
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
             The following Sports are according to no of sessions created
           </h5>
-          <h5 class="text-xl font-semibold text-gray-600 pb-5">
-            From <%= startDate %> to <%= endDate %>
-          </h5>
 
           <div>
             <table>
@@ -75,7 +72,7 @@
                   <a
                     href="/sport/<%= allSports[i].id
                     %>/report-session/<%= startDate %>/<%= endDate %>"
-                    class="underline text-green-600"
+                    class="bg-white hover:bg-stone-50 rounded my-0.5 p-2 w-auto text-green-600 w-full"
                     ><%=allSports[i].title %>
                   </a>
                 </td>

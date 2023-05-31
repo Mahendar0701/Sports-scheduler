@@ -9,37 +9,37 @@
     <title>Sports</title>
   </head>
   <body>
-    <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
+    <div class="grid grid-cols-10">
+      <div class="col-start-4 col-span-4">
         <%- include('header') %> <br />
-        <div class="text-2xl font-semibold text-gray-600">
+        <span class="text-2xl font-semibold text-gray-600">
           Welcome <%= userName %>
-        </div>
-        <div class="py-5">
-          <a href="/my_sessions" class="text-green-600 underline"
-            >My sessions</a
-          >
-        </div>
-        <div>
-          <br />
+        </span>
+        <span>
           <a
-            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-2"
+            class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded font-medium mr-2 mb mt-2"
             href="/signout"
             >Signout</a
           >
-        </div>
-        <div>
-          <br />
           <a
-            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-2"
+            class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded font-medium mr-2 mb mt-2"
             href="/changePassword"
             >Change Password</a
           >
+        </span>
+
+        <div class="pt-5">
+          <a href="/my_sessions" class="mb-5 text-green-600 underline"
+            >My sessions</a
+          >
         </div>
+
         <% if (isAdmin) { %>
-        <hr class="h-0.5 bg-black opacity-50" />
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div class="py-0">
-          isadmin <%= isAdmin %>
+          <h5 class="text-2xl font-semibold text-gray-600">
+            Adminstartive actions
+          </h5>
           <div class="py-5">
             <a href="/createSport" class="text-green-600 underline"
               >Create New Sport</a
@@ -63,10 +63,10 @@
               <td>
                 <a
                   href="/sessions/<%=userUpcomingSessions[i].id %>"
-                  class="text-green-600"
+                  class="bg-sky-500 hover:bg-sky-700 ..."
                 >
                   <div
-                    class="border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
+                    class="bg-white hover:bg-stone-50 border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=userUpcomingSessions[i].playDate.toString().substring(0,25)%>
@@ -118,7 +118,7 @@
                     class="text-green-600 no-underline"
                   >
                     <div
-                      class="border border-gray-600 text-gray-900 rounded my-0.5 p-2 w-full"
+                      class="border border-gray-600 text-white-900 bg-white hover:bg-stone-50 rounded my-0.5 p-2 w-full"
                     >
                       <%=allSports[i].title %>
                     </div>
@@ -144,7 +144,7 @@
                   class="text-green-600"
                 >
                   <div
-                    class="border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
+                    class="bg-white hover:bg-stone-50 border border-gray-600 text-green-600 rounded p-2 my-0.5 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=createdUpcomingSessions[i].playDate.toString().substring(0,25)%>

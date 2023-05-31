@@ -35,12 +35,12 @@
             i < previousSessions.length ; i++) { %>
             <tr>
               <td>
-                <div
-                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                <a
+                  href="/sessions/<%=previousSessions[i].id %>"
+                  class="text-green-600"
                 >
-                  <a
-                    href="/sessions/<%=previousSessions[i].id %>"
-                    class="text-green-600"
+                  <div
+                    class="border border-gray-600 text-gray-900 rounded p-2 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=previousSessions[i].playDate.toString().substring(0,25)%>
@@ -60,8 +60,8 @@
                       Fully Booked
                     </div>
                     <% } %>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </td>
             </tr>
             <% } %>
