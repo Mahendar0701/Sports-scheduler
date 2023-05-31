@@ -813,6 +813,11 @@ app.delete(
     try {
       const sportId = request.params.id;
       console.log("Deleting sport with ID", sportId);
+      await Session.destroy({
+        where: {
+          sportId: sportId,
+        },
+      });
       await Sport.remove(sportId);
       console.log("sport deleted successfully");
       return response.redirect("/sport");
