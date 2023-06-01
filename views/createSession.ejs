@@ -6,12 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
-    <title>Sports Scheduler</title>
+    <title>My Sports Scheduler</title>
   </head>
   <body>
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
+        <span><a
+          class="ml-3 my-5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+          href="/sport"
+          >Home</a
+        ></span>
         <form action="/sessions" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <input type="hidden" name="sportId" value="<%= sportId %>" />

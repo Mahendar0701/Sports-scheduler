@@ -24,27 +24,39 @@
   <body>
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-3 col-span-2">
-        <div class="text-3xl font-semibold text-gray-600"><%= title %></div>
-        <br />
+        <span class="text-4xl font-semibold text-gray-600"><%= title %></span
+        ><span class="ml-6"
+          ><a
+            class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+            href="/sport"
+            >Home</a
+          ></span
+        >
         <div>
-          <h1 class="text-xl font-semibold text-gray-600">
-            <h1 class="text-xl font-bold">Sessions</h1>
-            Sessions of <%- sportTitle %> From <%- startDate.replace("T", " ")
-            %> To <%= endDate.replace("T", " ") %>
+          <h1 class="my-4 text-2xl font-bold">
+            Sessions (<%=allSessions.length %>)
+          </h1>
+          <h1 class="text-xl mb-3 font-semibold text-gray-600">
+            Sessions of <%- sportTitle %>
+            <h1 class="my-2">
+              From <%- new Date(startDate).toLocaleString("en-US", { year:
+              '2-digit', month: '2-digit', day: '2-digit', hour: 'numeric',
+              minute: 'numeric', hour12: true }); %> To <%- new
+              Date(endDate).toLocaleString("en-US", { year: '2-digit', month:
+              '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric',
+              hour12: true }); %>
+            </h1>
           </h1>
           <table>
-            sportId : <%= sportId %>
-            <br />
-            <%=allSessions.length %> sessions Available<% for( var i = 0 ; i <
-            allSessions.length ; i++) { %>
+            <% for( var i = 0 ; i < allSessions.length ; i++) { %>
             <tr>
               <td>
-                <div
-                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                <a
+                  href="/sessions/<%=allSessions[i].id %>"
+                  class="text-green-600"
                 >
-                  <a
-                    href="/sessions/<%=allSessions[i].id %>"
-                    class="text-green-600"
+                  <div
+                    class="my-0.5 bg-white font-semibold hover:bg-stone-50 border border-gray-600 rounded p-2 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=allSessions[i].playDate.toString().substring(0,25)%>
@@ -64,33 +76,39 @@
                       Fully Booked
                     </div>
                     <% } %>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </td>
             </tr>
             <% } %>
           </table>
         </div>
-        <br />
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h1 class="text-xl font-semibold text-gray-600">
-            <h1 class="text-xl font-bold">Canceled Sessions</h1>
-            Canceled Sessions of <%- sportTitle %> From <%=
-            startDate.replace("T", " ") %> To <%= endDate.replace("T", " ") %>
+          <h1 class="mb-3 text-2xl font-bold">
+            Canceled Sessions (<%=allCanceledSessions.length %>)
+          </h1>
+          <h1 class="text-xl mb-2 font-semibold text-gray-600">
+            Canceled Sessions of <%- sportTitle %>
+            <h1 class="my-2">
+              From <%- new Date(startDate).toLocaleString("en-US", { year:
+              '2-digit', month: '2-digit', day: '2-digit', hour: 'numeric',
+              minute: 'numeric', hour12: true }); %> To <%- new
+              Date(endDate).toLocaleString("en-US", { year: '2-digit', month:
+              '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric',
+              hour12: true }); %>
+            </h1>
           </h1>
           <table>
-            sportId : <%= sportId %>
-            <br />
-            <%=allCanceledSessions.length %> sessions Available<% for( var i = 0
-            ; i < allCanceledSessions.length ; i++) { %>
+            <% for( var i = 0 ; i < allCanceledSessions.length ; i++) { %>
             <tr>
               <td>
-                <div
-                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                <a
+                  href="/sessions/<%=allCanceledSessions[i].id %>"
+                  class="text-green-600"
                 >
-                  <a
-                    href="/sessions/<%=allCanceledSessions[i].id %>"
-                    class="text-green-600"
+                  <div
+                    class="border my-0.5 font-semibold bg-white hover:bg-stone-50 border-gray-600 rounded p-2 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=allCanceledSessions[i].playDate.toString().substring(0,25)%>
@@ -111,9 +129,16 @@
                     >
                       Fully Booked
                     </div>
+                    <% } %> <% if (allCanceledSessions[i].isCanceled ===true ) {
+                    %>
+                    <div
+                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
+                    </div>
                     <% } %>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </td>
             </tr>
             <% } %>
@@ -122,17 +147,9 @@
         <div>
           <br />
           <a
-            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            class="bg-red-600 hover:bg-red-800 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
             href="/signout"
             >Signout</a
-          >
-        </div>
-        <div>
-          <br />
-          <a
-            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
-            href="/sport"
-            >Home</a
           >
         </div>
       </div>

@@ -10,8 +10,8 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="grid grid-cols-6">
-      <div class="mt-6 col-start-3 col-span-2">
+    <div class="grid grid-cols-10">
+      <div class="mt-6 col-start-4 col-span-4">
         <div>
           <span class="text-4xl mr-5 font-semibold text-gray-600"
             >Sports Scheduler</span
@@ -74,7 +74,7 @@
         </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+          <h5 class="text-xl font-bold text-gray-600 pb-5">
             The following are Sports according to no of sessions created
           </h5>
 
@@ -86,7 +86,7 @@
                   <a
                     href="/sport/<%= allSports[i].id
                     %>/report-session/<%= startDate %>/<%= endDate %>"
-                    class="bg-white hover:bg-stone-50 rounded my-0.5 p-2 w-auto text-green-600 w-full"
+                    class="bg-white hover:bg-stone-50 font-semibold rounded my-0.5 p-2 w-auto text-green-600 w-full"
                     ><%=allSports[i].title %>
                   </a>
                 </td>
@@ -99,24 +99,24 @@
           </div>
           <hr class="my-5 h-0.5 bg-black opacity-50" />
           <div>
-            <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            <h5 class="text-2xl font-bold text-gray-600 pb-5">
               Relative popularity of Sports
             </h5>
           </div>
         </div>
-        <div style="width: 500px; height: 300px; py: 2px">
+        <div style="width: 600px; height: 300px;">
           <canvas id="myChart"></canvas>
         </div>
-        <hr class="mb-5 h-0.5 bg-black opacity-50" />
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+          <h5 class="text-2xl font-bold text-gray-600 pb-5">
             Ranking of Sports
           </h5>
           <ol type="1">
             <% for (var i = 0; i < sortedSportTitles.length; i++) { %>
             <li>
-              <span class="mr-5"><%= i+1 %></span
-              ><span><%= sortedSportTitles[i] %></span>
+              <span class="mr-5 text-xl font-bold text-purple-900"><%= i+1 %></span
+              ><span class=" text-xl font-semibold text-purple-900 "><%= sortedSportTitles[i] %></span>
             </li>
             <% } %>
           </ol>
@@ -124,7 +124,7 @@
         <div class="my-5"></div>
         <div class="my-5">
           <a
-            class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            class="bg-red-600 hover:bg-red-800 text-white px-3 py-1.5 rounded font-medium mr-2 mb mt-5"
             href="/signout"
             >Signout</a
           >

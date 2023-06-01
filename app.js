@@ -354,6 +354,88 @@ app.get(
   }
 );
 
+// app.get(
+//   "/reports",
+//   connectEnsureLogin.ensureLoggedIn(),
+//   async (request, response) => {
+//     try {
+//       const startDate = request.query.startDate;
+//       const endDate = request.query.endDate;
+//       const allSports = await Sport.getAllSports();
+//       console.log("sport id", allSports.length);
+//       let sessionCounts = [];
+//       let sortedSessionCount = [];
+//       let sportTitles = [];
+//       for (let i = 0; i < allSports.length; i++) {
+//         const count = await Session.count({
+//           where: {
+//             sportId: allSports[i].id,
+//           },
+//         });
+//         sessionCounts.push(count);
+//         sortedSessionCount.push(count);
+//         sportTitles.push(allSports[i].title);
+//       }
+//       console.log(sessionCounts);
+//       console.log("sport titles before sort", sportTitles);
+
+//       var sportDict = {};
+
+//       for (let i = 0; i < sportTitles.length; i++) {
+//         sportDict[sportTitles[i]] = sessionCounts[i];
+//       }
+
+//       console.log(sportDict);
+
+//       var items = Object.keys(sportDict).map((key) => {
+//         return [key, sportDict[key]];
+//       });
+
+//       items.sort((first, second) => {
+//         return second[1] - first[1];
+//       });
+
+//       var sortedSportTitles = items.map((e) => {
+//         return e[0];
+//       });
+
+//       console.log("keys", sportTitles);
+//       console.log(sessionCounts);
+//       sortedSessionCount.sort();
+//       sortedSessionCount.reverse();
+//       console.log(sortedSessionCount);
+//       console.log("sport titles", sportTitles);
+
+//       if (request.accepts("html")) {
+//         response.render("reports", {
+//           loggedInUser: request.user,
+//           title: "Sports Application",
+//           allSports,
+//           sessionCounts,
+//           sortedSessionCount,
+//           sportTitles,
+//           sortedSportTitles,
+//           startDate,
+//           endDate,
+//           csrfToken: request.csrfToken(),
+//         });
+//       } else {
+//         response.json({
+//           allSports,
+//           sessionCounts,
+//           sortedSessionCount,
+//           sportTitles,
+//           startDate,
+//           endDate,
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return response.status(422).json(error);
+//     }
+//   }
+// );
+
 app.get(
   "/reports",
   connectEnsureLogin.ensureLoggedIn(),
@@ -374,7 +456,7 @@ app.get(
         });
         sessionCounts.push(count);
         sortedSessionCount.push(count);
-        sportTitles.push(allSports[i].title);
+        sportTitles.push(allSports[i].titles);
       }
       console.log(sessionCounts);
       console.log("sport titles before sort", sportTitles);
@@ -521,7 +603,7 @@ app.post(
 );
 
 app.get(
-  "/sport/:id//:startDate/:endDate",
+  "/sport/:id/report-session/:startDate/:endDate",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
