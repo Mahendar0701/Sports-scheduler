@@ -48,6 +48,17 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static prevAndCanceledSessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+          playDate: {
+            [Op.lt]: new Date(),
+          },
+        },
+      });
+    }
+
     static upcomingSessions(sportId) {
       return this.findAll({
         where: {
