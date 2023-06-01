@@ -974,16 +974,20 @@ app.post(
       playernames = playernames.filter((name) => name !== playerNameToRemove);
 
       session.playernames = playernames;
-      const user = await User.findOne({
-        where: {
-          firstName: firstName,
-          lastName: lastName,
-        },
-      });
+      if (lastName) {
+        const user = await User.findOne({
+          where: {
+            firstName: firstName,
+            lastName: lastName,
+          },
+        });
 
-      if (user != null) {
-        await session.removeUser(user);
+        if (user != null) {
+          await session.removeUser(user);
+        }
+
       }
+
 
       session.playersneeded = session.playersneeded + 1;
       await Session.update(
