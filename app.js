@@ -513,7 +513,9 @@ app.post(
       }
     } catch (error) {
       console.log(error);
-      return response.status(422).json(error);
+      request.flash("error", "Please Fill start Date and end Date!");
+      response.redirect("/reports");
+      // return response.status(422).json(error);
     }
   }
 );
@@ -1036,9 +1038,24 @@ app.post(
       let playernames = session.playernames;
       const playerNameToRemove = request.params.playerName;
 
+      console.log("playerNameToRemove", playerNameToRemove);
+      const [firstName, lastName] = playerNameToRemove.split(" ");
+
       playernames = playernames.filter((name) => name !== playerNameToRemove);
 
       session.playernames = playernames;
+
+      const user = await User.findOne({
+        where: {
+          firstName: firstName,
+          lastName: lastName,
+        },
+      });
+
+      console.log("user", user);
+      if (user != null) {
+        await session.removeUser(user);
+      }
 
       session.playersneeded = session.playersneeded + 1;
 

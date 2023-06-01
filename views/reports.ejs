@@ -37,7 +37,6 @@
                 id="startDate"
                 class="ml-6 border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
-                required
               />
             </div>
             <div class="py-3">
@@ -49,7 +48,6 @@
                 id="endDate"
                 class="ml-12 border border-gray-600 text-gray-900 rounded p-2"
                 type="datetime-local"
-                required
               />
             </div>
             <div class="py-3">
@@ -61,6 +59,11 @@
               </button>
             </div>
           </form>
+          <div class="text-red-500"><% if(messages && messages.error && messages.error.length > 0)  { %>
+            <% for(var i=0; i<messages.error.length; i++) { %>
+                    <li > <%= messages.error[i] %></li>
+            <% } %>
+          <% } %></div>
           <script>
             const startDateInput = document.getElementById("startDate");
             const endDateInput = document.getElementById("endDate");
