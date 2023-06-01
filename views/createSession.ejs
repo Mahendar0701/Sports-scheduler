@@ -10,19 +10,20 @@
   </head>
   <body>
     <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
-        <h2 class="text-3xl font-semibold text-gray-600">Create new session</h2>
+      <div class="my-5 col-start-3 col-span-2">
+        <span class="text-3xl my-5 font-semibold text-gray-600">Create new session</span>
         <span><a
-          class="ml-3 my-5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+          class="ml-3 my-5 bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
           href="/sport"
           >Home</a
         ></span>
+        <br><br>
         <form action="/sessions" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <input type="hidden" name="sportId" value="<%= sportId %>" />
           <input type="hidden" name="creatorId" value="<%= userId %>" />
           <div class="py-3">
-            <label for="playDate" class="text-xl font-semibold text-gray-600"
+            <label for="playDate" class="text-xl my-3 font-semibold text-gray-600"
               >When will this session be held?</label
             >
             <input
@@ -66,9 +67,9 @@
           <div class="py-3">
             <button
               type="submit"
-              class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+              class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-5 py-2"
             >
-              Submit
+              Create
             </button>
           </div>
         </form>
@@ -77,9 +78,7 @@
                   <li > <%= messages.error[i] %></li>
           <% } %>
         <% } %></div>
-        <!-- <div>
-          <h1>Available sessions</h1>
-        </div> -->
+        
       </div>
     </div>
   </body>

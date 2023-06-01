@@ -63,27 +63,30 @@
         <% } %>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h1 class="mt-5 text-2xl font-semibold text-gray-600">
+          <h1 class="mt-5 text-2xl font-bold text-gray-600">
             Upcoming sessions (<%= upcomingSessions.length %>)
           </h1>
           <table>
             <br />
             <% if(upcomingSessions.length===0) { %>
-            <h5 class="text-grey">
+            <h5 class="text-grey font-semibold">
               There are no upcoming Sessions available to Join. Do you want to
               create one ?
             </h5>
+
             <% } %> <% if(upcomingSessions.length!=0) { %>
-            <%=upcomingSessions.length %> sessions Available<% for( var i=0 ; i
-            < upcomingSessions.length ; i++) { %>
+            <h5 class="my-3">
+              <%=upcomingSessions.length %> sessions Available
+            </h5>
+            <% for( var i=0 ; i < upcomingSessions.length ; i++) { %>
             <tr>
               <td>
-                <div
-                  class="border border-gray-600 text-gray-900 rounded p-2 w-full"
+                <a
+                  href="/sessions/<%=upcomingSessions[i].id %>"
+                  class="text-green-600"
                 >
-                  <a
-                    href="/sessions/<%=upcomingSessions[i].id %>"
-                    class="text-green-600"
+                  <div
+                    class="bg-white hover:bg-stone-50 border border-gray-600 text-green-600 font-semibold rounded p-2 my-0.5 w-full"
                   >
                     <div class="mr-18 display: inline">
                       <%=upcomingSessions[i].playDate.toString().substring(0,25)%>
@@ -101,8 +104,8 @@
                       Fully Booked
                     </div>
                     <% } %>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </td>
             </tr>
             <% } %> <% } %>
@@ -112,14 +115,14 @@
         <span class="mt-5 mr-5">
           <a
             href="/sport/<%= sportId %>/new_session"
-            class="bg-cyan-600 hover:bg-cyan-800 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            class="bg-slate-50 hover:bg-slate-100 text-grey-900 px-3 py-1 rounded font-medium mr-2 mb mt-5"
             >create a new session</a
           >
         </span>
         <span class="mt-5 mr-5">
           <a
             href="/sport/<%= sportId %>/prev_sessions"
-            class="bg-violet-600 hover:bg-violet-800 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
+            class="bg-slate-50 hover:bg-slate-100 text-grey-900 px-3 py-1 rounded font-medium mr-2 mb mt-5"
             >view previous sessions</a
           >
         </span>
