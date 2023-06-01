@@ -11,10 +11,21 @@
   </head>
   <body>
     <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
-        <%- include('header') %> <br />
-
+      <div class="mt-6 col-start-3 col-span-2">
         <div>
+          <span class="text-4xl mr-5 font-semibold text-gray-600"
+            >Sports Scheduler</span
+          >
+          <span
+            ><a
+              class="ml-3 my-5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
+              href="/sport"
+              >Home</a
+            ></span
+          >
+        </div>
+
+        <div class="mt-5">
           <form action="/reports" method="post">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="py-3">
@@ -44,7 +55,7 @@
             <div class="py-3">
               <button
                 type="submit"
-                class="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-5 py-2"
+                class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-5 py-2"
               >
                 Filter
               </button>
@@ -58,10 +69,10 @@
             });
           </script>
         </div>
-
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
           <h5 class="text-xl font-semibold text-gray-600 pb-5">
-            The following Sports are according to no of sessions created
+            The following are Sports according to no of sessions created
           </h5>
 
           <div>
@@ -83,13 +94,32 @@
               <% } %>
             </table>
           </div>
-          <div style="width: 500px; height: 300px; py: 2px">
-            <canvas id="myChart"></canvas>
+          <hr class="my-5 h-0.5 bg-black opacity-50" />
+          <div>
+            <h5 class="text-xl font-semibold text-gray-600 pb-5">
+              Relative popularity of Sports
+            </h5>
           </div>
         </div>
-
+        <div style="width: 500px; height: 300px; py: 2px">
+          <canvas id="myChart"></canvas>
+        </div>
+        <hr class="mb-5 h-0.5 bg-black opacity-50" />
         <div>
-          <br />
+          <h5 class="text-xl font-semibold text-gray-600 pb-5">
+            Ranking of Sports
+          </h5>
+          <ol type="1">
+            <% for (var i = 0; i < sortedSportTitles.length; i++) { %>
+            <li>
+              <span class="mr-5"><%= i+1 %></span
+              ><span><%= sortedSportTitles[i] %></span>
+            </li>
+            <% } %>
+          </ol>
+        </div>
+        <div class="my-5"></div>
+        <div class="my-5">
           <a
             class="bg-blue-600 text-white px-3 py-1 rounded font-medium mr-2 mb mt-5"
             href="/signout"
@@ -99,8 +129,8 @@
       </div>
     </div>
     <script>
-      const sportTitlesx = <%- JSON.stringify(sportTitles) %>;
-      const sessionCountsy = <%- JSON.stringify(sessionCounts) %>;
+      const sportTitlesx = <%- JSON.stringify(sortedSportTitles) %>;
+      const sessionCountsy = <%- JSON.stringify(sortedSessionCount) %>;
 
       new Chart("myChart", {
         type: "bar",

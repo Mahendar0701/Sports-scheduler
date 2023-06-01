@@ -364,6 +364,88 @@ app.get(
       const allSports = await Sport.getAllSports();
       console.log("sport id", allSports.length);
       let sessionCounts = [];
+      let sortedSessionCount = [];
+      let sportTitles = [];
+      for (let i = 0; i < allSports.length; i++) {
+        const count = await Session.count({
+          where: {
+            sportId: allSports[i].id,
+          },
+        });
+        sessionCounts.push(count);
+        sortedSessionCount.push(count);
+        sportTitles.push(allSports[i].title);
+      }
+      console.log(sessionCounts);
+      console.log("sport titles before sort", sportTitles);
+
+      var sportDict = {};
+
+      for (let i = 0; i < sportTitles.length; i++) {
+        sportDict[sportTitles[i]] = sessionCounts[i];
+      }
+
+      console.log(sportDict);
+
+      var items = Object.keys(sportDict).map((key) => {
+        return [key, sportDict[key]];
+      });
+
+      items.sort((first, second) => {
+        return second[1] - first[1];
+      });
+
+      var sortedSportTitles = items.map((e) => {
+        return e[0];
+      });
+
+      console.log("keys", sportTitles);
+      console.log(sessionCounts);
+      sortedSessionCount.sort();
+      sortedSessionCount.reverse();
+      console.log(sortedSessionCount);
+      console.log("sport titles", sportTitles);
+
+      if (request.accepts("html")) {
+        response.render("reports", {
+          loggedInUser: request.user,
+          title: "Sports Application",
+          allSports,
+          sessionCounts,
+          sortedSessionCount,
+          sportTitles,
+          sortedSportTitles,
+          startDate,
+          endDate,
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        response.json({
+          allSports,
+          sessionCounts,
+          sortedSessionCount,
+          sportTitles,
+          startDate,
+          endDate,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.post(
+  "/reports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const startDate = request.body.startDate;
+      const endDate = request.body.endDate;
+      const allSports = await Sport.getAllSports();
+      let sessionCounts = [];
+      let sortedSessionCount = [];
       let sportTitles = [];
       for (let i = 0; i < allSports.length; i++) {
         const count = await Session.count({
@@ -375,9 +457,36 @@ app.get(
           },
         });
         sessionCounts.push(count);
+        sortedSessionCount.push(count);
         sportTitles.push(allSports[i].title);
       }
       console.log(sessionCounts);
+      console.log("sport titles before sort", sportTitles);
+
+      var sportDict = {};
+
+      for (let i = 0; i < sportTitles.length; i++) {
+        sportDict[sportTitles[i]] = sessionCounts[i];
+      }
+
+      console.log(sportDict);
+
+      var items = Object.keys(sportDict).map((key) => {
+        return [key, sportDict[key]];
+      });
+
+      items.sort((first, second) => {
+        return second[1] - first[1];
+      });
+
+      var sortedSportTitles = items.map((e) => {
+        return e[0];
+      });
+
+      sortedSessionCount.sort();
+      sortedSessionCount.reverse();
+      console.log(sessionCounts);
+      console.log(sortedSessionCount);
       console.log("sport titles", sportTitles);
 
       if (request.accepts("html")) {
@@ -386,6 +495,8 @@ app.get(
           title: "Sports Application",
           allSports,
           sessionCounts,
+          sortedSessionCount,
+          sortedSportTitles,
           sportTitles,
           startDate,
           endDate,
@@ -408,7 +519,7 @@ app.get(
 );
 
 app.get(
-  "/sport/:id/report-session/:startDate/:endDate",
+  "/sport/:id//:startDate/:endDate",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
@@ -465,48 +576,43 @@ app.get(
   }
 );
 
-app.post(
-  "/reports",
+app.get(
+  "/sport/:id/report-session//",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      const startDate = request.body.startDate;
-      const endDate = request.body.endDate;
-      const allSports = await Sport.getAllSports();
-      let sessionCounts = [];
-      let sportTitles = [];
+      const sportId = request.params.id;
+      const sportTitle = await Sport.getSportTitle(sportId);
+      console.log("sport Title :", sportTitle);
+      const allSessions = await Session.findAll({
+        where: {
+          sportId: sportId,
+          isCanceled: false,
+        },
+      });
 
-      for (let i = 0; i < allSports.length; i++) {
-        const count = await Session.count({
-          where: {
-            sportId: allSports[i].id,
-            playDate: {
-              [Op.between]: [startDate, endDate],
-            },
-          },
-        });
-        sessionCounts.push(count);
-        sportTitles.push(allSports[i].title);
-      }
+      const allCanceledSessions = await Session.findAll({
+        where: {
+          sportId: sportId,
+          isCanceled: true,
+        },
+      });
 
       if (request.accepts("html")) {
-        response.render("reports", {
+        response.render("report-sessions2", {
           loggedInUser: request.user,
           title: "Sports Application",
-          allSports,
-          sessionCounts,
-          sportTitles,
-          startDate,
-          endDate,
-          csrfToken: request.csrfToken(),
+          allSessions,
+          allCanceledSessions,
+          sportTitle,
+          sportId,
         });
       } else {
         response.json({
-          allSports,
-          sessionCounts,
-          sportTitles,
-          startDate,
-          endDate,
+          allSessions,
+          allCanceledSessions,
+          sportId,
+          sportTitle,
         });
       }
     } catch (error) {
