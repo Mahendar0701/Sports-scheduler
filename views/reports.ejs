@@ -75,26 +75,30 @@
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
           <h5 class="text-xl font-bold text-gray-600 pb-5">
-            The following are Sports according to no of sessions created
+            Rank of Sports according to number of Sessions
           </h5>
-
-          <div>
-            <table>
-              <% for( var i = 0 ; i < allSports.length ; i++) { %>
-              <tr>
-                <td style="padding: 10px; text-align: center">
-                  <a
-                    href="/sport/<%= allSports[i].id
+          <div class="p-4">
+            <table class="border-collapse border border-slate-400" >
+              <tbody>
+                <tr>
+                  <th class="p-3 text-center font-bold border border-slate-300 rounded-md">Rank</th>
+                  <th class="p-3 text-center font-bold border border-slate-300 rounded-md">Sport</th>
+                  <th class="p-3 text-center font-bold border border-slate-300 rounded-md">No of Sessions</th>
+                </tr>
+                <% for(var i = 0; i < sortedSportTitles.length; i++) { %>
+                <tr>
+                  <td class="p-3 text-center font-bold border border-slate-300 rounded-md"><%= i+1 %></td>
+                  <td class="p-3 text-center font-bold border border-slate-300 rounded-md"><a
+                    href="/sport/<%= sortedSportIds[i]
                     %>/report-session/<%= startDate %>/<%= endDate %>"
                     class="bg-white hover:bg-stone-50 font-semibold rounded my-0.5 p-2 w-auto text-green-600 w-full"
-                    ><%=allSports[i].title %>
-                  </a>
-                </td>
-                <td style="padding: 10px; text-align: center">
-                  number ofsessions : <%=sessionCounts[i] %>
-                </td>
-              </tr>
-              <% } %>
+                    >
+                    <%= sortedSportTitles[i] %>
+                   </a></td>
+                  <td class="text-center p-3 border border-slate-300 rounded-md">  <%= sortedSessionCount[i] %></td>
+                </tr>
+                <% } %>
+              </tbody>
             </table>
           </div>
           <hr class="my-5 h-0.5 bg-black opacity-50" />
@@ -108,19 +112,7 @@
           <canvas id="myChart"></canvas>
         </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
-        <div>
-          <h5 class="text-2xl font-bold text-gray-600 pb-5">
-            Ranking of Sports
-          </h5>
-          <ol type="1">
-            <% for (var i = 0; i < sortedSportTitles.length; i++) { %>
-            <li>
-              <span class="mr-5 text-xl font-bold text-purple-900"><%= i+1 %></span
-              ><span class=" text-xl font-semibold text-purple-900 "><%= sortedSportTitles[i] %></span>
-            </li>
-            <% } %>
-          </ol>
-        </div>
+        
         <div class="my-5"></div>
         <div class="my-5">
           <a

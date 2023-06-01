@@ -9,7 +9,6 @@ const { Session, Sport, User, UserSession } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
 var cookieParser = require("cookie-parser");
-// const session = require("./models/session");
 
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
@@ -111,7 +110,6 @@ app.post("/users", async (request, response) => {
     return response.redirect("/signup");
   }
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedPwd);
   try {
     const user = await User.create({
       firstName: request.body.firstName,
@@ -186,9 +184,6 @@ app.get(
   "/changePassword",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    const user = request.user;
-    const oldHashedPassword = user.password;
-    console.log("oldHashedPassword", oldHashedPassword);
     response.render("changePassword", {
       title: "Change Password",
       csrfToken: request.csrfToken(),
@@ -215,9 +210,7 @@ app.post(
       }
       const saltRounds = 10;
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
-
       user.password = newHashedPassword;
-
       await User.update(
         { password: user.password },
         { where: { id: user.id } }
@@ -317,7 +310,6 @@ app.get(
           isCanceled: true,
         },
       });
-
       const createdUpcomingSessions = await user.getSessions({
         where: {
           playDate: {
@@ -366,6 +358,9 @@ app.get(
       let sessionCounts = [];
       let sortedSessionCount = [];
       let sportTitles = [];
+      let sortedSportTitles = [];
+      let sportIds = [];
+      let sortedSportIds = [];
       for (let i = 0; i < allSports.length; i++) {
         const count = await Session.count({
           where: {
@@ -373,58 +368,51 @@ app.get(
           },
         });
         sessionCounts.push(count);
-        sortedSessionCount.push(count);
         sportTitles.push(allSports[i].title);
+        sportIds.push(allSports[i].id);
       }
       console.log(sessionCounts);
       console.log("sport titles before sort", sportTitles);
 
-      var sportDict = {};
+      var sessionsPerSport = {};
+      var idsPerSport = {};
 
-      for (let i = 0; i < sportTitles.length; i++) {
-        sportDict[sportTitles[i]] = sessionCounts[i];
+      for (let i = 0; i < allSports.length; i++) {
+        sessionsPerSport[sportTitles[i]] = sessionCounts[i];
+      }
+      for (let i = 0; i < allSports.length; i++) {
+        idsPerSport[sportIds[i]] = sessionCounts[i];
       }
 
-      console.log(sportDict);
+      var sortedSportList = Object.entries(sessionsPerSport);
+      var sortedIdsList = Object.entries(idsPerSport);
 
-      var items = Object.keys(sportDict).map((key) => {
-        return [key, sportDict[key]];
-      });
-
-      items.sort((first, second) => {
+      sortedSportList.sort((first, second) => {
         return second[1] - first[1];
       });
-
-      var sortedSportTitles = items.map((e) => {
-        return e[0];
+      sortedIdsList.sort((first, second) => {
+        return second[1] - first[1];
       });
-
-      console.log("keys", sportTitles);
-      console.log(sessionCounts);
-      sortedSessionCount.sort();
-      sortedSessionCount.reverse();
-      console.log(sortedSessionCount);
-      console.log("sport titles", sportTitles);
+      sortedSportTitles = sortedSportList.map((item) => item[0]);
+      sortedSportIds = sortedIdsList.map((item) => item[0]);
+      sortedSessionCount = sortedSportList.map((item) => item[1]);
 
       if (request.accepts("html")) {
         response.render("reports", {
           loggedInUser: request.user,
           title: "Sports Application",
-          allSports,
-          sessionCounts,
           sortedSessionCount,
-          sportTitles,
           sortedSportTitles,
+          sortedSportIds,
           startDate,
           endDate,
           csrfToken: request.csrfToken(),
         });
       } else {
         response.json({
-          allSports,
-          sessionCounts,
           sortedSessionCount,
-          sportTitles,
+          sortedSportTitles,
+          sortedSportIds,
           startDate,
           endDate,
         });
@@ -444,9 +432,13 @@ app.post(
       const startDate = request.body.startDate;
       const endDate = request.body.endDate;
       const allSports = await Sport.getAllSports();
+      console.log("sport id", allSports.length);
       let sessionCounts = [];
       let sortedSessionCount = [];
       let sportTitles = [];
+      let sortedSportTitles = [];
+      let sportIds = [];
+      let sortedSportIds = [];
       for (let i = 0; i < allSports.length; i++) {
         const count = await Session.count({
           where: {
@@ -457,56 +449,51 @@ app.post(
           },
         });
         sessionCounts.push(count);
-        sortedSessionCount.push(count);
         sportTitles.push(allSports[i].title);
+        sportIds.push(allSports[i].id);
       }
       console.log(sessionCounts);
       console.log("sport titles before sort", sportTitles);
 
-      var sportDict = {};
+      var sessionsPerSport = {};
+      var idsPerSport = {};
 
-      for (let i = 0; i < sportTitles.length; i++) {
-        sportDict[sportTitles[i]] = sessionCounts[i];
+      for (let i = 0; i < allSports.length; i++) {
+        sessionsPerSport[sportTitles[i]] = sessionCounts[i];
+      }
+      for (let i = 0; i < allSports.length; i++) {
+        idsPerSport[sportIds[i]] = sessionCounts[i];
       }
 
-      console.log(sportDict);
+      var sortedSportList = Object.entries(sessionsPerSport);
+      var sortedIdsList = Object.entries(idsPerSport);
 
-      var items = Object.keys(sportDict).map((key) => {
-        return [key, sportDict[key]];
-      });
-
-      items.sort((first, second) => {
+      sortedSportList.sort((first, second) => {
         return second[1] - first[1];
       });
-
-      var sortedSportTitles = items.map((e) => {
-        return e[0];
+      sortedIdsList.sort((first, second) => {
+        return second[1] - first[1];
       });
-
-      sortedSessionCount.sort();
-      sortedSessionCount.reverse();
-      console.log(sessionCounts);
-      console.log(sortedSessionCount);
-      console.log("sport titles", sportTitles);
+      sortedSportTitles = sortedSportList.map((item) => item[0]);
+      sortedSportIds = sortedIdsList.map((item) => item[0]);
+      sortedSessionCount = sortedSportList.map((item) => item[1]);
 
       if (request.accepts("html")) {
         response.render("reports", {
           loggedInUser: request.user,
           title: "Sports Application",
-          allSports,
-          sessionCounts,
           sortedSessionCount,
           sortedSportTitles,
-          sportTitles,
+          sortedSportIds,
           startDate,
           endDate,
           csrfToken: request.csrfToken(),
         });
       } else {
         response.json({
-          allSports,
-          sessionCounts,
-          sportTitles,
+          sortedSessionCount,
+          sortedSportTitles,
+          sortedSportIds,
           startDate,
           endDate,
         });
@@ -515,7 +502,6 @@ app.post(
       console.log(error);
       request.flash("error", "Please Fill start Date and end Date!");
       response.redirect("/reports");
-      // return response.status(422).json(error);
     }
   }
 );
@@ -529,7 +515,6 @@ app.get(
       const endDate = request.params.endDate;
       const sportId = request.params.id;
       const sportTitle = await Sport.getSportTitle(sportId);
-      console.log("sport Title :", sportTitle);
       const allSessions = await Session.findAll({
         where: {
           sportId: sportId,
@@ -628,7 +613,6 @@ app.post(
   "/sports",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("Creating a sport", request.body);
     try {
       const sport = await Sport.addSport({
         title: request.body.title,
@@ -688,8 +672,6 @@ app.post(
   "/sessions",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("Creating a session", request.body);
-    console.log("id...", request.params.id);
     try {
       const session = await Session.addSession({
         playDate: request.body.playDate,
@@ -721,7 +703,6 @@ app.post(
     } catch (error) {
       const id = request.body.sportId;
       console.log(error);
-      // return response.status(422).json(error);
       if (error.name == "SequelizeValidationError") {
         const errMsg = error.errors.map((error) => error.message);
         console.log("flash errors", errMsg);
@@ -749,14 +730,12 @@ app.get(
   "/sport/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("paramsid...", request.params.id);
     const sportId = request.params.id;
     const title = await Sport.getSportTitle(sportId);
     const user = request.user;
     const isAdmin = user.isAdmin;
     const upcomingSessions = await Session.upcomingSessions(sportId);
     response.render("session", {
-      // title: "Sports Application",
       upcomingSessions,
       sportId,
       title,
@@ -770,41 +749,14 @@ app.get(
   "/sport/:id/prev_sessions",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("paramsid...", request.params);
     const sportId = request.params.id;
     const title = await Sport.getSportTitle(sportId);
-    console.log();
 
     const user = request.user;
     const isAdmin = user.isAdmin;
-
-    const previousSessions = await Session.prevSessions(sportId);
+    const previousSessions = await Session.prevAndCanceledSessions(sportId);
     response.render("previousSessions", {
-      // title: "Sports Application",
       previousSessions,
-      sportId,
-      title,
-      isAdmin,
-    });
-  }
-);
-
-app.get(
-  "/sport/:id/canceled_sessions",
-  connectEnsureLogin.ensureLoggedIn(),
-  async function (request, response) {
-    console.log("paramsid...", request.params);
-    const sportId = request.params.id;
-    const title = await Sport.getSportTitle(sportId);
-    console.log();
-
-    const user = request.user;
-    const isAdmin = user.isAdmin;
-
-    const canceledSessions = await Session.canceledSessions(sportId);
-    response.render("canceledSessions", {
-      // title: "Sports Application",
-      canceledSessions,
       sportId,
       title,
       isAdmin,
@@ -843,28 +795,21 @@ app.get(
     //allowToJoin
     let allowToJoin = true;
     let userJoinedSession = null;
-    // let userAlreadyJoinedSession = null;
     const userAllJoinedSessionsIds =
       await UserSession.getUpcomingSessionsByUser(userId);
-    console.log("session date ", session.playDate);
+
     for (let i = 0; i < userAllJoinedSessionsIds.length; i++) {
       userJoinedSession = await Session.getSessionWithDtId(
         userAllJoinedSessionsIds[i].sessionId,
         session.playDate
       );
-      console.log("userJoinedSession for loop ", userJoinedSession);
       if (userJoinedSession === null) {
         allowToJoin = true;
-        console.log("allowtojoin FOR LOOP ", allowToJoin);
       } else {
         allowToJoin = false;
         break;
       }
     }
-    console.log("userJoinedSessions ", userJoinedSession);
-    console.log("session date ", session.playDate);
-    console.log("allowtojoin  ", allowToJoin);
-
     response.render("dispSession", {
       userName,
       userId,
@@ -893,7 +838,6 @@ app.post(
       const sessionId = request.params.id;
       const session = await Session.getSession(sessionId);
       const user = request.user;
-
       await session.addUser(user);
 
       const userName = request.user.firstName + " " + request.user.lastName;
@@ -927,20 +871,17 @@ app.post(
       const user = request.user;
 
       await session.removeUser(user);
-
       const userName = request.user.firstName + " " + request.user.lastName;
 
       session.playernames = session.playernames.filter(
         (name) => name !== userName
       );
-
       session.playersneeded = session.playersneeded + 1;
 
       await Session.update(
         { playernames: session.playernames },
         { where: { id: sessionId } }
       );
-
       await Session.update(
         { playersneeded: session.playersneeded },
         { where: { id: sessionId } }
@@ -962,8 +903,6 @@ app.post(
     try {
       const sessionId = request.params.id;
       const session = await Session.getSession(sessionId);
-      // const user = request.user;
-
       session.reason = request.body.reason;
       session.isCanceled = true;
       session.playersneeded = session.playersneeded + 1;
@@ -990,11 +929,9 @@ app.delete(
   async function (request, response) {
     try {
       const sessionId = request.params.id;
-      console.log("Deleting session with ID", sessionId);
       const session = await Session.getSession(sessionId);
       const sportId = session.sportId;
       await Session.remove(sessionId);
-      console.log("Session deleted successfully");
       return response.redirect(`/sport/${sportId}`);
     } catch (error) {
       console.log(error);
@@ -1009,15 +946,12 @@ app.delete(
   async function (request, response) {
     try {
       const sportId = request.params.id;
-      console.log("Deleting sport with ID", sportId);
       await Session.destroy({
         where: {
           sportId: sportId,
         },
       });
-      console.log("sessions deleted successfully");
       await Sport.remove(sportId);
-      console.log("sport deleted successfully");
       return response.redirect("/sport");
     } catch (error) {
       console.log(error);
@@ -1032,19 +966,14 @@ app.post(
   async function (request, response) {
     try {
       const sessionId = request.params.id;
-      console.log("Deleting session with ID", sessionId);
       const session = await Session.getSession(sessionId);
       const sportId = session.sportId;
       let playernames = session.playernames;
       const playerNameToRemove = request.params.playerName;
-
-      console.log("playerNameToRemove", playerNameToRemove);
       const [firstName, lastName] = playerNameToRemove.split(" ");
-
       playernames = playernames.filter((name) => name !== playerNameToRemove);
 
       session.playernames = playernames;
-
       const user = await User.findOne({
         where: {
           firstName: firstName,
@@ -1052,13 +981,11 @@ app.post(
         },
       });
 
-      console.log("user", user);
       if (user != null) {
         await session.removeUser(user);
       }
 
       session.playersneeded = session.playersneeded + 1;
-
       await Session.update(
         {
           playernames: session.playernames,
@@ -1067,7 +994,6 @@ app.post(
         { where: { id: sessionId } }
       );
       await session.save();
-
       return response.redirect(`/sessions/${sessionId}`);
     } catch (error) {
       console.log(error);
@@ -1082,7 +1008,6 @@ app.post(
   async function (request, response) {
     try {
       const sessionId = request.params.id;
-      console.log("Updating session with ID", sessionId);
       const session = await Session.getSession(sessionId);
       session.venue = request.body.venue;
       session.playernames = request.body.playernames.split(",");
@@ -1099,8 +1024,6 @@ app.post(
         }
       );
       await session.save();
-
-      console.log("Session Edited successfully");
       return response.redirect(`/sessions/${sessionId}`);
     } catch (error) {
       console.log(error);
@@ -1132,7 +1055,6 @@ app.post(
       console.log("Updating sport with ID", sportId);
       const sport = await Sport.getSport(sportId);
       sport.title = request.body.title;
-
       await Sport.update(
         {
           title: sport.title,
@@ -1142,8 +1064,6 @@ app.post(
         }
       );
       await sport.save();
-
-      console.log("Session Edited successfully");
       return response.redirect(`/sport/${sportId}`);
     } catch (error) {
       console.log(error);
