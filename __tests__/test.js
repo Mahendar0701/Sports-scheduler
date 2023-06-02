@@ -56,6 +56,30 @@ describe("Sports Application", function () {
     expect(res.statusCode).toBe(302);
   });
 
+  test("should sign in a user", async () => {
+    // Sign up a user
+    let res1 = await agent.get("/signup");
+    const csrfToken = extractCsrfToken(res1);
+    res1 = await agent.post("/users").send({
+      firstName: "Test",
+      lastName: "User A",
+      email: "user.a@test.com",
+      password: "12345678",
+      _csrf: csrfToken,
+    });
+    expect(res1.statusCode).toBe(302);
+
+    // Sign in the user
+    let res2 = await agent.get("/login");
+    let csrfToken2 = extractCsrfToken(res2);
+    res2 = await agent.post("/signin").send({
+      email: "user.a@test.com",
+      password: "12345678",
+      _csrf: csrfToken2,
+    });
+    expect(res2.statusCode).toBe(302);
+  });
+
   test("Sign out", async () => {
     let res = await agent.get("/sport");
     expect(res.statusCode).toBe(200);
@@ -63,5 +87,17 @@ describe("Sports Application", function () {
     expect(res.statusCode).toBe(302);
     res = await agent.get("/sport");
     expect(res.statusCode).toBe(302);
+  });
+
+  test(" Creating a sport", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
+    const res = await agent.get("/sport");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/sports").send({
+      title: "Cricket",
+      _csrf: csrfToken,
+    });
+    expect(response.statusCode).toBe(403);
   });
 });
