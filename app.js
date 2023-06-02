@@ -296,6 +296,7 @@ app.get(
           playDate: {
             [Op.gt]: new Date(),
           },
+          isCanceled: false,
         },
       });
       const previousSessions = await user.getSessions({

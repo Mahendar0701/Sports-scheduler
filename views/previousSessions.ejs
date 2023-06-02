@@ -157,6 +157,12 @@
                     >
                       Fully Booked
                     </div>
+                    <% } %> <% if (previousSessions[i].isCanceled ===true ) { %>
+                    <div
+                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
+                    </div>
                     <% } %>
                   </div>
                 </a>

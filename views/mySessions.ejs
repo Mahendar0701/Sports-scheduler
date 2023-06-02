@@ -122,7 +122,7 @@
       <div class="col-start-3 col-span-2">
         <div>
           <h1 class="mb-3 text-2xl font-bold text-gray-600">
-            Upcoming sessions
+            Active Upcoming sessions
           </h1>
           <table>
             <%=upComingSessions.length %> sessions Available<% for( var i = 0 ;
@@ -154,6 +154,13 @@
                       class="text-green-1000 font-bold pl-5 pr-2 display: inline"
                     >
                       Fully Booked
+                    </div>
+
+                    <% } %> <% if (upComingSessions[i].isCanceled ===true ) { %>
+                    <div
+                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
+                    >
+                      Canceled
                     </div>
                     <% } %>
                   </div>

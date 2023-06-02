@@ -183,7 +183,8 @@
               <div
                 class="border border-gray-600 text-teal-800 font-semibold rounded p-2 w-40 my-2 display:inline"
               >
-                <%=session.playernames[i]%> <% if (isCreator) { %>
+                <%=session.playernames[i]%> <% if (isCreator &&
+                session.isCanceled===false && isPrevious ===false ) { %>
 
                 <form
                   action="/sessions/<%= sessionId %>/removePlayer/<%=session.playernames[i]%>"
@@ -303,7 +304,8 @@
           <div class="text-xl">
             This session is Fully Booked. No slots available
           </div>
-          <% } %> <% if ( isCreator && session.isCanceled===false) { %>
+          <% } %> <% if ( isCreator && session.isCanceled===false && isPrevious
+          ===false) { %>
           <div class="my-3">
             <a
               href="/sessions/<%= session.id %>/edit"
