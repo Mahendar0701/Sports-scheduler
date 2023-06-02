@@ -39,23 +39,109 @@
   </head>
 
   <body>
+    <nav
+      class="shadow-md sticky top-0 opacity-100 bg-stone-100 border-gray-200 dark:bg-gray-900"
+    >
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <a href="/sport" class="flex items-center">
+          <img
+            src="https://png.pngtree.com/png-clipart/20210711/original/pngtree-sports-icon-design-with-human-shape-running-png-image_6524332.jpg"
+            class="h-10 mr-3"
+            alt="Flowbite Logo"
+          />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+            >Sports Scheduler</span
+          >
+        </a>
+
+        <div class="flex items-center md:order-2">
+          <% if (isAdmin) { %>
+          <a
+            href="/createSport"
+            class="bg-cyan-600 hover:bg-cyan-800 text-white px-3 py-1.5 rounded font-medium mx-5 my-0.5"
+            >+ Create New Sport</a
+          >
+          <% } %> <% if (!isAdmin) { %>
+          <span class="text-grey-900 px-3 py-1.5 mx-7 my-0.5 font-bold">
+            <%= userName %>
+          </span>
+          <% } %>
+          <button
+            type="button"
+            class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            id="user-menu-button"
+            aria-expanded="false"
+            data-dropdown-toggle="user-dropdown"
+            data-dropdown-placement="bottom"
+          >
+            <span class="sr-only">Open user menu</span>
+            <img
+              class="w-8 h-8 rounded-full"
+              src="/docs/images/people/profile-picture-3.jpg"
+              alt="user photo"
+            />
+          </button>
+        </div>
+
+        <div
+          class="items-center justify-around hidden w-full md:flex md:w-auto md:order-1"
+          id="mobile-menu-2"
+        >
+          <ul
+            class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-stone-100 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-stone-100 dark:bg-stone-100 md:dark:bg-stone-100 dark:border-gray-700"
+          >
+            <li>
+              <a
+                href="/sport"
+                class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="/my_sessions"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >My Sessions</a
+              >
+            </li>
+            <% if (isAdmin) { %>
+            <li>
+              <a
+                href="/reports"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >View Reports</a
+              >
+            </li>
+            <% } %>
+            <li>
+              <a
+                href="/changePassword"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Change Password</a
+              >
+            </li>
+            <li>
+              <a
+                href="/signout"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Sign Out</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-2 col-span-5">
-        <br />
-        <div>
-          <br />
-          <a
-            class="bg-blue-600 text-white px-3 py-1.5 rounded font-medium mr-2 mb"
-            href="/sport"
-            >Home</a
-          >
-        </div>
-        <br />
         <div>
           <h1 class="text-3xl font-semibold text-gray-600">
             <%= title %> session #<%= sessionId %>
           </h1>
-          <p class="my-5">
+          <p class="my-5 text-xl">
             This session is scheduled for <%=
             session.playDate.toLocaleString('en-US', { weekday: 'long' , month:
             'long' , day: 'numeric' , year: 'numeric' , hour: 'numeric' ,
@@ -71,7 +157,7 @@
               if((session.playernames[i]===userName) &&
               (session.playernames[i]===creatorName)) { %>
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
+                class="border border-gray-600 text-teal-800 font-semibold rounded p-2 my-2 w-40 display:inline"
               >
                 You
                 <p class="font-light">organizer</p>
@@ -79,14 +165,14 @@
               <% } %> <% if((session.playernames[i]===userName) &&
               (session.playernames[i]!=creatorName)) { %>
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
+                class="border border-gray-600 text-teal-800 font-semibold rounded p-2 my-2 w-40 display:inline"
               >
                 You
               </div>
               <% } %> <% if((session.playernames[i]===creatorName) &&
               (session.playernames[i]!=userName)) { %>
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 my-2 w-40 display:inline"
+                class="border border-gray-600 text-teal-800 font-semibold rounded p-2 my-2 w-40 display:inline"
               >
                 <%=session.playernames[i]%>
                 <p class="font-light">organizer</p>
@@ -95,7 +181,7 @@
               (session.playernames[i]!=creatorName) ) { %>
 
               <div
-                class="border border-gray-600 text-gray-900 rounded p-2 w-40 my-2 display:inline"
+                class="border border-gray-600 text-teal-800 font-semibold rounded p-2 w-40 my-2 display:inline"
               >
                 <%=session.playernames[i]%> <% if (isCreator) { %>
 
@@ -129,9 +215,10 @@
 
           <% if ( isJoined===true) { %>
           <div>
-            <h5 class="my-5">
+            <h5 class="my-5 text-xl">
               You <% if ( isPrevious) { %>were <% } %> <% if ( !isPrevious) {
-              %>are <% } %> in this Session
+              %>are <% } %> a <% if ( !isCreator) { %>participitant in<% } %> <%
+              if ( isCreator) { %> organizer of<% } %> this Session
             </h5>
           </div>
 
@@ -148,15 +235,15 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
-              class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+              class="border border-gray-600 text-white bg-cyan-600 hover:bg-cyan-800 font-medium rounded px-1.5 py-1"
             >
-              Join Session
+              + Join Session
             </button>
           </form>
           <br />
           <% } %> <% } %> <% if (allowToJoin===false &&
           userJoinedSession.isCanceled===false && isJoined===false) { %>
-          <h3>
+          <h3 class="text-xl">
             You Can't join this session as you have the following Session at the
             same time
           </h3>
@@ -199,7 +286,7 @@
             </table>
           </div>
           <% if ((session.playersneeded)==0 && isJoined===true) { %>
-          <div>Your Session is Fully booked</div>
+          <div class="text-xl my-2">This Session is Fully booked</div>
           <% } %> <% if (isJoined && isPrevious===false &&
           session.isCanceled===false ) { %>
           <h5 class="mt-4">Do You Want to leave this session ?</h5>
@@ -213,9 +300,11 @@
             </button>
           </form>
           <% } %> <% if ((session.playersneeded)==0 && isJoined===false) { %>
-          <div>This session is Fully Booked. No slots available</div>
+          <div class="text-xl">
+            This session is Fully Booked. No slots available
+          </div>
           <% } %> <% if ( isCreator && session.isCanceled===false) { %>
-          <div class="mb-5">
+          <div class="my-3">
             <a
               href="/sessions/<%= session.id %>/edit"
               class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
@@ -246,7 +335,7 @@
                 <br />
                 <button
                   type="submit"
-                  class="my-5 text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
+                  class="my-5 text-white bg-cyan-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
                 >
                   Confirm Cancellation
                 </button>
@@ -256,17 +345,12 @@
           </div>
           <% } %> <% if (session.isCanceled===true) { %>
           <div class="my-5">
-            <h5>This session is canceled due to :</h5>
-            <%= reason %>
+            <h5 class="text-xl text-red-500">
+              This session is canceled due to :
+            </h5>
+            <h5 class="text-xl"><%= reason %></h5>
           </div>
           <% } %>
-          <div>
-            <a
-              class="my-5 bg-red-600 hover:bg-red-800 text-white px-3 py-1 rounded font-medium"
-              href="/signout"
-              >Signout</a
-            >
-          </div>
         </div>
       </div>
     </div>

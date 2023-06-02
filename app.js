@@ -185,6 +185,8 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     response.render("changePassword", {
+      isAdmin: request.user.isAdmin,
+      userName: request.user.firstName + " " + request.user.lastName,
       title: "Change Password",
       csrfToken: request.csrfToken(),
     });
@@ -400,6 +402,8 @@ app.get(
       if (request.accepts("html")) {
         response.render("reports", {
           loggedInUser: request.user,
+          isAdmin: request.user.isAdmin,
+          userName: request.user.firstName + " " + request.user.lastName,
           title: "Sports Application",
           sortedSessionCount,
           sortedSportTitles,
@@ -481,6 +485,8 @@ app.post(
       if (request.accepts("html")) {
         response.render("reports", {
           loggedInUser: request.user,
+          isAdmin: request.user.isAdmin,
+          userName: request.user.firstName + " " + request.user.lastName,
           title: "Sports Application",
           sortedSessionCount,
           sortedSportTitles,
@@ -538,6 +544,8 @@ app.get(
       if (request.accepts("html")) {
         response.render("report-sessions", {
           loggedInUser: request.user,
+          isAdmin: request.user.isAdmin,
+          userName: request.user.firstName + " " + request.user.lastName,
           title: "Sports Application",
           allSessions,
           allCanceledSessions,
@@ -588,6 +596,8 @@ app.get(
       if (request.accepts("html")) {
         response.render("report-sessions2", {
           loggedInUser: request.user,
+          isAdmin: request.user.isAdmin,
+          userName: request.user.firstName + " " + request.user.lastName,
           title: "Sports Application",
           allSessions,
           allCanceledSessions,
@@ -647,9 +657,17 @@ app.post(
   }
 );
 
-app.get("/createSport", (request, response, next) => {
-  response.render("createSport", { csrfToken: request.csrfToken() });
-});
+app.get(
+  "/createSport",
+  connectEnsureLogin.ensureLoggedIn(),
+  (request, response, next) => {
+    response.render("createSport", {
+      isAdmin: request.user.isAdmin,
+      userName: request.user.firstName + " " + request.user.lastName,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
 
 app.get(
   "/sport/:id/new_session",
@@ -660,6 +678,7 @@ app.get(
     const userId = request.user.id;
     console.log("iddd", sportId);
     response.render("createSession", {
+      isAdmin: request.user.isAdmin,
       sportId,
       userName,
       userId,
@@ -736,6 +755,7 @@ app.get(
     const isAdmin = user.isAdmin;
     const upcomingSessions = await Session.upcomingSessions(sportId);
     response.render("session", {
+      userName: request.user.firstName + " " + request.user.lastName,
       upcomingSessions,
       sportId,
       title,
@@ -757,6 +777,7 @@ app.get(
     const previousSessions = await Session.prevAndCanceledSessions(sportId);
     response.render("previousSessions", {
       previousSessions,
+      userName: request.user.firstName + " " + request.user.lastName,
       sportId,
       title,
       isAdmin,
@@ -985,9 +1006,7 @@ app.post(
         if (user != null) {
           await session.removeUser(user);
         }
-
       }
-
 
       session.playersneeded = session.playersneeded + 1;
       await Session.update(
@@ -1043,6 +1062,8 @@ app.get(
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
     response.render("editSession", {
+      isAdmin: request.user.isAdmin,
+      userName: request.user.firstName + " " + request.user.lastName,
       sessionId,
       session,
       csrfToken: request.csrfToken(),
@@ -1084,6 +1105,8 @@ app.get(
     const sport = await Sport.getSport(sportId);
     console.log("Updating sport ", sport);
     response.render("editSport", {
+      isAdmin: request.user.isAdmin,
+      userName: request.user.firstName + " " + request.user.lastName,
       sportId,
       sport,
       csrfToken: request.csrfToken(),
