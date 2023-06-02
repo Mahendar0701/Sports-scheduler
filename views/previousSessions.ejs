@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
-    <title>Sessions</title>
+    <title>Previous Sessions</title>
     <script>
       function deleteSport(id) {
         fetch(`/sport/${id}`, {
@@ -141,7 +141,11 @@
                     class="my-1.5 bg-white hover:bg-stone-50 border border-gray-600 text-cyan-700 font-semibold rounded p-2 my-0.5 w-full"
                   >
                     <div class="mr-18 display: inline">
-                      <%=previousSessions[i].playDate.toString().substring(0,25)%>
+                      <%= new
+                      Date(previousSessions[i].playDate).toLocaleString('en-US',
+                      { weekday: 'short', month: 'short', day: '2-digit', year:
+                      'numeric', hour: '2-digit', minute: '2-digit', second:
+                      '2-digit', hour12: true }) %>
                     </div>
                     <% if (previousSessions[i].playersneeded>1) { %>
                     <div class="pl-5 pr-2 display: inline">

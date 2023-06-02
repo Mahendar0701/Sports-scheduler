@@ -1033,12 +1033,14 @@ app.post(
     try {
       const sessionId = request.params.id;
       const session = await Session.getSession(sessionId);
+      session.playDate = request.body.playDate;
       session.venue = request.body.venue;
       session.playernames = request.body.playernames.split(",");
       session.playersneeded = request.body.playersneeded;
 
       await Session.update(
         {
+          playDate: request.body.playDate,
           playernames: session.playernames,
           playersneeded: session.playersneeded,
           venue: session.venue,

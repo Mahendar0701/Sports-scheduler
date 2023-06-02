@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
-    <title>Document</title>
+    <title>Session Details</title>
     <script>
       function deleteSession(id) {
         fetch(`/sessions/${id}`, {
@@ -286,7 +286,8 @@
               <% } %>
             </table>
           </div>
-          <% if ((session.playersneeded)==0 && isJoined===true) { %>
+          <% if ((session.playersneeded)==0 && isJoined===true &&
+          isPrevious===false && session.isCanceled===false ) { %>
           <div class="text-xl my-2">This Session is Fully booked</div>
           <% } %> <% if (isJoined && isPrevious===false &&
           session.isCanceled===false ) { %>
