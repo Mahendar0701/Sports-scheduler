@@ -7,80 +7,121 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css" />
     <title>Sports Scheduler</title>
-    <link rel="icon" type="image/png" href="views/favicon.jpg">
+    <link rel="icon" type="image/png" href="views/favicon.jpg" />
   </head>
   <body>
-    
-    
-<nav class=" shadow-md sticky top-0 opacity-100 bg-stone-100 border-gray-200 dark:bg-gray-900">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <a href="/sport" class="flex items-center">
-      <img src="https://png.pngtree.com/png-clipart/20210711/original/pngtree-sports-icon-design-with-human-shape-running-png-image_6524332.jpg" class="h-10 mr-3" alt="Flowbite Logo" />
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Sports Scheduler</span>
-  </a>
- 
-  <div class="flex items-center md:order-2">
-    <% if (isAdmin) { %>
-    <a
-                href="/createSport"
-                class="bg-cyan-600 hover:bg-cyan-800 text-white px-3 py-1.5 rounded font-medium mx-5 my-0.5"
-                >+ Create New Sport</a
-              > <% } %>
-              <% if (!isAdmin) { %>
-                <span class="text-grey-900 px-3 py-1.5  mx-7 my-0.5 font-bold ">
-                  <%= userName %>
-                </span>
-                <% } %>
-      <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-        <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
-        
-      </button>
+    <nav
+      class="shadow-md sticky top-0 opacity-100 bg-stone-100 border-gray-200 dark:bg-gray-900"
+    >
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <a href="/sport" class="flex items-center">
+          <img
+            src="https://png.pngtree.com/png-clipart/20210711/original/pngtree-sports-icon-design-with-human-shape-running-png-image_6524332.jpg"
+            class="h-10 mr-3"
+            alt="Flowbite Logo"
+          />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+            >Sports Scheduler</span
+          >
+        </a>
 
-  </div>
+        <div class="flex items-center md:order-2">
+          <% if (isAdmin) { %>
+          <a
+            href="/createSport"
+            class="bg-cyan-600 hover:bg-cyan-800 text-white px-3 py-1.5 rounded font-medium mx-5 my-0.5"
+            >+ Create New Sport</a
+          >
+          <% } %> <% if (!isAdmin) { %>
+          <span class="text-grey-900 px-3 py-1.5 mx-7 my-0.5 font-bold">
+            <%= userName %>
+          </span>
+          <% } %>
+          <button
+            type="button"
+            class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            id="user-menu-button"
+            aria-expanded="false"
+            data-dropdown-toggle="user-dropdown"
+            data-dropdown-placement="bottom"
+          >
+            <span class="sr-only">Open user menu</span>
+            <img
+              class="w-8 h-8 rounded-full"
+              src="/docs/images/people/profile-picture-3.jpg"
+              alt="user photo"
+            />
+          </button>
+        </div>
 
-  <div class="items-center  justify-around hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
-    <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-stone-100 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-stone-100 dark:bg-stone-100 md:dark:bg-stone-100 dark:border-gray-700">
-      <li>
-        <a href="/sport" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
-      </li>
-      <li>
-        <a href="/my_sessions" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">My Sessions</a>
-      </li>
-      <% if (isAdmin) { %>
-      <li>
-        <a href="/reports" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">View Reports</a>
-      </li>
-      <% } %>
-      <li>
-        <a href="/changePassword" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Change Password</a>
-      </li>
-      <li>
-        <a href="/signout" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Sign Out</a>
-      </li>
-    </ul>
-  </div>
-  </div>
-</nav>
+        <div
+          class="items-center justify-around hidden w-full md:flex md:w-auto md:order-1"
+          id="mobile-menu-2"
+        >
+          <ul
+            class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-stone-100 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-stone-100 dark:bg-stone-100 md:dark:bg-stone-100 dark:border-gray-700"
+          >
+            <li>
+              <a
+                href="/sport"
+                class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="/my_sessions"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >My Sessions</a
+              >
+            </li>
+            <% if (isAdmin) { %>
+            <li>
+              <a
+                href="/reports"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >View Reports</a
+              >
+            </li>
+            <% } %>
+            <li>
+              <a
+                href="/changePassword"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Change Password</a
+              >
+            </li>
+            <li>
+              <a
+                href="/signout"
+                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Sign Out</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="grid grid-cols-10">
-        <div class=" my-5 col-start-4 col-span-4">
-          <h3 class=" text-center text-2xl font-semibold text-gray-600">
-            Welcome <%= userName %>
-          </h3>
-          <hr class="h-0.5 bg-black opacity-50 my-5" />
-          <div class="content-between">
-            <!-- <div class="m-5">
-
-            </div> -->
-            <h5 class=" text-xl font-bold text-gray-600 pb-5">
+      <div class="my-5 col-start-4 col-span-4">
+        <h3 class="text-center text-2xl font-semibold text-gray-600">
+          Welcome <%= userName %>
+        </h3>
+        <hr class="h-0.5 bg-black opacity-50 my-5" />
+        <div class="flex">
+          <div class="m-auto">
+            <h5 class="text-xl font-bold text-gray-600 pb-5">
               You have the following upcoming Sessions
             </h5>
-            <table >
+            <table>
               <%=userUpcomingSessions.length %> sessions Available<% for( var i
               = 0 ; i < userUpcomingSessions.length ; i++) { %>
               <tr>
                 <td>
-                  
                   <a
                     href="/sessions/<%=userUpcomingSessions[i].id %>"
                     class="bg-sky-500 hover:bg-sky-700 ..."
@@ -89,9 +130,13 @@
                       class="bg-white hover:bg-stone-50 border border-gray-600 text-teal-700 font-semibold rounded p-2 my-0.5 w-full"
                     >
                       <div class="mr-18 display: inline">
-                        <%= new Date(userUpcomingSessions[i].playDate).toLocaleString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) %>
+                        <%= new
+                        Date(userUpcomingSessions[i].playDate).toLocaleString('en-US',
+                        { weekday: 'short', month: 'short', day: '2-digit',
+                        year: 'numeric', hour: '2-digit', minute: '2-digit',
+                        second: '2-digit', hour12: true }) %>
                       </div>
-                      
+
                       <% if (userUpcomingSessions[i].playersneeded>1) { %>
                       <div class="pl-5 pr-2 display: inline">
                         <%=userUpcomingSessions[i].playersneeded %> slots
@@ -124,25 +169,90 @@
               <% } %>
             </table>
           </div>
-          <hr class="h-0.5 bg-black opacity-50 my-5" />
-          <div>
-            <h5 class="text-xl font-bold text-gray-600 pb-5">
+        </div>
+        <hr class="h-0.5 bg-black opacity-50 my-5" />
+       
+          <!-- <div class="m-auto"> -->
+            <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
               The following Sports are available. Please select one
             </h5>
-            <div>
-              <table>
+            <!-- <div class="flex m-auto"> -->
+              <div class="ml-24">
+           
+            <div class="flex flex-wrap " >
+              <!-- <table> -->
                 <% for( var i = 0 ; i < allSports.length ; i++) { %>
-                <tr>
-                  <td>
+                <!-- <tr>
+                  <td> -->
+                    
                     <a
                       href="/sport/<%= allSports[i].id
                   %>"
                       class="text-teal-700 font-semibold no-underline"
                     >
                       <div
-                        class=" border border-gray-600 text-white-900 bg-white hover:bg-stone-50 rounded my-0.5 p-2 w-full"
+                        class= "mx-2 my-1 text-center border border-gray-600 text-white-900 bg-white hover:bg-stone-50 rounded  p-2 w-48"
                       >
                         <%=allSports[i].title %>
+                      </div>
+                    </a>
+                  <!-- </td>
+                </tr> -->
+                <% } %>
+              <!-- </table> -->
+            <!-- </div> -->
+          <!-- </div> -->
+          </div>
+          </div>
+          <hr class="h-0.5 bg-black opacity-50 my-5" />
+          <div class="flex">
+            <div class="m-auto">
+              <h5 class="text-xl font-bold text-gray-600 pb-5">
+                You Created the following upcoming Sessions
+              </h5>
+              <table>
+                <%=createdUpcomingSessions.length %> sessions Available<% for(
+                var i = 0 ; i < createdUpcomingSessions.length ; i++) { %>
+                <tr>
+                  <td>
+                    <a
+                      href="/sessions/<%=createdUpcomingSessions[i].id %>"
+                      class="text-green-600"
+                    >
+                      <div
+                        class="bg-white hover:bg-stone-50 font-semibold border border-gray-600 text-teal-700 rounded p-2 my-0.5 w-full"
+                      >
+                        <div class="mr-18 display: inline">
+                          <%= new
+                          Date(createdUpcomingSessions[i].playDate).toLocaleString('en-US',
+                          { weekday: 'short', month: 'short', day: '2-digit',
+                          year: 'numeric', hour: '2-digit', minute: '2-digit',
+                          second: '2-digit', hour12: true }) %>
+                        </div>
+                        <% if (createdUpcomingSessions[i].playersneeded>1) { %>
+                        <div class="pl-5 pr-2 display: inline">
+                          <%=createdUpcomingSessions[i].playersneeded %> slots
+                        </div>
+                        <% } %> <% if
+                        (createdUpcomingSessions[i].playersneeded===1) { %>
+                        <div class="text-red-600 pl-5 pr-2 display: inline">
+                          Last slot
+                        </div>
+                        <% } %> <% if (createdUpcomingSessions[i].playersneeded
+                        ===0) { %>
+                        <div
+                          class="text-green-1000 font-bold pl-5 pr-2 display: inline"
+                        >
+                          Fully Booked
+                        </div>
+                        <% } %> <% if (createdUpcomingSessions[i].isCanceled
+                        ===true ) { %>
+                        <div
+                          class="text-red-600 font-bold pl-5 pr-2 display: inline"
+                        >
+                          Canceled
+                        </div>
+                        <% } %>
                       </div>
                     </a>
                   </td>
@@ -150,57 +260,6 @@
                 <% } %>
               </table>
             </div>
-          </div>
-          <hr class="h-0.5 bg-black opacity-50 my-5" />
-          <div>
-            <h5 class="text-xl font-bold text-gray-600 pb-5">
-              You Created the following upcoming Sessions
-            </h5>
-            <table>
-              <%=createdUpcomingSessions.length %> sessions Available<% for( var
-              i = 0 ; i < createdUpcomingSessions.length ; i++) { %>
-              <tr>
-                <td>
-                  <a
-                    href="/sessions/<%=createdUpcomingSessions[i].id %>"
-                    class="text-green-600"
-                  >
-                    <div
-                      class="bg-white hover:bg-stone-50 font-semibold border border-gray-600 text-teal-700 rounded p-2 my-0.5 w-full"
-                    >
-                      <div class="mr-18 display: inline">
-                        <%= new Date(createdUpcomingSessions[i].playDate).toLocaleString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) %>
-                      </div>
-                      <% if (createdUpcomingSessions[i].playersneeded>1) { %>
-                      <div class="pl-5 pr-2 display: inline">
-                        <%=createdUpcomingSessions[i].playersneeded %> slots
-                      </div>
-                      <% } %> <% if
-                      (createdUpcomingSessions[i].playersneeded===1) { %>
-                      <div class="text-red-600 pl-5 pr-2 display: inline">
-                        Last slot
-                      </div>
-                      <% } %> <% if (createdUpcomingSessions[i].playersneeded
-                      ===0) { %>
-                      <div
-                        class="text-green-1000 font-bold pl-5 pr-2 display: inline"
-                      >
-                        Fully Booked
-                      </div>
-                      <% } %> <% if (createdUpcomingSessions[i].isCanceled
-                      ===true ) { %>
-                      <div
-                        class="text-red-600 font-bold pl-5 pr-2 display: inline"
-                      >
-                        Canceled
-                      </div>
-                      <% } %>
-                    </div>
-                  </a>
-                </td>
-              </tr>
-              <% } %>
-            </table>
           </div>
           <hr class="h-0.5 bg-black opacity-50 my-5" />
         </div>

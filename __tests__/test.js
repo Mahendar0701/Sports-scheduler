@@ -100,4 +100,16 @@ describe("Sports Application", function () {
     });
     expect(response.statusCode).toBe(403);
   });
+
+  test(" Creating a sport", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
+    const res = await agent.get("/sport");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/sports").send({
+      title: "Cricket",
+      _csrf: csrfToken,
+    });
+    expect(response.statusCode).toBe(403);
+  });
 });

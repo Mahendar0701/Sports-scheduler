@@ -296,7 +296,7 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button
               type="submit"
-              class="my-5 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+              class="bg-slate-100 hover:bg-slate-200 text-grey-900 px-3 py-1 rounded font-medium mr-2 mb mt-5"
             >
               leave session
             </button>
@@ -310,7 +310,7 @@
           <div class="my-3">
             <a
               href="/sessions/<%= session.id %>/edit"
-              class="border border-gray-600 text-white bg-blue-600 hover:bg-blue-800 font-medium rounded px-1.5 py-1"
+              class="bg-slate-100 hover:bg-slate-200 text-cyan-900 px-3 py-1 rounded font-medium mr-2 mb mt-5"
             >
               Edit session
             </a>
@@ -321,7 +321,7 @@
               <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
               <button
                 type="button"
-                class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
+                class="bg-slate-100 hover:bg-slate-200 text-red-600 px-3 py-1 rounded font-medium mr-2 mb mt-5"
                 onclick="displayReasonField()"
               >
                 Cancel session
@@ -338,7 +338,7 @@
                 <br />
                 <button
                   type="submit"
-                  class="my-5 text-white bg-cyan-600 hover:bg-red-800 font-medium rounded px-1.5 py-1"
+                  class="bg-slate-100 hover:bg-slate-200 text-red-700 px-3 py-1 rounded font-medium mr-2 mb mt-5"
                 >
                   Confirm Cancellation
                 </button>
