@@ -146,6 +146,9 @@
             minute: 'numeric' , hour12: true }) %> , to be played at " <%=
             session.venue %>"
           </p>
+          <p class="my-5 text-xl">
+            This session is created by : <%= creatorName %>
+          </p>
           <h1 class="text-2xl font-semibold text-gray-600">
             Players (<%= session.playernames.length %>)
           </h1>

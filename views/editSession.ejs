@@ -165,6 +165,11 @@
             </button>
           </div>
         </form>
+        <div class="text-grey-600 ml-3 my-2"><% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+                  <li > <%= messages.error[i] %></li>
+          <% } %>
+        <% } %></div>
       </div>
     </div>
   </body>

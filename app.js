@@ -245,7 +245,7 @@ app.get(
           },
         },
       });
-      const createdUpcomingSessions = await user.getSessions({
+      const createdUpcomingSessions = await Session.findAll({
         where: {
           playDate: {
             [Op.gt]: new Date(),
@@ -315,9 +315,6 @@ app.get(
       });
       const createdUpcomingSessions = await user.getSessions({
         where: {
-          playDate: {
-            [Op.gt]: new Date(),
-          },
           CreatorId: user.id,
         },
       });
@@ -742,7 +739,7 @@ app.post(
           { where: { id: session.id } }
         );
         await session.save();
-        return response.redirect(`/sport/${id}`);
+        return response.redirect(`/sessions/${session.id}`);
       } else {
         response.render("createSession", {
           isAdmin: request.user.isAdmin,
@@ -768,13 +765,15 @@ app.post(
             request.flash("error", "Venue cannot be empty");
           }
           if (message == "Validation notEmpty on playersneeded failed") {
-            request.flash("error", "Number of players nedded cannot be empty");
+            request.flash("error", "Number of players needed cannot be empty");
           }
         });
         response.redirect(`/sport/${id}/new_session`);
       } else {
         console.log(error);
-        return response.status(422).json(error);
+        request.flash("error", "Fill all details");
+        response.redirect(`/sport/${id}/new_session`);
+        // return response.status(422).json(error);
       }
     }
   }
@@ -935,11 +934,10 @@ app.post(
       session.playersneeded = session.playersneeded + 1;
 
       await Session.update(
-        { playernames: session.playernames },
-        { where: { id: sessionId } }
-      );
-      await Session.update(
-        { playersneeded: session.playersneeded },
+        {
+          playernames: session.playernames,
+          playersneeded: session.playersneeded,
+        },
         { where: { id: sessionId } }
       );
       await session.save();
@@ -1086,8 +1084,32 @@ app.post(
       await session.save();
       return response.redirect(`/sessions/${sessionId}`);
     } catch (error) {
+      const sessionId = request.params.id;
       console.log(error);
-      return response.status(422).json(error);
+      // return response.status(422).json(error);
+      const id = request.body.sportId;
+      console.log(error);
+      if (error.name == "SequelizeValidationError") {
+        const errMsg = error.errors.map((error) => error.message);
+        console.log("flash errors", errMsg);
+        errMsg.forEach((message) => {
+          if (message == "Validation notEmpty on playDate failed") {
+            request.flash("error", "Play Date cannot be empty");
+          }
+          if (message == "Validation notEmpty on venue failed") {
+            request.flash("error", "Venue cannot be empty");
+          }
+          if (message == "Validation notEmpty on playersneeded failed") {
+            request.flash("error", "Number of players needed cannot be empty");
+          }
+        });
+        response.redirect(`/sessions/${sessionId}/edit`);
+      } else {
+        console.log(error);
+        request.flash("error", "Fill all details");
+        response.redirect(`/sessions/${sessionId}/edit`);
+        // return response.status(422).json(error);
+      }
     }
   }
 );
