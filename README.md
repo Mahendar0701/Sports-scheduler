@@ -1,4 +1,4 @@
-### Sports Scheduler
+## Sports Scheduler
 <hr>
 This is final capstone project of WD-201 
 
@@ -6,7 +6,7 @@ This is a Sport Sccheduling website built using Node.js which allows players to 
 
  [Sports Scheduler]([https://pages.github.com/](https://wd-sports-scheduler.onrender.com/))
 <hr>
-### Features
+## Features
 
 ## Admin
 1. Only Admin can create new sport and can delete it.
