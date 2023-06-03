@@ -313,7 +313,7 @@ app.get(
           isCanceled: true,
         },
       });
-      const createdUpcomingSessions = await user.getSessions({
+      const createdUpcomingSessions = await Session.findAll({
         where: {
           CreatorId: user.id,
         },
