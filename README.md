@@ -1,11 +1,11 @@
 ## Sports Scheduler
-<hr>
+
 This is final capstone project of WD-201 
 
 This is a Sport Sccheduling website built using Node.js which allows players to sign up and join sport sessions.Players can also create new Sessions.
 
- [Sports Scheduler]([https://pages.github.com/](https://wd-sports-scheduler.onrender.com/))
-<hr>
+[Sports Scheduler]([https://pages.github.com/](https://wd-sports-scheduler.onrender.com/))
+
 ## Features
 
 ## Admin
