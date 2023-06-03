@@ -119,14 +119,18 @@
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-3 col-span-2">
         <div>
-          <h1 class="mb-3 text-2xl font-bold text-gray-600">
+          <h1 class="mb-3 text-center text-2xl font-bold text-gray-600">
             Active Upcoming sessions
           </h1>
+
+          <div class="flex">
+            <div class="flex m-auto">
+              <div class="m-auto">
+          <h1 class="text-center"><%=upComingSessions.length %> sessions Available</h1>
           <table>
-            <%=upComingSessions.length %> sessions Available<% for( var i = 0 ;
-            i < upComingSessions.length ; i++) { %>
+            <% for( var i = 0 ; i < upComingSessions.length ; i++) { %>
             <tr>
-              <td>
+              <td>                  
                 <a
                   href="/sessions/<%=upComingSessions[i].id %>"
                   class="text-green-600"
@@ -166,17 +170,26 @@
                   </div>
                 </a>
               </td>
+            </div>
+
+          </div>
             </tr>
             <% } %>
           </table>
         </div>
+        </div>
+        </div>
+        </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
-          <h1 class="mb-3 text-2xl font-bold text-gray-600">
+          <h1 class="mb-3 text-2xl text-center font-bold text-gray-600">
             Previous sessions
           </h1>
+          <div class="flex">
+            <div class="flex m-auto">
+              <div class="m-auto">
           <table>
-            <%=previousSessions.length %> sessions Available<% for( var i = 0 ;
+           <h1 class="text-center"> <%=previousSessions.length %> sessions Available</h1><% for( var i = 0 ;
             i < previousSessions.length ; i++) { %>
             <tr>
               <td>
@@ -216,13 +229,19 @@
             <% } %>
           </table>
         </div>
-        <hr class="my-5 h-0.5 bg-black opacity-50" />
+        </div>
+        </div>
+        </div>
+        <hr class="my-5  h-0.5 bg-black opacity-50" />
         <div>
-          <h5 class="text-2xl font-bold text-gray-600 pb-5">
+          <h5 class="text-2xl text-center font-bold text-gray-600 pb-5">
             Sessions created by you
           </h5>
+          <div class="flex">
+            <div class="flex m-auto">
+              <div class="m-auto">
           <table>
-            <%=createdUpcomingSessions.length %> sessions Available<% for( var i
+           <h1 class="text-center"> <%=createdUpcomingSessions.length %> sessions Available</h1><% for( var i
             = 0 ; i < createdUpcomingSessions.length ; i++) { %>
             <tr>
               <td>
@@ -271,13 +290,20 @@
             <% } %>
           </table>
         </div>
+        </div>
+        </div>
+        </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div class="mb-5">
-          <h1 class="my-3 text-2xl font-bold text-gray-600">
+          <h1 class="my-3 text-2xl text-center font-bold text-gray-600">
             Canceled sessions
           </h1>
+
+          <div class="flex">
+            <div class="flex m-auto">
+              <div class="m-auto">
           <table>
-            <%=canceledSessions.length %> sessions Available<% for( var i = 0 ;
+           <h1 class="text-center"> <%=canceledSessions.length %> sessions Available </h1><% for( var i = 0 ;
             i < canceledSessions.length ; i++) { %>
             <tr>
               <td class="my-2">
@@ -322,6 +348,9 @@
             </tr>
             <% } %>
           </table>
+        </div>
+        </div>
+        </div>
         </div>
       </div>
     </div>
