@@ -675,12 +675,14 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     const sportId = request.params.id;
+    let allowToJoin = true;
     const userName = request.user.firstName + " " + request.user.lastName;
     const userId = request.user.id;
     console.log("iddd", sportId);
     response.render("createSession", {
       isAdmin: request.user.isAdmin,
       sportId,
+      allowToJoin,
       userName,
       userId,
       csrfToken: request.csrfToken(),
@@ -693,33 +695,65 @@ app.post(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
-      const session = await Session.addSession({
-        playDate: request.body.playDate,
-        venue: request.body.venue,
-        playernames: request.body.playernames.split(","),
-        playersneeded: request.body.playersneeded,
-        sportId: request.body.sportId,
-        CreatorId: request.body.creatorId,
-      });
-      const id = request.body.sportId;
+      //allowToJoin
       const user = request.user;
-      console.log("creator Id ", request.body.creatorId);
+      let allowToJoin = true;
+      let userJoinedSession = null;
+      const userAllJoinedSessionsIds =
+        await UserSession.getUpcomingSessionsByUser(user.id);
 
-      const creator = await User.findByPk(request.body.creatorId);
-      const creatorName = creator.firstName + " " + creator.lastName;
+      for (let i = 0; i < userAllJoinedSessionsIds.length; i++) {
+        userJoinedSession = await Session.getSessionWithDtId(
+          userAllJoinedSessionsIds[i].sessionId,
+          request.body.playDate
+        );
+        if (userJoinedSession === null) {
+          allowToJoin = true;
+        } else {
+          allowToJoin = false;
+          break;
+        }
+      }
 
-      await session.addUser(user);
-      session.playernames.push(creatorName);
-      session.CreatorId = request.body.creatorId;
-      await Session.update(
-        {
-          playernames: session.playernames,
-          CreatorId: session.creatorId,
-        },
-        { where: { id: session.id } }
-      );
-      await session.save();
-      return response.redirect(`/sport/${id}`);
+      if (allowToJoin === true) {
+        const session = await Session.addSession({
+          playDate: request.body.playDate,
+          venue: request.body.venue,
+          playernames: request.body.playernames.split(","),
+          playersneeded: request.body.playersneeded,
+          sportId: request.body.sportId,
+          CreatorId: request.body.creatorId,
+        });
+        const id = request.body.sportId;
+        const sportId = request.body.sportId;
+        console.log("creator Id ", request.body.creatorId);
+
+        const creator = await User.findByPk(request.body.creatorId);
+        const creatorName = creator.firstName + " " + creator.lastName;
+
+        await session.addUser(user);
+        session.playernames.push(creatorName);
+        session.CreatorId = request.body.creatorId;
+        await Session.update(
+          {
+            playernames: session.playernames,
+            CreatorId: session.creatorId,
+          },
+          { where: { id: session.id } }
+        );
+        await session.save();
+        return response.redirect(`/sport/${id}`);
+      } else {
+        response.render("createSession", {
+          isAdmin: request.user.isAdmin,
+          allowToJoin,
+          userJoinedSession,
+          userName: request.user.firstName + " " + request.user.lastName,
+          sportId: request.body.sportId,
+          userId: request.user.id,
+          csrfToken: request.csrfToken(),
+        });
+      }
     } catch (error) {
       const id = request.body.sportId;
       console.log(error);
