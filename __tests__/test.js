@@ -80,15 +80,6 @@ describe("Sports Application", function () {
     expect(res2.statusCode).toBe(302);
   });
 
-  // test("Sign out", async () => {
-  //   let res = await agent.get("/sport");
-  //   expect(res.statusCode).toBe(200);
-  //   res = await agent.get("/signout");
-  //   expect(res.statusCode).toBe(302);
-  //   res = await agent.get("/sport");
-  //   expect(res.statusCode).toBe(422);
-  // });
-
   test("Sign out", async () => {
     let res = await agent.get("/signout");
     expect(res.statusCode).toBe(302);
