@@ -34,8 +34,48 @@ module.exports = (sequelize, DataTypes) => {
           userId,
         },
       });
-
       return sessions;
+    }
+
+    static async getSessionsByUser(userId) {
+      const sessions = await UserSession.findAll({
+        where: {
+          userId,
+        },
+      });
+      return sessions;
+    }
+
+    static async getSessionPlayers(sessionId) {
+      const sessions = await UserSession.findAll({
+        where: {
+          sessionId,
+        },
+      });
+      return sessions;
+    }
+
+    static async addCreator(userId, sessionId) {
+      return this.create({
+        userId,
+        sessionId,
+      });
+    }
+
+    static async addPlayer(userId, sessionId) {
+      return this.create({
+        userId,
+        sessionId,
+      });
+    }
+
+    static async removePlayer(userId, sessionId) {
+      return this.destroy({
+        where: {
+          userId,
+          sessionId,
+        },
+      });
     }
   }
   UserSession.init(

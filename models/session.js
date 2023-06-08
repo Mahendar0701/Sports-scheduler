@@ -36,6 +36,53 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static updatePlayers(playernames, playersneeded, sessionId) {
+      return this.update(
+        {
+          playernames,
+          playersneeded,
+        },
+        { where: { id: sessionId } }
+      );
+    }
+
+    static updateCancellation(reason, sessionId) {
+      return this.update(
+        {
+          reason,
+          isCanceled: true,
+        },
+        { where: { id: sessionId } }
+      );
+    }
+
+    static updateCreatorId(CreatorId, sessionId) {
+      return this.update(
+        {
+          CreatorId,
+        },
+        { where: { id: sessionId } }
+      );
+    }
+
+    static updateSessionDetails(
+      playDate,
+      playernames,
+      playersneeded,
+      venue,
+      sessionId
+    ) {
+      return this.update(
+        {
+          playDate,
+          playernames,
+          playersneeded,
+          venue,
+        },
+        { where: { id: sessionId } }
+      );
+    }
+
     static prevSessions(sportId) {
       return this.findAll({
         where: {
@@ -43,6 +90,15 @@ module.exports = (sequelize, DataTypes) => {
           playDate: {
             [Op.lt]: new Date(),
           },
+          isCanceled: false,
+        },
+      });
+    }
+
+    static getAllUnCancelled(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
           isCanceled: false,
         },
       });
@@ -71,6 +127,49 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static getCreatedUpcomingSessions(creatorId) {
+      return this.findAll({
+        where: {
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+          CreatorId: creatorId,
+        },
+      });
+    }
+
+    static getAllCreatedSessions(creatorId) {
+      return this.findAll({
+        where: {
+          CreatorId: creatorId,
+        },
+      });
+    }
+
+    static getAllSessionsInPeriod(sportId, startDate, endDate) {
+      return this.findAll({
+        where: {
+          sportId: sportId,
+          playDate: {
+            [Op.between]: [startDate, endDate],
+          },
+          isCanceled: false,
+        },
+      });
+    }
+
+    static getCancelledInPeriod(sportId, startDate, endDate) {
+      return this.findAll({
+        where: {
+          sportId: sportId,
+          playDate: {
+            [Op.between]: [startDate, endDate],
+          },
+          isCanceled: true,
+        },
+      });
+    }
+
     static canceledSessions(sportId) {
       return this.findAll({
         where: {
@@ -95,6 +194,49 @@ module.exports = (sequelize, DataTypes) => {
     static async getSession(id) {
       return this.findOne({
         where: { id },
+      });
+    }
+
+    static async getUserUpcomingSession(id) {
+      return this.findOne({
+        where: {
+          id,
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+        },
+      });
+    }
+
+    static async getActiveUpcomingSession(id) {
+      return this.findOne({
+        where: {
+          id,
+          playDate: {
+            [Op.gt]: new Date(),
+          },
+          isCanceled: false,
+        },
+      });
+    }
+
+    static async getPreviousSession(id) {
+      return this.findOne({
+        where: {
+          id,
+          playDate: {
+            [Op.lt]: new Date(),
+          },
+        },
+      });
+    }
+
+    static async getCancelSession(id) {
+      return this.findOne({
+        where: {
+          id,
+          isCanceled: true,
+        },
       });
     }
 

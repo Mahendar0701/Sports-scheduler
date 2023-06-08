@@ -22,100 +22,7 @@
     </script>
   </head>
   <body>
-    <nav class="shadow-md top-0 opacity-100 bg-stone-100 border-gray-200">
-      <div
-        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
-      >
-        <a href="/sport" class="flex items-center">
-          <img
-            src="https://png.pngtree.com/png-clipart/20210711/original/pngtree-sports-icon-design-with-human-shape-running-png-image_6524332.jpg"
-            class="h-10 mr-3"
-            alt="Flowbite Logo"
-          />
-          <span
-            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-grey-900"
-            >Sports Scheduler</span
-          >
-        </a>
-
-        <div class="flex items-center md:order-2">
-          <% if (isAdmin) { %>
-          <a
-            href="/createSport"
-            class="bg-cyan-600 hover:bg-cyan-800 text-white px-3 py-1.5 rounded font-medium mx-5 my-0.5"
-            >+ Create New Sport</a
-          >
-          <% } %> <% if (!isAdmin) { %>
-          <span class="text-grey-900 px-3 py-1.5 mx-7 my-0.5 font-bold">
-            <%= userName %>
-          </span>
-          <% } %>
-          <button
-            type="button"
-            class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-            id="user-menu-button"
-            aria-expanded="false"
-            data-dropdown-toggle="user-dropdown"
-            data-dropdown-placement="bottom"
-          >
-            <span class="sr-only"></span>
-            <img
-              class="w-8 rounded-full"
-              src="https://p7.hiclipart.com/preview/782/114/405/5bbc3519d674c.jpg"
-              alt="user photo"
-            />
-          </button>
-        </div>
-
-        <div
-          class="items-center justify-around hidden w-full md:flex md:w-auto md:order-1"
-          id="mobile-menu-2"
-        >
-          <ul
-            class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-stone-100 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-stone-100 dark:bg-stone-100 md:dark:bg-stone-100 dark:border-gray-700"
-          >
-            <li>
-              <a
-                href="/sport"
-                class="block py-2 pl-3 pr-4 text-grey-800 bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                aria-current="page"
-                >Home</a
-              >
-            </li>
-            <li>
-              <a
-                href="/my_sessions"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >My Sessions</a
-              >
-            </li>
-            <% if (isAdmin) { %>
-            <li>
-              <a
-                href="/reports"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >View Reports</a
-              >
-            </li>
-            <% } %>
-            <li>
-              <a
-                href="/changePassword"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >Change Password</a
-              >
-            </li>
-            <li>
-              <a
-                href="/signout"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 md:dark:hover:text-red-600 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >Sign Out</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <%- include('navbar') %>
     <div class="grid grid-cols-6 pt-10">
       <div class="col-start-3 col-span-2">
         <div>
@@ -126,59 +33,10 @@
           <div class="flex">
             <div class="flex m-auto">
               <div class="m-auto">
-          <h1 class="text-center"><%=upComingSessions.length %> sessions Available</h1>
-          <table>
-            <% for( var i = 0 ; i < upComingSessions.length ; i++) { %>
-            <tr>
-              <td>                  
-                <a
-                  href="/sessions/<%=upComingSessions[i].id %>"
-                  class="text-green-600"
-                >
-                  <div
-                    class="bg-white hover:bg-stone-50 my-0.5 border font-semibold border-gray-600 text-cyan-700 rounded p-2 w-full"
-                  >
-                    <div class="mr-18 display: inline">
-                      <%= new
-                      Date(upComingSessions[i].playDate).toLocaleString('en-US',
-                      { weekday: 'short', month: 'short', day: '2-digit', year:
-                      'numeric', hour: '2-digit', minute: '2-digit', second:
-                      '2-digit', hour12: true }) %>
-                    </div>
-                    <% if (upComingSessions[i].playersneeded>1) { %>
-                    <div class="pl-5 pr-2 display: inline">
-                      <%=upComingSessions[i].playersneeded %> slots
-                    </div>
-                    <% } %> <% if (upComingSessions[i].playersneeded===1) { %>
-                    <div class="text-red-600 pl-5 pr-2 display: inline">
-                      Last slot
-                    </div>
-                    <% } %> <% if (upComingSessions[i].playersneeded ===0) { %>
-                    <div
-                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Fully Booked
-                    </div>
-
-                    <% } %> <% if (upComingSessions[i].isCanceled ===true ) { %>
-                    <div
-                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Canceled
-                    </div>
-                    <% } %>
-                  </div>
-                </a>
-              </td>
+                <%- include('sessionList', {sessions: upComingSessions}) %>
+              </div>
             </div>
-
           </div>
-            </tr>
-            <% } %>
-          </table>
-        </div>
-        </div>
-        </div>
         </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
@@ -188,51 +46,12 @@
           <div class="flex">
             <div class="flex m-auto">
               <div class="m-auto">
-          <table>
-           <h1 class="text-center"> <%=previousSessions.length %> sessions Available</h1><% for( var i = 0 ;
-            i < previousSessions.length ; i++) { %>
-            <tr>
-              <td>
-                <a
-                  href="/sessions/<%=previousSessions[i].id %>"
-                  class="text-green-600"
-                >
-                  <div
-                    class="bg-white hover:bg-stone-50 my-0.5 border border-gray-600 font-semibold text-cyan-700 rounded p-2 w-full"
-                  >
-                    <div class="mr-18 display: inline">
-                      <%= new
-                      Date(previousSessions[i].playDate).toLocaleString('en-US',
-                      { weekday: 'short', month: 'short', day: '2-digit', year:
-                      'numeric', hour: '2-digit', minute: '2-digit', second:
-                      '2-digit', hour12: true }) %>
-                    </div>
-                    <% if (previousSessions[i].playersneeded>1) { %>
-                    <div class="pl-5 pr-2 display: inline">
-                      <%=previousSessions[i].playersneeded %> slots
-                    </div>
-                    <% } %> <% if (previousSessions[i].playersneeded===1) { %>
-                    <div class="text-red-600 pl-5 pr-2 display: inline">
-                      Last slot
-                    </div>
-                    <% } %> <% if (previousSessions[i].playersneeded ===0) { %>
-                    <div
-                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Fully Booked
-                    </div>
-                    <% } %>
-                  </div>
-                </a>
-              </td>
-            </tr>
-            <% } %>
-          </table>
+                <%- include('sessionList', {sessions: previousSessions}) %>
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
-        </div>
-        </div>
-        <hr class="my-5  h-0.5 bg-black opacity-50" />
+        <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div>
           <h5 class="text-2xl text-center font-bold text-gray-600 pb-5">
             Sessions created by you
@@ -240,58 +59,10 @@
           <div class="flex">
             <div class="flex m-auto">
               <div class="m-auto">
-          <table>
-           <h1 class="text-center"> <%=createdUpcomingSessions.length %> sessions Available</h1><% for( var i
-            = 0 ; i < createdUpcomingSessions.length ; i++) { %>
-            <tr>
-              <td>
-                <a
-                  href="/sessions/<%=createdUpcomingSessions[i].id %>"
-                  class="text-green-600"
-                >
-                  <div
-                    class="bg-white hover:bg-stone-50 border border-gray-600 text-cyan-700 font-semibold rounded p-2 my-0.5 w-full"
-                  >
-                    <div class="mr-18 display: inline">
-                      <%= new
-                      Date(createdUpcomingSessions[i].playDate).toLocaleString('en-US',
-                      { weekday: 'short', month: 'short', day: '2-digit', year:
-                      'numeric', hour: '2-digit', minute: '2-digit', second:
-                      '2-digit', hour12: true }) %>
-                    </div>
-                    <% if (createdUpcomingSessions[i].playersneeded>1) { %>
-                    <div class="pl-5 pr-2 display: inline">
-                      <%=createdUpcomingSessions[i].playersneeded %> slots
-                    </div>
-                    <% } %> <% if (createdUpcomingSessions[i].playersneeded===1)
-                    { %>
-                    <div class="text-red-600 pl-5 pr-2 display: inline">
-                      Last slot
-                    </div>
-                    <% } %> <% if (createdUpcomingSessions[i].playersneeded
-                    ===0) { %>
-                    <div
-                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Fully Booked
-                    </div>
-                    <% } %> <% if (createdUpcomingSessions[i].isCanceled ===true
-                    ) { %>
-                    <div
-                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Canceled
-                    </div>
-                    <% } %>
-                  </div>
-                </a>
-              </td>
-            </tr>
-            <% } %>
-          </table>
-        </div>
-        </div>
-        </div>
+                <%- include('sessionList', {sessions: createdSessions}) %>
+              </div>
+            </div>
+          </div>
         </div>
         <hr class="my-5 h-0.5 bg-black opacity-50" />
         <div class="mb-5">
@@ -302,55 +73,10 @@
           <div class="flex">
             <div class="flex m-auto">
               <div class="m-auto">
-          <table>
-           <h1 class="text-center"> <%=canceledSessions.length %> sessions Available </h1><% for( var i = 0 ;
-            i < canceledSessions.length ; i++) { %>
-            <tr>
-              <td class="my-2">
-                <a
-                  href="/sessions/<%=canceledSessions[i].id %>"
-                  class="text-green-600"
-                >
-                  <div
-                    class="bg-white hover:bg-stone-50 my-0.5 border border-gray-600 font-semibold text-cyan-700 rounded p-2 w-full"
-                  >
-                    <div class="mr-18 display: inline">
-                      <%= new
-                      Date(canceledSessions[i].playDate).toLocaleString('en-US',
-                      { weekday: 'short', month: 'short', day: '2-digit', year:
-                      'numeric', hour: '2-digit', minute: '2-digit', second:
-                      '2-digit', hour12: true }) %>
-                    </div>
-                    <% if (canceledSessions[i].playersneeded>1) { %>
-                    <div class="pl-5 pr-2 display: inline">
-                      <%=canceledSessions[i].playersneeded %> slots
-                    </div>
-                    <% } %> <% if (canceledSessions[i].playersneeded===1) { %>
-                    <div class="text-red-600 pl-5 pr-2 display: inline">
-                      Last slot
-                    </div>
-                    <% } %> <% if (canceledSessions[i].playersneeded ===0) { %>
-                    <div
-                      class="text-green-1000 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Fully Booked
-                    </div>
-                    <% } %><% if (canceledSessions[i].isCanceled ===true ) { %>
-                    <div
-                      class="text-red-600 font-bold pl-5 pr-2 display: inline"
-                    >
-                      Canceled
-                    </div>
-                    <% } %>
-                  </div>
-                </a>
-              </td>
-            </tr>
-            <% } %>
-          </table>
-        </div>
-        </div>
-        </div>
+                <%- include('sessionList', {sessions: canceledSessions}) %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

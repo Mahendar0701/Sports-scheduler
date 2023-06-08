@@ -36,6 +36,15 @@ module.exports = (sequelize, DataTypes) => {
       return sport.title;
     }
 
+    static async updateSportTitle(title, sportId) {
+      return this.update(
+        {
+          title,
+        },
+        { where: { id: sportId } }
+      );
+    }
+
     static async remove(id) {
       return this.destroy({
         where: {
