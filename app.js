@@ -1174,7 +1174,8 @@ app.post(
       const userId = request.user.id;
 
       await User.update(updatedUser, { where: { id: userId } });
-      response.redirect("/sport");
+      request.flash("success", "Profile edited successfully");
+      response.redirect("/editProfile");
     } catch (error) {
       console.log(error);
       if (error.name == "SequelizeUniqueConstraintError") {
