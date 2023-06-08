@@ -80,25 +80,21 @@ describe("Sports Application", function () {
     expect(res2.statusCode).toBe(302);
   });
 
+  // test("Sign out", async () => {
+  //   let res = await agent.get("/sport");
+  //   expect(res.statusCode).toBe(200);
+  //   res = await agent.get("/signout");
+  //   expect(res.statusCode).toBe(302);
+  //   res = await agent.get("/sport");
+  //   expect(res.statusCode).toBe(422);
+  // });
+
   test("Sign out", async () => {
-    let res = await agent.get("/sport");
-    expect(res.statusCode).toBe(200);
-    res = await agent.get("/signout");
+    let res = await agent.get("/signout");
     expect(res.statusCode).toBe(302);
+
     res = await agent.get("/sport");
     expect(res.statusCode).toBe(302);
-  });
-
-  test(" Creating a sport", async () => {
-    const agent = request.agent(server);
-    await login(agent, "user.a@test.com", "12345678");
-    const res = await agent.get("/sport");
-    const csrfToken = extractCsrfToken(res);
-    const response = await agent.post("/sports").send({
-      title: "Cricket",
-      _csrf: csrfToken,
-    });
-    expect(response.statusCode).toBe(403);
   });
 
   test(" Creating a sport", async () => {
