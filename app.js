@@ -743,7 +743,7 @@ app.post(
       if (allowToJoin === true) {
         const playDate = new Date(request.body.playDate);
         const session = await Session.addSession({
-          playDate: playDate.toISOString(),
+          playDate: playDate.toUTCString(),
           // playDate: request.body.playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
