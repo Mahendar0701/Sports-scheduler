@@ -741,11 +741,8 @@ app.post(
       }
 
       if (allowToJoin === true) {
-        const playDate = new Date(request.body.playDate);
-        playDate.setMinutes(playDate.getMinutes() - 330);
         const session = await Session.addSession({
-          playDate: playDate,
-          // playDate: request.body.playDate,
+          playDate: request.body.playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
           playersneeded: request.body.playersneeded,

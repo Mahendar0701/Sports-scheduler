@@ -105,11 +105,13 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static prevAndCanceledSessions(sportId) {
+      const currentDateTime = new Date();
+      currentDateTime.setMinutes(playDate.getMinutes() - 330);
       return this.findAll({
         where: {
           sportId,
           playDate: {
-            [Op.lt]: new Date(),
+            [Op.lt]: currentDateTime,
           },
         },
       });
