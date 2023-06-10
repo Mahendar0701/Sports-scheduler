@@ -742,8 +742,9 @@ app.post(
 
       if (allowToJoin === true) {
         const playDate = new Date(request.body.playDate);
+        playDate.setMinutes(playDate.getMinutes() - 330);
         const session = await Session.addSession({
-          playDate: playDate.toUTCString(),
+          playDate: playDate,
           // playDate: request.body.playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
@@ -809,6 +810,8 @@ app.get(
     const sportId = session.sportId;
     const reason = session.reason;
     const title = await Sport.getSportTitle(sportId);
+    console.log("date....", session.playDate);
+    console.log("date....", new Date());
     //players
     let sessionPlayers = [];
     const sessionPlayerlist = await UserSession.getSessionPlayers(sessionId);

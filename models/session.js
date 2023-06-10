@@ -109,7 +109,7 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           playDate: {
-            [Op.lt]: new Date().toUTCString(),
+            [Op.lt]: new Date(),
           },
         },
       });
