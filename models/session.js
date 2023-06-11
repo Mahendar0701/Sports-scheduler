@@ -105,7 +105,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static prevAndCanceledSessions(sportId) {
-      var playDate = new Date().getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000;
+      var playDate = new Date().getTime() - 5 * 60 * 60 * 1000 - 30 * 60 * 1000;
       playDate = new Date(playDate).toISOString().slice(0, 16);
       return this.findAll({
         where: {
