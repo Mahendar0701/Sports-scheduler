@@ -807,8 +807,8 @@ app.get(
     const sportId = session.sportId;
     const reason = session.reason;
     const title = await Sport.getSportTitle(sportId);
-    console.log("date....", session.playDate);
-    console.log("date....", new Date());
+    console.log("play date....", session.playDate);
+    console.log("new date....", new Date().toLocaleString());
     //players
     let sessionPlayers = [];
     const sessionPlayerlist = await UserSession.getSessionPlayers(sessionId);
@@ -1061,10 +1061,16 @@ app.get(
   async (request, response, next) => {
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
+    var playDate =
+      new Date(session.playDate).getTime() +
+      5 * 60 * 60 * 1000 +
+      30 * 60 * 1000;
+    playDate = new Date(playDate).toISOString().slice(0, 16);
     response.render("editSession", {
       isAdmin: request.user.isAdmin,
       userName: request.user.firstName + " " + request.user.lastName,
       sessionId,
+      playDate,
       session,
       csrfToken: request.csrfToken(),
     });
