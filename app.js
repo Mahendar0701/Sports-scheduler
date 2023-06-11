@@ -85,6 +85,14 @@ passport.deserializeUser((id, done) => {
     });
 });
 
+function requireAdmin(req, res, next) {
+  if (req.user && req.user.isAdmin === true) {
+    return next();
+  } else {
+    res.status(401).json({ message: "Unauthorized user" });
+  }
+}
+
 app.get("/", async (request, response) => {
   response.render("index", {
     title: "Sports Application",
@@ -355,6 +363,7 @@ app.get(
 
 app.get(
   "/reports",
+  requireAdmin,
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
@@ -519,6 +528,7 @@ app.post(
 
 app.get(
   "/sport/:id/report-session/:startDate/:endDate",
+  requireAdmin,
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
@@ -571,6 +581,7 @@ app.get(
 
 app.get(
   "/sport/:id/report-session//",
+  requireAdmin,
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
@@ -609,6 +620,7 @@ app.get(
 app.get(
   "/createSport",
   connectEnsureLogin.ensureLoggedIn(),
+  requireAdmin,
   (request, response, next) => {
     response.render("createSport", {
       isAdmin: request.user.isAdmin,
@@ -1061,11 +1073,22 @@ app.get(
   async (request, response, next) => {
     const sessionId = request.params.id;
     const session = await Session.getSession(sessionId);
+    const isCanceled = session.isCanceled;
+    const currentDateTime = new Date();
+    const isPrevious = session.playDate < currentDateTime;
+    const creatorId = session.CreatorId;
+    let isCreator = false;
+    if (request.user.id === creatorId) {
+      isCreator = true;
+    }
     response.render("editSession", {
       isAdmin: request.user.isAdmin,
       userName: request.user.firstName + " " + request.user.lastName,
       sessionId,
+      isCanceled,
+      isCreator,
       session,
+      isPrevious,
       csrfToken: request.csrfToken(),
     });
   }
@@ -1112,6 +1135,7 @@ app.post(
 
 app.get(
   "/sport/:id/edit",
+  requireAdmin,
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response, next) => {
     const sportId = request.params.id;

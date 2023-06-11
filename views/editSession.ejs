@@ -9,7 +9,9 @@
     <title>Edit Session</title>
   </head>
   <body>
+    <% if(!isCanceled && isCreator && !isPrevious) { %>
     <%- include('navbar') %>
+ 
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <h2 class="text-3xl font-semibold text-gray-600">Edit session</h2>
@@ -79,5 +81,8 @@
         <% } %></div>
       </div>
     </div>
+    <% } else { %>
+      invalid action
+      <% } %>
   </body>
 </html>
