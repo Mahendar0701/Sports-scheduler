@@ -75,10 +75,19 @@
           })
           .catch((err) => console.error(err));
       }
-
-      function displayReasonField() {
-        document.getElementById("reasonField").style.display = "block";
-        window.scrollTo(0, document.body.scrollHeight);
+      
+      function toggleReasonField() {
+        var reasonField = document.getElementById("reasonField");
+        var displayText = document.getElementById("displayText");
+        
+        if (reasonField.style.display === "block") {
+          reasonField.style.display = "none";
+          displayText.textContent = "";
+        } else {
+          reasonField.style.display = "block";
+          displayText.textContent = "Give reason of cancellation";
+          window.scrollTo(0, document.body.scrollHeight);
+        }
       }
     </script>
   </head>
@@ -279,18 +288,20 @@
               <button
                 type="button"
                 class="bg-slate-100 hover:bg-slate-200 text-red-600 px-3 py-1 rounded font-medium mr-2"
-                onclick="displayReasonField()"
+                onclick="toggleReasonField()"
               >
                 Cancel session
               </button>
               <br />
               <br />
+            <p id="displayText"></p>
               <div id="reasonField" style="display: none">
                 <textarea
                   name="reason"
                   class="border border-gray-600 p-2 rounded"
                   rows="4"
                   cols="50"
+                  placeholder="Reason.."
                 ></textarea>
                 <br />
                 <button
