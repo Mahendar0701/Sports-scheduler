@@ -87,12 +87,15 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static prevSessions(sportId) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           sportId,
           playDate: {
-            [Op.lt]: new Date(),
-            // [Op.lt]: currentDateTime,
+            // [Op.lt]: new Date(),
+            [Op.lt]: currentDateTime,
           },
           isCanceled: false,
         },
@@ -124,12 +127,15 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static upcomingSessions(sportId) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           sportId,
           playDate: {
             [Op.gt]: new Date(),
-            // [Op.gt]: currentDateTime,
+            [Op.gt]: currentDateTime,
           },
           isCanceled: false,
         },
@@ -137,9 +143,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static getCreatedUpcomingSessions(creatorId) {
-      // const currentDateTime = new Date();
-      // currentDateTime.setHours(currentDateTime.getHours() + 5);
-      // currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           playDate: {
@@ -211,9 +217,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getUserUpcomingSession(id) {
-      // const currentDateTime = new Date();
-      // currentDateTime.setHours(currentDateTime.getHours() + 5);
-      // currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findOne({
         where: {
           playDate: {
@@ -226,12 +232,15 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getActiveUpcomingSession(id) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findOne({
         where: {
           id,
           playDate: {
-            [Op.gt]: new Date(),
-            // [Op.gt]: currentDateTime,
+            // [Op.gt]: new Date(),
+            [Op.gt]: currentDateTime,
           },
           isCanceled: false,
         },
@@ -239,6 +248,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getPreviousSession(id) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findOne({
         where: {
           id,
