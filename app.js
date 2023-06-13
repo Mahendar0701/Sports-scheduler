@@ -754,8 +754,14 @@ app.post(
       }
 
       if (allowToJoin === true) {
+        const inputDate = request.body.playDate;
+        const ISTDateTime = new Date(inputDate);
+        const UTCDateTime = new Date(
+          ISTDateTime.getTime() - ISTDateTime.getTimezoneOffset() * 6000
+        );
+        const playDate = UTCDateTime.toISOString();
         const session = await Session.addSession({
-          playDate: request.body.playDate,
+          playDate: playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
           playersneeded: request.body.playersneeded,
