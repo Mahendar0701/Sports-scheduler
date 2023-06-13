@@ -137,9 +137,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static getCreatedUpcomingSessions(creatorId) {
-      const currentDateTime = new Date();
-      currentDateTime.setHours(currentDateTime.getHours() + 5);
-      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
+      // const currentDateTime = new Date();
+      // currentDateTime.setHours(currentDateTime.getHours() + 5);
+      // currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           playDate: {
@@ -211,9 +211,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getUserUpcomingSession(id) {
-      const currentDateTime = new Date();
-      currentDateTime.setHours(currentDateTime.getHours() + 5);
-      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
+      // const currentDateTime = new Date();
+      // currentDateTime.setHours(currentDateTime.getHours() + 5);
+      // currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findOne({
         where: {
           playDate: {
