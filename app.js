@@ -244,9 +244,10 @@ app.get(
       const userName = user.firstName + " " + user.lastName;
       const allSports = await Sport.getAllSports();
       const isAdmin = user.isAdmin;
+      const userId = request.user.id;
 
       const userUpcomingSessionsIds = await UserSession.getSessionsByUser(
-        user.id
+        userId
       );
       let userUpcomingSessions = [];
       let allUserUpcomingSessions = null;
