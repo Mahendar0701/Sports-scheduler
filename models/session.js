@@ -128,10 +128,13 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static getCreatedUpcomingSessions(creatorId) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           playDate: {
-            [Op.gt]: new Date(),
+            [Op.gt]: currentDateTime,
           },
           CreatorId: creatorId,
         },

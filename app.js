@@ -761,7 +761,8 @@ app.post(
         );
         const playDate = UTCDateTime.toISOString();
         const session = await Session.addSession({
-          playDate: playDate,
+          // playDate: playDate,
+          playDate: request.body.playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
           playersneeded: request.body.playersneeded,
