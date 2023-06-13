@@ -832,6 +832,8 @@ app.get(
     const sessionMembers = session.playernames;
     //isPrevious
     const currentDateTime = new Date();
+    currentDateTime.setHours(currentDateTime.getHours() + 5);
+    currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
     const isPrevious = session.playDate < currentDateTime;
     //isCreator
     const creatorId = session.CreatorId;
