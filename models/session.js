@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 "use strict";
 const { Model, Op } = require("sequelize");
-let currentDateTime = new Date();
+const currentDateTime = new Date();
 currentDateTime.setHours(currentDateTime.getHours() + 5);
 currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
 module.exports = (sequelize, DataTypes) => {
@@ -227,7 +227,7 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           id,
           playDate: {
-            [Op.gt]: new Date(),
+            // [Op.gt]: new Date(),
             [Op.gt]: currentDateTime,
           },
           isCanceled: false,
@@ -240,7 +240,7 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           id,
           playDate: {
-            [Op.lt]: new Date(),
+            [Op.lt]: currentDateTime,
           },
         },
       });
