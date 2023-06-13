@@ -91,8 +91,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           playDate: {
-            // [Op.lt]: new Date(),
-            [Op.lt]: currentDateTime,
+            [Op.lt]: new Date(),
+            // [Op.lt]: currentDateTime,
           },
           isCanceled: false,
         },
@@ -116,7 +116,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           playDate: {
-            [Op.lt]: currentDateTime,
+            // [Op.lt]: currentDateTime,
+            [Op.lt]: new Date(),
           },
         },
       });
@@ -127,8 +128,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           playDate: {
-            // [Op.gt]: new Date(),
-            [Op.gt]: currentDateTime,
+            [Op.gt]: new Date(),
+            // [Op.gt]: currentDateTime,
           },
           isCanceled: false,
         },
@@ -142,7 +143,8 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll({
         where: {
           playDate: {
-            [Op.gt]: currentDateTime,
+            // [Op.gt]: currentDateTime,
+            [Op.gt]: new Date(),
           },
           CreatorId: creatorId,
         },
@@ -215,7 +217,8 @@ module.exports = (sequelize, DataTypes) => {
       return this.findOne({
         where: {
           playDate: {
-            [Op.gt]: currentDateTime,
+            // [Op.gt]: currentDateTime,
+            [Op.gt]: new Date(),
           },
           id,
         },
@@ -227,8 +230,8 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           id,
           playDate: {
-            // [Op.gt]: new Date(),
-            [Op.gt]: currentDateTime,
+            [Op.gt]: new Date(),
+            // [Op.gt]: currentDateTime,
           },
           isCanceled: false,
         },
