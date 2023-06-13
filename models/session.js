@@ -105,11 +105,14 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static prevAndCanceledSessions(sportId) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findAll({
         where: {
           sportId,
           playDate: {
-            [Op.lt]: new Date(),
+            [Op.lt]: currentDateTime,
           },
         },
       });
@@ -201,12 +204,15 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getUserUpcomingSession(id) {
+      const currentDateTime = new Date();
+      currentDateTime.setHours(currentDateTime.getHours() + 5);
+      currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
       return this.findOne({
         where: {
-          id,
           playDate: {
-            [Op.gt]: new Date(),
+            [Op.gt]: currentDateTime,
           },
+          id,
         },
       });
     }
