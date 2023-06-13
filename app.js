@@ -761,8 +761,8 @@ app.post(
         );
         const playDate = UTCDateTime.toISOString();
         const session = await Session.addSession({
-          // playDate: playDate,
-          playDate: request.body.playDate,
+          playDate: playDate,
+          // playDate: request.body.playDate,
           venue: request.body.venue,
           playernames: request.body.playernames.split(","),
           playersneeded: request.body.playersneeded,
@@ -1085,6 +1085,8 @@ app.get(
     const session = await Session.getSession(sessionId);
     const isCanceled = session.isCanceled;
     const currentDateTime = new Date();
+    currentDateTime.setHours(currentDateTime.getHours() + 5);
+    currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
     const isPrevious = session.playDate < currentDateTime;
     const creatorId = session.CreatorId;
     let isCreator = false;
