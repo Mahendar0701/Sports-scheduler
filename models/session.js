@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 "use strict";
 const { Model, Op } = require("sequelize");
-const currentDateTime = new Date();
-currentDateTime.setHours(currentDateTime.getHours() + 5);
-currentDateTime.setMinutes(currentDateTime.getMinutes() + 30);
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     /**
