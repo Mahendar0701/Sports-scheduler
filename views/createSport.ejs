@@ -16,6 +16,7 @@
         
         <form action="/sports" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="userId" value="<%= userId %>" />
           <div class="py-3">
             <label for="title" ><h1 class="text-xl py-3 text-gray-900">Enter the name of Sport you want to create</h1></label>
             <input

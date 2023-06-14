@@ -26,6 +26,14 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
+    static getSportsByAdmin(id) {
+      return this.findAll({
+        where: {
+          userId: id,
+        },
+      });
+    }
+
     static async getSport(id) {
       const sport = await this.findOne({ where: { id } });
       return sport;
@@ -40,6 +48,15 @@ module.exports = (sequelize, DataTypes) => {
       return this.update(
         {
           title,
+        },
+        { where: { id: sportId } }
+      );
+    }
+
+    static updateUserID(userId, sportId) {
+      return this.update(
+        {
+          userId,
         },
         { where: { id: sportId } }
       );
@@ -64,6 +81,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         unique: true,
       },
+      userId: DataTypes.INTEGER,
     },
     {
       sequelize,

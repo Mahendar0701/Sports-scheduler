@@ -243,6 +243,9 @@ app.get(
       const user = request.user;
       const userName = user.firstName + " " + user.lastName;
       const allSports = await Sport.getAllSports();
+
+      const allAdminSports = await Sport.getSportsByAdmin(request.user.id);
+
       const isAdmin = user.isAdmin;
       const userId = request.user.id;
 
@@ -272,6 +275,7 @@ app.get(
           createdUpcomingSessions,
           isAdmin,
           userName,
+          allAdminSports,
           csrfToken: request.csrfToken(),
         });
       } else {
@@ -279,6 +283,7 @@ app.get(
           allSports,
           userUpcomingSessions,
           createdUpcomingSessions,
+          allAdminSports,
           isAdmin,
         });
       }
@@ -623,8 +628,10 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   requireAdmin,
   (request, response, next) => {
+    const userId = request.user.id;
     response.render("createSport", {
       isAdmin: request.user.isAdmin,
+      userId,
       userName: request.user.firstName + " " + request.user.lastName,
       csrfToken: request.csrfToken(),
     });
@@ -638,7 +645,11 @@ app.post(
     try {
       const sport = await Sport.addSport({
         title: request.body.title,
+        userId: request.user.id,
       });
+
+      await Sport.updateUserID(request.user.id, sport.id);
+
       return response.redirect("/sport");
     } catch (error) {
       console.log(error);
