@@ -17,20 +17,17 @@
     <div class="grid grid-cols-10">
       <div class="my-9 col-start-4 col-span-4">
         <div class="text-center">
-          <!-- <% if (!isAdmin) { %>
-        <span class="my-3"><a  class="bg-slate-100 hover:bg-slate-200 text-cyan-700 px-3 py-1 rounded font-medium mr-5 " href="/createSport">Create Sport</a></span> <% } %> -->
-        <span class="text-center text-2xl font-semibold text-gray-600">
+        <span class="text-center text-2xl font-semibold text-gray-800">
           Welcome <%= userName %> 
-          <!-- <% if (isAdmin) { %> (Admin)  <% } %>  -->
         </span>  <% if (isAdmin) { %>
         <span><a  class="bg-slate-100 hover:bg-slate-200 text-cyan-700 px-3 py-1 rounded font-medium ml-5" href="/reports">View Reports</a></span>  <% } %>  </div>
         <hr class="h-0.5 bg-black opacity-50 my-5" />
         <% if(userUpcomingSessions.length === 0) { %>
-          <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+          <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
           You have no upcoming sessions available. Please join a new one by selecting below sports </h5>
           <% } %>
           <% if(userUpcomingSessions.length != 0) { %>
-        <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+        <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
           You have the following upcoming Sessions
         </h5>
         <%- include('sessionList', {sessions: userUpcomingSessions}) %>
@@ -38,7 +35,7 @@
 
         <% } %>
         <hr class="h-0.5 bg-black opacity-50 my-5" />
-            <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+            <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
               The following Sports are available. Please select one
             </h5>
               <div class="ml-24">
@@ -61,11 +58,11 @@
           </div>
           <% if (isAdmin) { %>
           <hr class="h-0.5 bg-black opacity-50 my-5" />
-          <h5 class="text-xl text-center font-bold text-gray-600 pb-3">
+          <h5 class="text-xl text-center font-semibold text-gray-800 pb-3">
             You are Admin so you can create Sport
           </h5>
-          <h5 class="text-xl text-center font-bold text-gray-600 pb-3">
-            Sports are created By you : (<%=allAdminSports.length %>)
+          <h5 class="text-xl text-center font-semibold text-gray-800 pb-3">
+            Sports created By you : (<%=allAdminSports.length %>)
           </h5>
             <div class="ml-24">
               
@@ -89,14 +86,14 @@
         <% } %>
           <hr class="h-0.5 bg-black opacity-50 my-5" />
           <% if(createdUpcomingSessions.length === 0) { %>
-            <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+            <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
             You have not created any upcoming session. Create a new one by selecting above sports </h5>
-            <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+            <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
               Click here to see all your sessions <a href="my_sessions" class="text-teal-600 underline">all sessions</a> </h5>
             <% } %>
 
             <% if(createdUpcomingSessions.length != 0) { %>
-          <h5 class="text-xl text-center font-bold text-gray-600 pb-5">
+          <h5 class="text-xl text-center font-semibold text-gray-800 pb-5">
             You Created the following upcoming Sessions
           </h5>
           <!-- display sessions -->
