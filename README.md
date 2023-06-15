@@ -28,15 +28,20 @@ This is a Sport Sccheduling website built using Node.js which allows players to 
 2. Creator can add player or remove a player.
 
 
-![Screenshot 2023-06-15 063819](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/9df75586-bbbc-4a78-94cd-83e1bfffb39d)
-![Screenshot 2023-06-15 064039](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/37a245a1-5417-4e3e-a8d4-826e505ca219)
-![Screenshot 2023-06-15 064029](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/b88b2ae3-2a3e-4e42-85e5-563e014543f7)
-![Screenshot 2023-06-15 064017](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/69a38a12-0fa3-4bf6-81a3-a490c9e8a9c0)
-![Screenshot 2023-06-15 064006](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/4196eeaa-ea1f-4445-91a8-5531bc1c849e)
-![Screenshot 2023-06-15 063952](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/e3cf0615-bfa7-4c75-a708-c6119eb6d7b7)
-![Screenshot 2023-06-15 063931](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/da078b54-86e7-4b64-a62e-26e007f88e64)
-![Screenshot 2023-06-15 063920](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/a8aeb1b0-27c2-4694-84b1-9749c84f4b63)
-![Screenshot 2023-06-15 064054](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/9e31029f-51da-4591-aaa1-044c65fef84a)
-![Screenshot 2023-06-15 063858](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/2357b210-42b6-436b-a2cf-78ef9f76b831)
-![Screenshot 2023-06-15 063847](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/24276f1f-0329-4134-8e9f-1332fa50c2dc)
-![Screenshot 2023-06-15 063834](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/1439e0c7-a917-45a7-9990-6276b6410ed3)
+
+
+![Screenshot 2023-06-15 063729](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/188f0d69-c9d4-4eb0-a7eb-6dade945e188)
+![Screenshot 2023-06-15 063748](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/630272eb-97cf-4e76-bade-f9d1a8775085)
+![Screenshot 2023-06-15 063819](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/c65f654e-a84e-438a-a87c-a2c9bce0cf25)
+![Screenshot 2023-06-15 063834](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/fbc64e57-4453-42eb-971c-400607624341)
+![Screenshot 2023-06-15 063847](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/bdd92fd6-19bc-4857-ab4b-c701edcbbbcb)
+![Screenshot 2023-06-15 063858](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/7e31a75d-d2e0-46ad-9517-4798d6156e3c)
+![Screenshot 2023-06-15 064054](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/15add0e4-15f3-4379-bd5a-874c94a77ac3)
+![Screenshot 2023-06-15 063920](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/2c0312fc-c14c-497a-ae4b-fb5d5f7ee9f3)
+![Screenshot 2023-06-15 063931](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/51bbf32b-6c04-4399-9178-826a87934679)
+![Screenshot 2023-06-15 063952](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/73748586-f1a3-4e5e-b786-2cb5c63d050d)
+![Screenshot 2023-06-15 064017](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/e794f3e3-00b3-4352-b7d3-286dded503b2)
+![Screenshot 2023-06-15 064006](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/52087412-6493-4d73-8372-ae548e2aee40)
+![Screenshot 2023-06-15 064029](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/41af7dae-ebbe-4abc-97be-793c1286ee74)
+![Screenshot 2023-06-15 064039](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/6673fda5-b749-4ea9-b057-844e5e7ad101)
+
