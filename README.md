@@ -27,7 +27,7 @@ This is a Sport Sccheduling website built using Node.js which allows players to 
 1. Only creator can edit and cancel a session with reason.
 2. Creator can add player or remove a player.
 
-
+### Screenshots
 
 
 ![Screenshot 2023-06-15 063729](https://github.com/Mahendar0701/Sports-scheduler/assets/119734520/188f0d69-c9d4-4eb0-a7eb-6dade945e188)
